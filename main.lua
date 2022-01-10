@@ -71,7 +71,7 @@ end
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.1.7",
+        ["Version"] = "v1.1.8",
         ["Developer"] = "Bug#3680",
     },
     ["Debug"] = true,
@@ -273,7 +273,7 @@ Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec)
     if type(FuncNames) == "string" then
         FuncNames = {FuncNames}
     end
-    print(string.format("• %s - %s (Aliases: \"%s\")", FuncNames[1], FuncDesc, table.concat(FuncNames, "\", \"")))
+    
     if #FuncOutput.SyntaxErrors == 0 then
         for _,FuncName in next, FuncNames do
             Settings["Thrix"]["Functions"][FuncName] = {}
@@ -285,6 +285,15 @@ Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec)
                 pcall(FuncExec, args)
             end
         end
+        
+        local CommandDocs = string.format("• %s - %s ", FuncNames[1], FuncDesc)
+        if #FuncNames > 1 then
+            table.remove(FuncNames, 1)
+            CommandDocs = CommandDocs .. "(Aliases: \"" .. table.concat(FuncNames, "\", \"") .. "\")"
+        end
+        
+        print(CommandDocs)
+    
         return FuncOutput
     else
         return FunctionOutput
@@ -546,7 +555,7 @@ local function main()
                 writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
             end)
         end)
-        
+
         local Chatted = LocalPlayer.Chatted:Connect(function(Message)
             local Args = string.split(Message, " ")
             table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
