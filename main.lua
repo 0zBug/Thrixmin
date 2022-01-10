@@ -194,6 +194,8 @@ local oprint = print
 local owarn = warn
 local oerror = error
 
+local queue_on_teleport = queue_on_teleport or syn.queue_on_teleport
+
 --[[
     ███████╗██╗   ██╗███╗   ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
     ██╔════╝██║   ██║████╗  ██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
@@ -512,14 +514,14 @@ local function main()
         
         Settings["Thrix"].AddFunction({"rejoin", "rj"}, "Makes your player rejoin.", function(Args)
             spawn(function()
+                queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer loadstring(game:HttpGet(\"https://raw.githubusercontent.com/0zBug/Thrixmin/main/main.lua\"))()")
                 game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
             end)
         end)
         
         Settings["Thrix"].AddFunction("posrj", "Makes your player rejoin and teleport to your current position.", function(Args)
             spawn(function()
-                local queue_on_teleport = queue_on_teleport or syn.queue_on_teleport
-                queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer repeat wait() until game:GetService('Players').LocalPlayer.Character repeat wait() until game:GetService('Players').LocalPlayer.Character.HumanoidRootPart wait() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(" .. tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame) .. ")")
+                queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer repeat wait() until game:GetService('Players').LocalPlayer.Character repeat wait() until game:GetService('Players').LocalPlayer.Character.HumanoidRootPart wait() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(" .. tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame) .. ") loadstring(game:HttpGet(\"https://raw.githubusercontent.com/0zBug/Thrixmin/main/main.lua\"))()")
                 game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
             end)
         end)
@@ -556,6 +558,12 @@ local function main()
                 
                 writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
                 print(string.format("Set command prefix to \"%s\".", Args[2]))
+            end)
+        end)
+        
+        Settings["Thrix"].AddFunction({"exit", "close"}, "Closes your game.", function(Args)
+            spawn(function()
+                game:Shutdown()
             end)
         end)
 
