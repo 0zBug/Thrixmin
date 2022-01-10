@@ -268,11 +268,12 @@ Settings["Thrix"]["BuildFunctionOutput"] = function()
     return Output
 end
     
-Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncExec)
+Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec)
     local FuncOutput = Settings["Thrix"]["BuildFunctionOutput"]()
     if type(FuncNames) == "string" then
         FuncNames = {FuncNames}
     end
+    print(string.format("• %s - %s (Aliases: \"%s\")", FuncNames[1], FuncDesc, table.concat(FuncNames, "\", \"")))
     if #FuncOutput.SyntaxErrors == 0 then
         for _,FuncName in next, FuncNames do
             Settings["Thrix"]["Functions"][FuncName] = {}
@@ -302,13 +303,13 @@ end
 local function main()
     print("\n" .. ASCII(Settings["Info"]["Name"], "standard") .. "\n" .. ASCII(Settings["Info"]["Version"]:gsub("%.", " . "):gsub("v", "v "), "small"))
     local Source, Error = pcall(function()
-        Settings["Thrix"].AddFunction({"goto", "tp"}, function(Args)
+        Settings["Thrix"].AddFunction({"goto", "tp"}, "Teleports your player to the selected player.", function(Args)
             spawn(function()
                 LocalPlayer.Character.HumanoidRootPart.CFrame = GetPlayer(Args[2]).Character.HumanoidRootPart.CFrame
             end)
         end)
         
-        Settings["Thrix"].AddFunction({"ruinreplication", "breaknet"}, function(Args)
+        Settings["Thrix"].AddFunction({"ruinreplication", "breaknet"}, "Breaks the selected players net causing them to repeatedly fall.", function(Args)
             spawn(function()
                 for _,v in next, GetPlayer(Args[2]).Character:GetDescendants() do
                     if v:IsA("Part") or v:IsA("BasePart") then
@@ -320,79 +321,79 @@ local function main()
             end)
         end)
         
-        Settings["Thrix"].AddFunction({"gameteleport", "gametp"}, function(Args)
+        Settings["Thrix"].AddFunction({"gameteleport", "gametp"}, "Teleports you to the selected game.", function(Args)
             spawn(function()
                 game:GetService("TeleportService"):Teleport(Args[2], game.Players.LocalPlayer)
             end)
         end)
         
-        Settings["Thrix"].AddFunction({"walkspeed", "ws"}, function(Args)
+        Settings["Thrix"].AddFunction({"walkspeed", "ws"}, "Sets your character's walkspeed to the chosen amount.", function(Args)
             spawn(function()
                 LocalPlayer.Character.Humanoid.WalkSpeed = Args[2] or 16
             end)
         end)
         
-        Settings["Thrix"].AddFunction({"jumppower", "jp"}, function(Args)
+        Settings["Thrix"].AddFunction({"jumppower", "jp"}, "Sets your character's jumppower to the chosen amount.", function(Args)
             spawn(function()
                 LocalPlayer.Character.Humanoid.JumpPower = Args[2] or 50
             end)
         end)
 
-        Settings["Thrix"].AddFunction({"hipheight", "height"}, function(Args)
+        Settings["Thrix"].AddFunction({"hipheight", "height"}, "Sets your hip height to the chosen amount.", function(Args)
             spawn(function()
                 LocalPlayer.Character.Humanoid.HipHeight = Args[2] or 2
             end)
         end)
         
-        Settings["Thrix"].AddFunction({"gravity", "grav"}, function(Args)
+        Settings["Thrix"].AddFunction({"gravity", "grav"}, "Sets the workspace's gravity to the chosen amount.", function(Args)
             spawn(function()
                 game.Workspace.Gravity = Args[2] or 196.2
             end)
         end)
 
-        Settings["Thrix"].AddFunction({"timeofday", "time"}, function(Args)
+        Settings["Thrix"].AddFunction({"timeofday", "time"}, "Sets the time to the selected time.", function(Args)
             spawn(function()
                 game.Lighting.ClockTime = Args[2] or 14
             end)
         end)
 
-        Settings["Thrix"].AddFunction("sit", function(Args)
+        Settings["Thrix"].AddFunction("sit", "Makes your player sit down.", function(Args)
             spawn(function()
                 LocalPlayer.Character.Humanoid.Sit = true
             end)
         end)
 
-        Settings["Thrix"].AddFunction("unsit", function(Args)
+        Settings["Thrix"].AddFunction("unsit", "Makes your player stand up.", function(Args)
             spawn(function()
                 LocalPlayer.Character.Humanoid.Sit = false
             end)
         end)
 
-        Settings["Thrix"].AddFunction({"platformstand", "stun"}, function(Args)
+        Settings["Thrix"].AddFunction({"platformstand", "stun"}, "Stuns your player.", function(Args)
             spawn(function()
                 LocalPlayer.Character.Humanoid.PlatformStand = true
             end)
         end)
 
-        Settings["Thrix"].AddFunction({"unplatformstand", "unstun"}, function(Args)
+        Settings["Thrix"].AddFunction({"unplatformstand", "unstun"}, "Unstuns your player.", function(Args)
             spawn(function()
                 LocalPlayer.Character.Humanoid.PlatformStand = false
             end)
         end)
 
-        Settings["Thrix"].AddFunction({"freeze", "fr"}, function(Args)
+        Settings["Thrix"].AddFunction({"freeze", "fr"}, "Freezes your player in place.", function(Args)
             spawn(function()
                 LocalPlayer.Character.HumanoidRootPart.Anchored = true
             end)
         end)
 
-        Settings["Thrix"].AddFunction({"unfreeze", "unfr"}, function(Args)
+        Settings["Thrix"].AddFunction({"unfreeze", "unfr"}, "Unfreezes your player in place.", function(Args)
             spawn(function()
                 LocalPlayer.Character.HumanoidRootPart.Anchored = false
             end)
         end)
 
-        Settings["Thrix"].AddFunction({"serverhop", "sh"}, function(Args)
+        Settings["Thrix"].AddFunction({"serverhop", "sh"}, "Teleports you to a different server.", function(Args)
             spawn(function()
                 for i, v in pairs(game.HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
                     if v.playing < v.maxPlayers then
@@ -405,7 +406,7 @@ local function main()
             end)
         end)
 
-        Settings["Thrix"].AddFunction({"sync", "syncanim"}, function(Args)
+        Settings["Thrix"].AddFunction({"sync", "syncanim"}, "Synchronizes your current animation with another players.", function(Args)
             spawn(function()
                 for _,v in next, GetPlayer(Args[2]).Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
                     for _,v2 in next, LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
@@ -422,14 +423,14 @@ local function main()
             end)
         end
         
-        Settings["Thrix"].AddFunction({"setwaypoint", "setwp"}, function(Args)
+        Settings["Thrix"].AddFunction({"setwaypoint", "setwp"}, "Creates a waypoint at your current location.", function(Args)
             spawn(function()
                 Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] = tostring(LocalPlayer.Character.HumanoidRootPart.CFrame)
                 writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
             end)
         end)
         
-        Settings["Thrix"].AddFunction({"deletewaypoint", "delwp"}, function(Args)
+        Settings["Thrix"].AddFunction({"deletewaypoint", "delwp"}, "Deletes the selected waypoint.", function(Args)
             spawn(function()
                 if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
                     Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] = nil
@@ -441,7 +442,7 @@ local function main()
             end)
         end)
 
-        Settings["Thrix"].AddFunction({"waypoint", "wp"}, function(Args)
+        Settings["Thrix"].AddFunction({"waypoint", "wp"}, "Teleports you to the selected waypoint.", function(Args)
             spawn(function()
                 if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
                     loadstring("game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(" .. Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] .. ")")()
@@ -451,7 +452,7 @@ local function main()
             end)
         end)
         
-        Settings["Thrix"].AddFunction({"firecd", "fireclickdetectors"}, function(Args)
+        Settings["Thrix"].AddFunction({"firecd", "fireclickdetectors"}, "Fires all click detectors in the workspace.", function(Args)
             spawn(function()
                 for _,v in pairs(workspace:GetDescendants()) do
             		if v:IsA("ClickDetector") then
@@ -461,7 +462,7 @@ local function main()
     	    end)
         end)
         
-        Settings["Thrix"].AddFunction({"firetouch", "firetouchinterests"}, function(Args)
+        Settings["Thrix"].AddFunction({"firetouch", "firetouchinterests"}, "Fires all touch interests in the workspace.", function(Args)
             spawn(function()
                 for _,v in pairs(workspace:GetDescendants()) do
             		if v:IsA("TouchTransmitter") then
@@ -472,7 +473,7 @@ local function main()
         	end)
         end)
         
-        Settings["Thrix"].AddFunction({"fireprox", "fireproximityprompts"}, function(Args)
+        Settings["Thrix"].AddFunction({"fireprox", "fireproximityprompts"}, "Fires all proximity prompts in the workspace.", function(Args)
             spawn(function()
                 for _,v in pairs(workspace:GetDescendants()) do
             		if v:IsA("ProximityPrompt") then
@@ -482,7 +483,7 @@ local function main()
     	    end)
         end)
         
-        Settings["Thrix"].AddFunction({"reset", "re"}, function(Args)
+        Settings["Thrix"].AddFunction({"reset", "re"}, "Resets your player.", function(Args)
             spawn(function()
                 local Position = LocalPlayer.Character.HumanoidRootPart.CFrame
                 if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then 
@@ -498,13 +499,13 @@ local function main()
             end)
         end)
         
-        Settings["Thrix"].AddFunction({"rejoin", "rj"}, function(Args)
+        Settings["Thrix"].AddFunction({"rejoin", "rj"}, "Makes your player rejoin.", function(Args)
             spawn(function()
                 game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
             end)
         end)
         
-        Settings["Thrix"].AddFunction("posrj", function(Args)
+        Settings["Thrix"].AddFunction("posrj", "Makes your player rejoin and teleport to your current position.", function(Args)
             spawn(function()
                 local queue_on_teleport = queue_on_teleport or syn.queue_on_teleport
                 queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer repeat wait() until game:GetService('Players').LocalPlayer.Character repeat wait() until game:GetService('Players').LocalPlayer.Character.HumanoidRootPart wait() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(" .. tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame) .. ")")
@@ -512,7 +513,7 @@ local function main()
             end)
         end)
         
-        Settings["Thrix"].AddFunction("report", function(Args)
+        Settings["Thrix"].AddFunction("report", "Reports the chosen player the chosen amount of times.", function(Args)
             spawn(function()
                 local Player = GetPlayer(Args[2])
                 local Amount = Args[3]
@@ -538,29 +539,13 @@ local function main()
             end)
         end)
         
-        Settings["Thrix"].AddFunction("prefix", function(Args)
+        Settings["Thrix"].AddFunction("prefix", "Sets your command prefix.", function(Args)
             spawn(function()
                 Settings["Thrix"]["Settings"]["Prefix"] = Args[2]
                 
                 writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
             end)
         end)
-        
-        for _,File in next, listfiles("Thrixmin/Plugins") do
-            if isfile(File) then
-                for _,Command in next, loadstring(readfile(File))() do
-                    Settings["Thrix"].AddFunction(Command[1], function(Args)
-                        spawn(function()
-                            Command[2](Args)
-                        end)
-                    end)
-                    if type(Command[1]) == "string" then
-                        Command[1] = {Command[1]}
-                    end
-                    print(string.format("Added command \"%s\" from plugin \"%s\".", Command[1][1], File:split("\\")[#File:split("\\")]))
-                end
-            end
-        end
         
         local Chatted = LocalPlayer.Chatted:Connect(function(Message)
             local Args = string.split(Message, " ")
@@ -571,13 +556,28 @@ local function main()
         	end)
         end)
         
-        Settings["Thrix"].AddFunction({"end", "quit"}, function(Args)
+        Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
             spawn(function()
                 Chatted:Disconnect()
                 getgenv().Thrixmin = false
                 print("Quit Thrixtle admin.")
             end)
         end)
+        
+        for _,File in next, listfiles("Thrixmin/Plugins") do
+            if isfile(File) then
+                for _,Command in next, loadstring(readfile(File))() do
+                    if type(Command[1]) == "string" then
+                        Command[1] = {Command[1]}
+                    end
+                    Settings["Thrix"].AddFunction(Command[1], Command[2], function(Args)
+                        spawn(function()
+                            Command[3](Args)
+                        end)
+                    end)
+                end
+            end
+        end
     end)
     
     if not Source then
