@@ -1,0 +1,2 @@
+# Thrixmin
+Open sourced admin
