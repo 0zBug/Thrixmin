@@ -11,6 +11,8 @@
 if Thrixmin then
     warn("Thrixmin has already been ran!")
     return
+else
+    getgenv().Thrixmin = true
 end
 
 --[[
@@ -32,7 +34,7 @@ end
         • posrj - Makes your player rejoin and teleport to your current position (Ex: "-posrj")
         • goto - Teleports your player to the selected player. (Ex: "-goto player", Aliases: "tp")
         • gameteleport - Teleports you to the selected game. (Ex: "-gameteleport 5100950559", Aliases: "gametp")
-        • report - Reports the chosen player a chosen amount of times. (Ex: "-report player 100")
+        • report - Reports the chosen player a chosen amount of times. (Ex: "-report playername 100")
         • waypoint - Teleports you to the selected waypoint. (Ex: "-towaypoint waypoint", Aliases: "wp")
         • setwaypoint - Creates a waypoint at your current location. (Ex: "-setwaypoint waypoint", Aliases: "setwp")
         • deletewaypoint - Deletes the selected waypoint. (Ex: "-deletewaypoint waypoint", Aliases: "delwp")
@@ -51,10 +53,10 @@ end
         • freeze - Freezes your player in place. (Ex: "-freeze", Aliases: "fr")
         • unfreeze - Unfreezes your player in place. (Ex: "-unfreeze", Aliases: "unfr")
         • timeofday - Sets the time to the selected time. (Ex: "-timeofday 0", Aliases: "time")
-        • ruinreplication - Breaks the selected players net causing the to repeatedly fall. (Ex: "-ruinreplication player", Aliases: "breaknet")
+        • end - Stops the admin from running. (Ex: "-end", Aliases: "quit")
         • Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
         • Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
-	• Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
+        • Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
 ]]--
 
 --[[
@@ -69,7 +71,7 @@ end
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.1.6",
+        ["Version"] = "v1.1.7",
         ["Developer"] = "Bug#3680",
     },
     ["Debug"] = true,
@@ -560,7 +562,7 @@ local function main()
             end
         end
         
-        LocalPlayer.Chatted:Connect(function(Message)
+        local Chatted = LocalPlayer.Chatted:Connect(function(Message)
             local Args = string.split(Message, " ")
             table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
                 if string.lower(Args[1]) == string.lower(Settings["Thrix"]["Settings"]["Prefix"] .. Command) then
@@ -569,7 +571,13 @@ local function main()
         	end)
         end)
         
-        getgenv().Thrixmin = true
+        Settings["Thrix"].AddFunction({"end", "quit"}, function(Args)
+            spawn(function()
+                Chatted:Disconnect()
+                getgenv().Thrixmin = false
+                print("Quit Thrixtle admin.")
+            end)
+        end)
     end)
     
     if not Source then
