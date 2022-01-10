@@ -270,7 +270,7 @@ Settings["Thrix"]["BuildFunctionOutput"] = function()
     return Output
 end
     
-Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec)
+Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec, PluginName)
     local FuncOutput = Settings["Thrix"]["BuildFunctionOutput"]()
     if type(FuncNames) == "string" then
         FuncNames = {FuncNames}
@@ -288,7 +288,8 @@ Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec)
             end
         end
         
-        local CommandDocs = string.format("• %s - %s ", FuncNames[1], FuncDesc)
+        local PluginName = PluginName or "main"
+        local CommandDocs = string.format("Imported %s from %s - %s ", FuncNames[1], PluginName, FuncDesc)
         if #FuncNames > 1 then
             table.remove(FuncNames, 1)
             CommandDocs = CommandDocs .. "(Aliases: \"" .. table.concat(FuncNames, "\", \"") .. "\")"
@@ -584,6 +585,52 @@ local function main()
             end)
         end)
         
+        Settings["Thrix"].AddFunction({"install", "installplugin"}, "Installs the chosen plugin.", function(Args)
+            spawn(function()
+                local Success, Error = pcall(function() game:HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
+
+                if not Success then
+                    warn("Plugin not found.")
+                    return
+                else
+                    local Files = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
+                    
+                    for i,v in next, Files do
+                        writefile("Thrixmin/Plugins/" .. v, game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v))
+                        print(string.format("Installed %s from plugin: %s", v, Args[2]))
+                        for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
+                            if type(Command[1]) == "string" then
+                                Command[1] = {Command[1]}
+                            end
+                            Settings["Thrix"].AddFunction(Command[1], Command[2], function(Args)
+                                spawn(function()
+                                    Command[3](Args)
+                                end)
+                            end, Args[2])
+                        end
+                    end
+                end
+            end)
+        end)
+        
+        Settings["Thrix"].AddFunction({"uninstall", "uninstallplugin"}, "Uninstalls the chosen plugin.", function(Args)
+            spawn(function()
+                local Success, Error = pcall(function() game:HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
+
+                if not Success then
+                    warn("Plugin not found.")
+                    return
+                else
+                    local Files = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
+                    
+                    for i,v in next, Files do
+                        delfile("Thrixmin/Plugins/" .. v)
+                        print(string.format("Deleted %s from plugin: %s", v, Args[2]))
+                    end
+                end
+            end)
+        end)
+        
         for _,File in next, listfiles("Thrixmin/Plugins") do
             if isfile(File) then
                 for _,Command in next, loadstring(readfile(File))() do
@@ -594,7 +641,7 @@ local function main()
                         spawn(function()
                             Command[3](Args)
                         end)
-                    end)
+                    end, string.split(string.split(File, "\\")[#string.split(File, "\\")], ".")[1])
                 end
             end
         end
