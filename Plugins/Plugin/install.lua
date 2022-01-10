@@ -1,3 +1,3 @@
 return {
-  "main.lua"
+  "print.lua"
 }
