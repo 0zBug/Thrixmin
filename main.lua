@@ -311,6 +311,8 @@ end
         
 local function main()
     print("\n" .. ASCII(Settings["Info"]["Name"], "standard") .. "\n" .. ASCII(Settings["Info"]["Version"]:gsub("%.", " . "):gsub("v", "v "), "small"))
+    print(string.format("Prefix - \"%s\"", Settings["Thrix"]["Settings"]["Prefix"]))
+    
     local Source, Error = pcall(function()
         Settings["Thrix"].AddFunction({"goto", "tp"}, "Teleports your player to the selected player.", function(Args)
             spawn(function()
@@ -553,6 +555,7 @@ local function main()
                 Settings["Thrix"]["Settings"]["Prefix"] = Args[2]
                 
                 writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
+                print(string.format("Set command prefix to \"%s\".", Args[2]))
             end)
         end)
 
