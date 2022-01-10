@@ -323,7 +323,7 @@ local function main()
             end)
         end)
         
-        Settings["Thrix"].AddFunction({"ruinreplication", "breaknet"}, "Breaks the selected players net causing them to repeatedly fall.", function(Args)
+        Settings["Thrix"].AddFunction({"ruinreplication", "breaknet"}, "Breaks the selected players net.", function(Args)
             spawn(function()
                 for _,v in next, GetPlayer(Args[2]).Character:GetDescendants() do
                     if v:IsA("Part") or v:IsA("BasePart") then
@@ -466,7 +466,7 @@ local function main()
             end)
         end)
         
-        Settings["Thrix"].AddFunction({"firecd", "fireclickdetectors"}, "Fires all click detectors in the workspace.", function(Args)
+        Settings["Thrix"].AddFunction({"firecd", "fireclickdetectors"}, "Fires all clickdetectors in the workspace.", function(Args)
             spawn(function()
                 for _,v in pairs(workspace:GetDescendants()) do
             		if v:IsA("ClickDetector") then
@@ -476,7 +476,7 @@ local function main()
     	    end)
         end)
         
-        Settings["Thrix"].AddFunction({"firetouch", "firetouchinterests"}, "Fires all touch interests in the workspace.", function(Args)
+        Settings["Thrix"].AddFunction({"firetouch", "firetouchinterests"}, "Fires all touchinterests in the workspace.", function(Args)
             spawn(function()
                 for _,v in pairs(workspace:GetDescendants()) do
             		if v:IsA("TouchTransmitter") then
@@ -487,7 +487,7 @@ local function main()
         	end)
         end)
         
-        Settings["Thrix"].AddFunction({"fireprox", "fireproximityprompts"}, "Fires all proximity prompts in the workspace.", function(Args)
+        Settings["Thrix"].AddFunction({"fireprox", "fireproximityprompts"}, "Fires all proximityprompts in the workspace.", function(Args)
             spawn(function()
                 for _,v in pairs(workspace:GetDescendants()) do
             		if v:IsA("ProximityPrompt") then
