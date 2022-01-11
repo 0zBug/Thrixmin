@@ -71,7 +71,7 @@ end
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.1.9",
+        ["Version"] = "v1.2.0",
         ["Developer"] = "Bug#3680",
     },
     ["Debug"] = true,
@@ -294,9 +294,9 @@ Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec, Plugi
             table.remove(FuncNames, 1)
             CommandDocs = CommandDocs .. "(Aliases: \"" .. table.concat(FuncNames, "\", \"") .. "\")"
         end
-        
+
         print(CommandDocs)
-    
+
         return FuncOutput
     else
         return FunctionOutput
@@ -596,7 +596,7 @@ local function main()
                     local Files = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
                     
                     for i,v in next, Files do
-                        writefile("Thrixmin/Plugins/" .. v, game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v))
+                        writefile("Thrixmin/Plugins/" .. v, game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v:gsub(" ", "%%20")))
                         print(string.format("Installed %s from plugin: %s", v, Args[2]))
                         for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
                             if type(Command[1]) == "string" then
