@@ -1,2 +1,2 @@
-# Thrixmin
-Open sourced admin
+# Thrixmin Admin
+Open sourced and free to use with credit.
