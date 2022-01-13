@@ -54,9 +54,11 @@ end
         • unfreeze - Unfreezes your player in place. (Ex: "-unfreeze", Aliases: "unfr")
         • timeofday - Sets the time to the selected time. (Ex: "-timeofday 0", Aliases: "time")
         • end - Stops the admin from running. (Ex: "-end", Aliases: "quit")
+        • install - Installs the selected plugin from github. (Ex: "-install Plguin", Aliases: "installplugin")
+        • uninstall - Uninstalls the selected plugin from github. (Ex: "-install Plguin", Aliases: "uninstallplugin")
         • Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
-        • Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
-        • Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
+	• Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
+	• Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
 ]]--
 
 --[[
