@@ -1,6 +1,6 @@
 
 return {
-    {"Outfit", "Test", function(Args)
+    {"Outfit", "Removes your hats then adds the selected players hats.", function(Args)
         spawn(function()
               local ghcmd = "-gh "
         
