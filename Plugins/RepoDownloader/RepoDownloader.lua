@@ -5,6 +5,6 @@ return {
     {{"downloadrepo", "git", "repo"}, function(Args)
         spawn(function()
             DownloadRepo(Args[2])
-        end
+        end)
     end}
 }
