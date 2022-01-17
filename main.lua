@@ -545,6 +545,12 @@ local function main()
                 end
             end)
         end)
+			
+	Settings["Thrix"].AddFunction({"load", "exec"}, "Runs the chosen file.", function(Args)
+            spawn(function()
+		loadstring(readfile(Args[2]))()
+            end)
+        end)
         
         Settings["Thrix"].AddFunction("prefix", "Sets your command prefix.", function(Args)
             spawn(function()
