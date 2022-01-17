@@ -189,8 +189,6 @@ local StarterGear = Players.LocalPlayer.StarterGear
 local PlayerScripts = Players.LocalPlayer.PlayerScripts
 
 local Mouse = LocalPlayer:GetMouse()
-local Humanoid = Character.Humanoid
-local HumanoidRootPart = Character.HumanoidRootPart
 
 local oprint = print
 local owarn = warn
