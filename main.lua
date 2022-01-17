@@ -552,6 +552,12 @@ local function main()
             end)
         end)
         
+	Settings["Thrix"].AddFunction({"delete", "del", "delfile"}, "Deletes the chosen file.", function(Args)
+            spawn(function()
+		delfile(Args[2]))
+            end)
+        end)
+	
         Settings["Thrix"].AddFunction("prefix", "Sets your command prefix.", function(Args)
             spawn(function()
                 Settings["Thrix"]["Settings"]["Prefix"] = Args[2]
