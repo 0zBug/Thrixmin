@@ -548,13 +548,25 @@ local function main()
 			
 	    Settings["Thrix"].AddFunction({"load", "exec"}, "Runs the chosen file.", function(Args)
             spawn(function()
-		        loadstring(readfile(Args[2]))()
+                if isfile(Args[2]) then
+		            loadstring(readfile(Args[2]))()
+                else
+                    print("404: File not found.")
+                end
             end)
         end)
         
 	    Settings["Thrix"].AddFunction({"delete", "del", "delfile"}, "Deletes the chosen file.", function(Args)
             spawn(function()
-		        delfile(Args[2])
+                if isfolder(Args[2]) then
+                    delfolder(Args[2])
+                    print("Deleted folder: " .. Args[2])
+                elseif isfile(Args[2]) then
+		            delfile(Args[2])
+		            print("Deleted folder: " .. Args[2])
+		        else 
+		            print("404: File not found.")
+		        end
             end)
         end)
 	
