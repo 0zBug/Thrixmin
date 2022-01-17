@@ -194,7 +194,6 @@ local HumanoidRootPart = Character.HumanoidRootPart
 
 local oprint = print
 local owarn = warn
-local oerror = error
 
 local queue_on_teleport = queue_on_teleport or syn.queue_on_teleport
 
@@ -220,14 +219,6 @@ local function warn(...)
         return false
     else
         owarn(...)
-    end
-end
-
-local function error(...)
-    if not Settings.Debug then
-        return false
-    else
-        oerror(...)
     end
 end
 
