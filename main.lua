@@ -561,7 +561,7 @@ local function main()
                     print("Deleted folder: " .. Args[2])
                 elseif isfile(Args[2]) then
 		            delfile(Args[2])
-		            print("Deleted folder: " .. Args[2])
+		            print("Deleted file: " .. Args[2])
 		        else 
 		            print("404: File not found.")
 		        end
