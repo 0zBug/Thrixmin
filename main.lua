@@ -73,7 +73,7 @@ end
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.2.2",
+        ["Version"] = "v1.2.3",
         ["Developer"] = "Bug#3680",
     },
     ["Debug"] = true,
@@ -583,20 +583,41 @@ local function main()
             end)
         end)
 
-        local Chatted = LocalPlayer.Chatted:Connect(function(Message)
-            local Args = string.split(Message, " ")
-            table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
-                if string.lower(Args[1]) == string.lower(Settings["Thrix"]["Settings"]["Prefix"] .. Command) then
-        			Settings["Thrix"]["Functions"][Command]:Execute(Args)
-        		end
-        	end)
-        end)
+        local DisableChat = true
+
+        local gt = getrawmetatable(game)
+        setreadonly(gt, false)
+        local f = gt.__namecall
+        
+        gt.__namecall = function(t, ...)
+            if getnamecallmethod() == "FireServer" and tostring(t) == "SayMessageRequest" then
+                local Args = (({...})[1]):split(" ")
+                if string.sub(Args[1], 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
+                    return table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
+                        if string.lower(Args[1]) == string.lower(Settings["Thrix"]["Settings"]["Prefix"] .. Command) then
+                            Settings["Thrix"]["Functions"][Command]:Execute(Args)
+                            if DisableChat then
+                                return
+                    		end
+                    	end
+                    end)
+                end
+            end
+            
+            return f(t, ...)
+        end
         
         Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
             spawn(function()
-                Chatted:Disconnect()
+                gt.__namecall = f
                 getgenv().Thrixmin = false
                 print("Quit Thrixtle admin.")
+            end)
+        end)
+        
+        Settings["Thrix"].AddFunction("togglechat", "Toggles the chat hook that stops commands from chatting.", function(Args)
+            spawn(function()
+                DisableChat = not DisableChat
             end)
         end)
         
