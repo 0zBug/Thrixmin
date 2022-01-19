@@ -73,7 +73,7 @@ end
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.2.2",
+        ["Version"] = "v1.2.3",
         ["Developer"] = "Bug#1024",
     },
     ["Debug"] = true,
@@ -544,7 +544,7 @@ local function main()
             end)
         end)
 			
-	    Settings["Thrix"].AddFunction({"load", "exec"}, "Runs the chosen file.", function(Args)
+	Settings["Thrix"].AddFunction({"load", "exec"}, "Runs the chosen file.", function(Args)
             spawn(function()
                 if isfile(Args[2]) then
 		            loadstring(readfile(Args[2]))()
@@ -554,17 +554,17 @@ local function main()
             end)
         end)
         
-	    Settings["Thrix"].AddFunction({"delete", "del", "delfile"}, "Deletes the chosen file.", function(Args)
+	Settings["Thrix"].AddFunction({"delete", "del", "delfile"}, "Deletes the chosen file.", function(Args)
             spawn(function()
                 if isfolder(Args[2]) then
                     delfolder(Args[2])
                     print("Deleted folder: " .. Args[2])
                 elseif isfile(Args[2]) then
-		            delfile(Args[2])
-		            print("Deleted file: " .. Args[2])
-		        else 
-		            print("404: File not found.")
-		        end
+		    delfile(Args[2])
+		    print("Deleted file: " .. Args[2])
+		else 
+		    print("404: File not found.")
+		end
             end)
         end)
 	
