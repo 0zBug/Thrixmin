@@ -73,7 +73,7 @@ end
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.2.3",
+        ["Version"] = "v1.2.2",
         ["Developer"] = "Bug#3680",
     },
     ["Debug"] = true,
@@ -583,8 +583,6 @@ local function main()
             end)
         end)
 
-        local DisableChat = true
-
         local gt = getrawmetatable(game)
         setreadonly(gt, false)
         local f = gt.__namecall
@@ -596,9 +594,7 @@ local function main()
                     return table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
                         if string.lower(Args[1]) == string.lower(Settings["Thrix"]["Settings"]["Prefix"] .. Command) then
                             Settings["Thrix"]["Functions"][Command]:Execute(Args)
-                            if DisableChat then
-                                return
-                    		end
+                            return
                     	end
                     end)
                 end
@@ -614,13 +610,7 @@ local function main()
                 print("Quit Thrixtle admin.")
             end)
         end)
-        
-        Settings["Thrix"].AddFunction("togglechat", "Toggles the chat hook that stops commands from chatting.", function(Args)
-            spawn(function()
-                DisableChat = not DisableChat
-            end)
-        end)
-        
+
         Settings["Thrix"].AddFunction({"install", "installplugin"}, "Installs the chosen plugin.", function(Args)
             spawn(function()
                 local Success, Error = pcall(function() game:HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
