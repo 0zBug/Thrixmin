@@ -2,7 +2,12 @@
 local Color = Color3.fromRGB(255, 0, 255)
 local Connections = {}
 
-local Highlight = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Highlight/main/main.lua"))()
+local function HttpGet(Url)
+    local request = request or syn.request
+    return request({Url = Url, Method = "GET"}).Body
+end
+
+local Highlight = loadstring(HttpGet("https://raw.githubusercontent.com/0zBug/Highlight/main/main.lua"))()
 
 return {
     {{"esp", "chams"}, "Highlights players.", function(Args)
