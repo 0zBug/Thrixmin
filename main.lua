@@ -433,6 +433,18 @@ local function main()
             end)
         end)
 
+        Settings["Thrix"].AddFunction({"view", "spectate"}, "Spectates the chosen player.", function(Args)
+            thread(function()
+                game.Workspace.Camera.CameraSubject = GetPlayer(Args[2]).Character.Humanoid
+            end)
+        end)
+        
+        Settings["Thrix"].AddFunction({"unview", "unspectate"}, "Makes your camera go back to your player.", function(Args)
+            thread(function()
+                game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
+            end)
+        end)
+        
         if Settings["Thrix"]["Settings"]["Waypoints"] == nil then
             thread(function()
                 Settings["Thrix"]["Settings"]["Waypoints"] = {}
