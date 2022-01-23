@@ -188,8 +188,6 @@ local PlayerGui = Players.LocalPlayer.PlayerGui
 local StarterGear = Players.LocalPlayer.StarterGear
 local PlayerScripts = Players.LocalPlayer.PlayerScripts
 
-local Mouse = LocalPlayer:GetMouse()
-
 local oprint = print
 local owarn = warn
 
