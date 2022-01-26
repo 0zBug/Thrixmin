@@ -411,6 +411,106 @@ local function main()
             end)
         end)
         
+        local Flying = false
+        Settings["Thrix"].AddFunction({"vehiclefly", "vfly"}, "Makes your camera go back to your player.", function(Args)
+            thread(function()
+                if Flying then Flying = false end
+                local Speed = tonumber(Args[2]) or 1
+                if KeyDown or KeyUp then 
+            	    KeyDown:Disconnect() 
+            	    KeyUp:Disconnect() 
+            	end
+            
+            	local Controls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+            	local lControls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+                local sSpeed = 0
+                
+            	KeyDown = game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(Key)
+            		if Key:lower() == "w" then
+            			Controls.F = Speed
+            		elseif Key:lower() == "s" then
+            			Controls.B = -Speed
+            		elseif Key:lower() == "a" then
+            			Controls.L = -Speed
+            		elseif Key:lower() == "d" then
+            			Controls.R = Speed
+            		elseif Key:lower() == "e" then
+            			Controls.Q = Speed * 2
+            		elseif Key:lower() == "q" then
+            			Controls.E = -Speed * 2
+            		end
+            		pcall(function() workspace.CurrentCamera.CameraType = Enum.CameraType.Track end)
+            	end)
+            	
+            	KeyUp = game.Players.LocalPlayer:GetMouse().KeyUp:Connect(function(Key)
+            		if Key:lower() == "w" then
+            			Controls.F = 0
+            		elseif Key:lower() == "s" then
+            			Controls.B = 0
+            		elseif Key:lower() == "a" then
+            			Controls.L = 0
+            		elseif Key:lower() == "d" then
+            			Controls.R = 0
+            		elseif Key:lower() == "e" then
+            			Controls.Q = 0
+            		elseif Key:lower() == "q" then
+            			Controls.E = 0
+            		end
+            	end)
+            	
+            	Flying = true
+            	
+                local BodyGyro = Instance.new("BodyGyro")
+                local BodyVelocity = Instance.new("BodyVelocity")
+                BodyGyro.P = 9e4
+                BodyGyro.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                BodyVelocity.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                BodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+                BodyGyro.CFrame = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame
+                BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+                BodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+                
+                while Flying and wait() do
+                    if Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0 then
+                        sSpeed = 50
+                    elseif not (Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0) and SPEED ~= 0 then
+                        sSpeed = 0
+                    end
+                    if (Controls.L + Controls.R) ~= 0 or (Controls.F + Controls.B) ~= 0 or (Controls.Q + Controls.E) ~= 0 then
+                        BodyVelocity.Velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (Controls.F + Controls.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(Controls.L + Controls.R, (Controls.F + Controls.B + Controls.Q + Controls.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * sSpeed
+                        lControls = {F = Controls.F, B = Controls.B, L = Controls.L, R = Controls.R}
+                    elseif (Controls.L + Controls.R) == 0 and (Controls.F + Controls.B) == 0 and (Controls.Q + Controls.E) == 0 and SPEED ~= 0 then
+                        BodyVelocity.Velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lControls.F + lControls.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lControls.L + lControls.R, (lControls.F + lControls.B + Controls.Q + Controls.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * sSpeed
+                    else
+                        BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+                    end
+                    BodyGyro.CFrame = workspace.CurrentCamera.CoordinateFrame
+                end
+                
+                Controls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+                lControls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+                sSpeed = 0
+                
+                BodyGyro:Destroy()
+                BodyVelocity:Destroy()
+            end)
+        end)
+        
+        Settings["Thrix"].AddFunction({"unvehiclefly", "unvfly"}, "Makes your camera go back to your player.", function(Args)
+            thread(function()
+                Flying = false
+	
+                if KeyDown or KeyUp then 
+                	KeyDown:Disconnect() 
+                    KeyUp:Disconnect() 
+            	end
+                
+                pcall(function() 
+                	workspace.CurrentCamera.CameraType = Enum.CameraType.Custom 
+                end)
+            end)
+        end)
+        
         if Settings["Thrix"]["Settings"]["Waypoints"] == nil then
             thread(function()
                 Settings["Thrix"]["Settings"]["Waypoints"] = {}
@@ -595,7 +695,7 @@ local function main()
         
         Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
             thread(function()
-                gt.__namecall = f
+                gt.__namecall = old
                 getgenv().Thrixmin = false
                 print("Quit Thrixtle admin.")
             end)
