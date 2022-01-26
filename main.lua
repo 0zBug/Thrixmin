@@ -412,7 +412,7 @@ local function main()
         end)
         
         local Flying = false
-        Settings["Thrix"].AddFunction({"vehiclefly", "vfly"}, "Makes your camera go back to your player.", function(Args)
+        Settings["Thrix"].AddFunction({"fly", "vfly", "vehiclefly"}, "Makes your player fly.", function(Args)
             thread(function()
                 if Flying then Flying = false end
                 local Speed = tonumber(Args[2]) or 1
@@ -496,7 +496,7 @@ local function main()
             end)
         end)
         
-        Settings["Thrix"].AddFunction({"unvehiclefly", "unvfly"}, "Makes your camera go back to your player.", function(Args)
+        Settings["Thrix"].AddFunction({"unfly", "unvfly", "unvehiclefly"}, "Makes your player stop flying.", function(Args)
             thread(function()
                 Flying = false
 	
