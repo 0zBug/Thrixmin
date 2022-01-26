@@ -27,38 +27,6 @@ end
         • AddFunction - Adds a function to the admin.
         • GetPlayer - Returns a player of a shortend string of the player's name.
         • swait - A wait function that is ~10 times faster than a normal wait.
-
-    ⮚ Commands
-        • prefix - Sets you command prefix. (Ex: "-prefix ;")
-        • rejoin - Makes your player rejoin. (Ex: "-rejoin", Aliases: "rj")
-        • posrj - Makes your player rejoin and teleport to your current position (Ex: "-posrj")
-        • goto - Teleports your player to the selected player. (Ex: "-goto player", Aliases: "tp")
-        • gameteleport - Teleports you to the selected game. (Ex: "-gameteleport 5100950559", Aliases: "gametp")
-        • report - Reports the chosen player a chosen amount of times. (Ex: "-report playername 100")
-        • waypoint - Teleports you to the selected waypoint. (Ex: "-towaypoint waypoint", Aliases: "wp")
-        • setwaypoint - Creates a waypoint at your current location. (Ex: "-setwaypoint waypoint", Aliases: "setwp")
-        • deletewaypoint - Deletes the selected waypoint. (Ex: "-deletewaypoint waypoint", Aliases: "delwp")
-        • walkspeed - Sets your character's walkspeed to the chosen amount. (Ex: "-walkspeed 50", Aliases: "ws")
-        • jumppower - Sets your character's jumppower to the chosen amount. (Ex: "-jumppower 500", Aliases: "jp")
-        • fireclickdetectors - Fires all click detectors in the workspace. (Ex: "-firetouchinterests", Aliases: "firecd")
-        • firetouchinterests - Fires all touch interests in the workspace. (Ex: "-firetouchinterests", Aliases: "firetouch")
-        • fireproximityprompts - Fires all proximity prompts in the workspace. (Ex: "-fireproximityprompts", Aliases: "fireprox")
-        • syncanim - Synchronizes your current animation with another players. (Ex: "-syncanim playername", Aliases: "sync")
-        • gravity - Sets the workspace's gravity to the chosen amount. (Ex: "-gravity 10", Aliases: "grav")
-        • hipheight - Sets you hip height to the chosen amount. (Ex: "-hipheight 10", Aliases: "height")
-        • sit - Makes your player sit down. (Ex: "-sit")
-        • unsit - Makes your player stand up. (Ex: "-unsit")
-        • platformstand - Stuns your player. (Ex: "-platformstand", Aliases: "stun")
-        • unplatformstand - Unstuns your player. (Ex: "-unplatformstand", Aliases: "unstun")
-        • freeze - Freezes your player in place. (Ex: "-freeze", Aliases: "fr")
-        • unfreeze - Unfreezes your player in place. (Ex: "-unfreeze", Aliases: "unfr")
-        • timeofday - Sets the time to the selected time. (Ex: "-timeofday 0", Aliases: "time")
-        • end - Stops the admin from running. (Ex: "-end", Aliases: "quit")
-        • install - Installs the selected plugin from github. (Ex: "-install Plugin", Aliases: "installplugin")
-        • uninstall - Uninstalls the selected plugin from github. (Ex: "-install Plugin", Aliases: "uninstallplugin")
-        • Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
-	• Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
-	• Command - [Command Description] (Ex: "-Command Example", Aliases: "Aliases")
 ]]--
 
 --[[
