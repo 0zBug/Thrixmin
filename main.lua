@@ -419,7 +419,11 @@ local function main()
                 if KeyDown or KeyUp then 
             	    KeyDown:Disconnect() 
             	    KeyUp:Disconnect() 
-            	end
+                end
+        	
+        	    if string.lower(Args[1]) == "-fly" then
+                    game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = true
+                end
             
             	local Controls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
             	local lControls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
@@ -499,7 +503,8 @@ local function main()
         Settings["Thrix"].AddFunction({"unfly", "unvfly", "unvehiclefly"}, "Makes your player stop flying.", function(Args)
             thread(function()
                 Flying = false
-	
+                game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = false
+            
                 if KeyDown or KeyUp then 
                 	KeyDown:Disconnect() 
                     KeyUp:Disconnect() 
