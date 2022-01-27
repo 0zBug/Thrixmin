@@ -374,6 +374,32 @@ local function main()
             end)
         end)
         
+        local Noclip
+        local Clip = true
+        Settings["Thrix"].AddFunction("noclip", "Noclips your character.", function(Args)
+            thread(function()
+                Clip = false
+                Noclip = game:GetService("RunService").RenderStepped:Connect(function()
+                    if Clip == false and game:GetService("Players").LocalPlayer.Character then
+                        for i, v in pairs(game:GetService("Players").LocalPlayer.Character:GetDescendants()) do
+                        	if v:IsA("BasePart") and v.CanCollide == true then
+                        		v.CanCollide = false
+                        	end
+                        end
+                    end
+                end)
+            end)
+        end)
+
+        Settings["Thrix"].AddFunction("clip", "Clips your character.", function(Args)
+            thread(function()
+                if Noclip then
+                    Noclip:Disconnect()
+                end
+                Clip = true
+            end)
+        end)
+        
         Settings["Thrix"].AddFunction({"serverhop", "sh"}, "Teleports you to a different server.", function(Args)
             thread(function()
                 for i, v in pairs(game.HttpService:JSONDecode(HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
