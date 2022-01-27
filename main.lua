@@ -11,8 +11,6 @@
 if Thrixmin then
     warn("Thrixmin has already been ran!")
     return
-else
-    getgenv().Thrixmin = true
 end
 
 --[[
@@ -677,36 +675,8 @@ local function main()
                 game:Shutdown()
             end)
         end)
-
-        local gt = getrawmetatable(game)
-        setreadonly(gt, false)
-        local old = gt.__namecall
-        
-        gt.__namecall = function(t, ...)
-            if getnamecallmethod() == "FireServer" and tostring(t) == "SayMessageRequest" then
-                local Args = (({...})[1]):split(" ")
-                if string.sub(Args[1], 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
-                    return table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
-                        if string.lower(Args[1]) == string.lower(Settings["Thrix"]["Settings"]["Prefix"] .. Command) then
-                            Settings["Thrix"]["Functions"][Command]:Execute(Args)
-                            return
-                    	end
-                    end)
-                end
-            end
-            
-            return old(t, ...)
-        end
-        
-        Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
-            thread(function()
-                gt.__namecall = old
-                getgenv().Thrixmin = false
-                print("Quit Thrixtle admin.")
-            end)
-        end)
-
-        Settings["Thrix"].AddFunction({"install", "installplugin"}, "Installs the chosen plugin.", function(Args)
+			
+	Settings["Thrix"].AddFunction({"install", "installplugin"}, "Installs the chosen plugin.", function(Args)
             thread(function()
                 local Success, Error = pcall(function() HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
 
@@ -751,7 +721,35 @@ local function main()
                 end
             end)
         end)
+
+        local gt = getrawmetatable(game)
+        setreadonly(gt, false)
+        local old = gt.__namecall
         
+        gt.__namecall = function(t, ...)
+            if getnamecallmethod() == "FireServer" and tostring(t) == "SayMessageRequest" then
+                local Args = (({...})[1]):split(" ")
+                if string.sub(Args[1], 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
+                    return table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
+                        if string.lower(Args[1]) == string.lower(Settings["Thrix"]["Settings"]["Prefix"] .. Command) then
+                            Settings["Thrix"]["Functions"][Command]:Execute(Args)
+                            return
+                    	end
+                    end)
+                end
+            end
+            
+            return old(t, ...)
+        end
+        
+        Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
+            thread(function()
+                gt.__namecall = old
+                getgenv().Thrixmin = false
+                print("Quit Thrixtle admin.")
+            end)
+        end)
+			
         for _,File in next, listfiles("Thrixmin/Plugins") do
             if isfile(File) then
                 for _,Command in next, loadstring(readfile(File))() do
@@ -766,6 +764,8 @@ local function main()
                 end
             end
         end
+	
+	getgenv().Thrixmin = true
     end)
     
     if not Source then
