@@ -159,7 +159,8 @@ local owarn = warn
 
 local queue_on_teleport = queue_on_teleport or syn.queue_on_teleport
 
-local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+ScreenGui.ResetOnSpawn = false
 
 local Frame = Instance.new("Frame", ScreenGui)
 Frame.AnchorPoint = Vector2.new(0.5, 0.5)
