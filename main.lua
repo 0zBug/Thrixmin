@@ -197,7 +197,7 @@ game:GetService("RunService").Stepped:Connect(function()
 end)
         
 local function swait(t)
-	local t = (type(t) ~= "number" or t < 0) and 0 or t
+    local t = (type(t) ~= "number" or t < 0) and 0 or t
     table.insert(y, {os.clock(), t, coroutine.running()})
     return coroutine.yield()
 end
