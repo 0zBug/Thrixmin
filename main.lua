@@ -39,7 +39,7 @@ end
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.2.6",
+        ["Version"] = "v1.2.7",
         ["Developer"] = "Bug#1024",
     },
     ["Debug"] = true,
