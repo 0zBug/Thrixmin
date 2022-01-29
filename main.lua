@@ -148,11 +148,6 @@ local SolidModelContentProvider = game:GetService("SolidModelContentProvider")
 local NonReplicatedCSGDictionaryService = game:GetService("NonReplicatedCSGDictionaryService")
 
 local LocalPlayer = Players.LocalPlayer
-local Character = Players.LocalPlayer.Character
-local BackPack = Players.LocalPlayer.Backpack
-local PlayerGui = Players.LocalPlayer.PlayerGui
-local StarterGear = Players.LocalPlayer.StarterGear
-local PlayerScripts = Players.LocalPlayer.PlayerScripts
 
 local oprint = print
 local owarn = warn
