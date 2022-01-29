@@ -64,10 +64,19 @@ else
     if not isfolder("Thrixmin") then
         makefolder("Thrixmin")
     end
-    if not isfolder("Thrixmin/Plugins") then
-        makefolder("Thrixmin/Plugins")
-    end
     writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
+end
+
+if not isfolder("Thrixmin/Plugins") then
+    makefolder("Thrixmin/Plugins")
+end
+
+if not isfolder("Thrixmin/Assets") then
+    makefolder("Thrixmin/Assets")
+end
+
+if not isfile("Thrixmin/Assets/Logo.png") then
+    writefile("Thrixmin/Assets/Logo.png", game:HttpGet("https://i.ibb.co/2M1MpTY/Thrixmin.png"))
 end
 
 --[[
@@ -155,6 +164,7 @@ local oprint = print
 local owarn = warn
 
 local queue_on_teleport = queue_on_teleport or syn.queue_on_teleport
+local getcustomasset = getcustomasset or getsynasset
 
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 ScreenGui.ResetOnSpawn = false
@@ -178,6 +188,13 @@ UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 UIStroke.Color = Color3.fromRGB(39, 39, 39)
 UIStroke.Transparency = 0.6
 UIStroke.Thickness = 1.8
+
+local ImageLabel = Instance.new("ImageLabel", Frame)
+ImageLabel.BackgroundTransparency = 1
+ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+ImageLabel.Position = UDim2.new(0.05, 0, 0.5, 0)
+ImageLabel.Size = UDim2.new(0.09, 0, 1, 0)
+ImageLabel.Image = getcustomasset("Thrixmin/Assets/Logo.png")
 
 local TextBox = Instance.new("TextBox", Frame)
 TextBox.AnchorPoint = Vector2.new(0.5, 0.5)
