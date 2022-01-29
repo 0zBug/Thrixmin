@@ -159,6 +159,39 @@ local owarn = warn
 
 local queue_on_teleport = queue_on_teleport or syn.queue_on_teleport
 
+local ScreenGui = Instance.new("ScreenGui", game.Players.LocalPlayer.PlayerGui)
+
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+Frame.Position = UDim2.new(0.5, 0, 1.3, 0)
+Frame.Size = UDim2.new(0.6, 0, 0.07, 0)
+
+local UIGradient = Instance.new("UIGradient", Frame)
+UIGradient.Rotation = -90
+UIGradient.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(39, 40, 49)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 28, 42))
+})
+
+local UICorner = Instance.new("UICorner", Frame)
+
+local UIStroke = Instance.new("UIStroke", Frame)
+UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+UIStroke.Color = Color3.fromRGB(39, 39, 39)
+UIStroke.Transparency = 0.6
+UIStroke.Thickness = 1.8
+
+local TextBox = Instance.new("TextBox", Frame)
+TextBox.AnchorPoint = Vector2.new(0.5, 0.5)
+TextBox.Position = UDim2.new(0.5, 0, 0.5, 0)
+TextBox.Size = UDim2.new(1, 0, 1, 0)
+TextBox.BackgroundTransparency = 1
+TextBox.Font = Enum.Font.Code
+TextBox.TextSize = "14"
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.Text = ""
+TextBox.PlaceholderText = "Enter Command"
+
 --[[
     ███████╗██╗   ██╗███╗   ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
     ██╔════╝██║   ██║████╗  ██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
@@ -692,6 +725,14 @@ local function main()
                 Settings["Thrix"]["Settings"]["Prefix"] = Args[2]
                 
                 writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
+                
+                ContextActionService:UnbindAction("CommandLine")
+                game:GetService("ContextActionService"):BindAction("CommandLine", function(Action, State)
+                	if Action == "CommandLine" and State == Enum.UserInputState.Begin then
+                		Frame:TweenPosition(UDim2.new(0.5, 0, 0.9, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad)
+                		TextBox:CaptureFocus()
+                	end
+                end, false, Settings["Thrix"]["Settings"]["Prefix"])
                 print(string.format("Set command prefix to \"%s\".", Args[2]))
             end)
         end)
@@ -768,6 +809,29 @@ local function main()
             return old(t, ...)
         end
         
+        game:GetService("ContextActionService"):BindAction("CommandLine", function(Action, State)
+        	if Action == "CommandLine" and State == Enum.UserInputState.Begin then
+        		Frame:TweenPosition(UDim2.new(0.5, 0, 0.9, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad)
+        		TextBox:CaptureFocus()
+        	end
+        end, false, Settings["Thrix"]["Settings"]["Prefix"])
+        
+        TextBox.FocusLost:Connect(function()
+        	wait()
+        	Frame:TweenPosition(UDim2.new(0.5, 0, 1.3, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad)
+        	local Args = TextBox.Text:split(" ")
+            if string.sub(Args[1], 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
+                table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
+                    if string.lower(Args[1]) == string.lower(Settings["Thrix"]["Settings"]["Prefix"] .. Command) then
+                        Settings["Thrix"]["Functions"][Command]:Execute(Args)
+                        return
+                    end
+                end)
+            end
+        	wait()
+        	TextBox.Text = ""
+        end)
+
         Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
             thread(function()
                 gt.__namecall = old
@@ -791,7 +855,7 @@ local function main()
             end
         end
 	
-	getgenv().Thrixmin = true
+	    getgenv().Thrixmin = true
     end)
     
     if not Source then
