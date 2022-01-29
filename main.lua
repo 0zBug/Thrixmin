@@ -206,6 +206,17 @@ TextBox.TextSize = "14"
 TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextBox.Text = ""
 TextBox.PlaceholderText = "Enter Command"
+TextBox.ZIndex = 3
+
+local AutoComplete = Instance.new("TextLabel", Frame)
+AutoComplete.AnchorPoint = Vector2.new(0.5, 0.5)
+AutoComplete.Position = UDim2.new(0.5, 0, 0.5, 0)
+AutoComplete.Size = UDim2.new(1, 0, 1, 0)
+AutoComplete.BackgroundTransparency = 1
+AutoComplete.Font = Enum.Font.Code
+AutoComplete.TextSize = "14"
+AutoComplete.TextColor3 = Color3.fromRGB(120, 120, 120)
+AutoComplete.Text = ""
 
 --[[
     ███████╗██╗   ██╗███╗   ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
@@ -847,6 +858,43 @@ local function main()
         	TextBox.Text = ""
         end)
 
+        TextBox:GetPropertyChangedSignal("Text"):Connect(function()
+            local Command = table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
+                if TextBox.Text == "" then return false end
+                if string.lower(TextBox.Text):sub(1, #TextBox.Text) == string.lower(Settings["Thrix"]["Settings"]["Prefix"] .. Command):sub(1, #TextBox.Text) then
+                    return Command
+                end
+            end)
+            
+            if Command then
+                AutoComplete.Text = string.rep(" ", #Command - #TextBox.Text + 1) .. Settings["Thrix"]["Settings"]["Prefix"] ..  Command
+            else
+                AutoComplete.Text = ""
+            end
+        end)
+        
+        game:GetService("UserInputService").InputBegan:Connect(function(Key)
+            if Key.KeyCode then
+                if Key.KeyCode == Enum.KeyCode.Tab then
+                    if TextBox.Focused then
+                        local Command = table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
+                            if TextBox.Text == "" then return false end
+                            if string.lower(TextBox.Text):sub(1, #TextBox.Text) == string.lower(Settings["Thrix"]["Settings"]["Prefix"] .. Command):sub(1, #TextBox.Text) then
+                                return Command
+                            end
+                        end)
+                        
+                        if Command then
+                            wait()
+                            TextBox.Text = Settings["Thrix"]["Settings"]["Prefix"] .. Command
+                            AutoComplete.Text = ""
+                            TextBox.CursorPosition = #TextBox.Text + 1
+                        end
+                    end
+                end
+            end
+        end)
+
         Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
             thread(function()
                 gt.__namecall = old
@@ -870,7 +918,7 @@ local function main()
             end
         end
 	
-	getgenv().Thrixmin = true
+	    getgenv().Thrixmin = true
     end)
     
     if not Source then
