@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.2.8",
+        ["Version"] = "v1.2.9",
         ["Developer"] = "Bug#1024",
     },
     ["Debug"] = true,
@@ -908,10 +908,13 @@ local function main()
             thread(function()
                 gt.__namecall = old
                 ContextActionService:UnbindAction("CommandLine")
-                ScreenGui:Destroy()
                 
                 getgenv().Thrixmin = false
                 print("Quit Thrixtle admin.")
+                
+                wait(1)
+                
+                ScreenGui:Destroy()
             end)
         end)
 			
