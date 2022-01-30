@@ -77,7 +77,7 @@ if not isfolder("Thrixmin/Assets") then
 end
 
 if not isfile("Thrixmin/Assets/Logo.png") then
-    writefile("Thrixmin/Assets/Logo.png", game:HttpGet("https://i.ibb.co/2M1MpTY/Thrixmin.png"))
+    writefile("Thrixmin/Assets/Logo.png", game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Logo.png"))
 end
 
 --[[
@@ -772,7 +772,7 @@ local function main()
 			
 	Settings["Thrix"].AddFunction({"install", "installplugin"}, "Installs the chosen plugin.", function(Args)
             thread(function()
-                local Success, Error = pcall(function() HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
+                local Success, Error = pcall(function() if Args[2] == "local" then Args[2] = game.PlaceId end HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
 
                 if not Success then
                     warn("Plugin not found.")
@@ -800,7 +800,7 @@ local function main()
         
         Settings["Thrix"].AddFunction({"uninstall", "uninstallplugin"}, "Uninstalls the chosen plugin.", function(Args)
             thread(function()
-                local Success, Error = pcall(function() HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
+                local Success, Error = pcall(function() if Args[2] == "local" then Args[2] = game.PlaceId end HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
 
                 if not Success then
                     warn("Plugin not found.")
@@ -809,6 +809,14 @@ local function main()
                     local Files = loadstring(HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
                     
                     for i,v in next, Files do
+                        for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
+                            if type(Command[1]) == "string" then
+                                Command[1] = {Command[1]}
+                            end
+                            for i,v in next, Command[1] do
+                                Settings["Thrix"]["Functions"][v] = nil
+                            end
+                        end
                         delfile("Thrixmin/Plugins/" .. v)
                         print(string.format("Deleted %s from plugin: %s", v, Args[2]))
                     end
@@ -899,6 +907,9 @@ local function main()
         Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
             thread(function()
                 gt.__namecall = old
+                ContextActionService:UnbindAction("CommandLine")
+                ScreenGui:Destroy()
+                
                 getgenv().Thrixmin = false
                 print("Quit Thrixtle admin.")
             end)
