@@ -55,7 +55,6 @@ local Settings = {
               Output = {},
               SyntaxErrors = {}
         },
-        ["Variables"] = {},
         ["Functions"] = {}
     }
 }
