@@ -8,12 +8,14 @@
        ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝
 ]]--
 
-repeat wait() until game:IsLoaded()
-
 if Thrixmin then
     warn("Thrixmin has already been ran!")
     return
+else
+    getgenv().Thrixmin = true
 end
+
+repeat wait() until game:IsLoaded()
 
 --[[
     ██████╗  ██████╗  ██████╗██╗   ██╗███╗   ███╗███████╗███╗   ██╗████████╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗
@@ -917,8 +919,6 @@ local function main()
                 end
             end
         end
-	
-	    getgenv().Thrixmin = true
     end)
     
     if not Source then
