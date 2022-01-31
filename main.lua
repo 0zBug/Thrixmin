@@ -166,6 +166,7 @@ local owarn = warn
 
 local queue_on_teleport = queue_on_teleport or syn.queue_on_teleport
 local getcustomasset = getcustomasset or getsynasset
+local request = request or syn.request
 
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 ScreenGui.ResetOnSpawn = false
@@ -277,13 +278,14 @@ local function GetPlayer(name)
 end
 
 local function HttpGet(Url)
-    local request = request or syn.request
     return request({Url = Url, Method = "GET"}).Body
 end
 
 local function thread(f)
     return spawn(function()
-        syn.set_thread_identity(7)
+        if syn then
+            syn.set_thread_identity(7)
+        end
         f()
     end)
 end
@@ -898,6 +900,26 @@ local function main()
             end)
         end)
 
+        Settings["Thrix"].AddFunction({"discord"}, "Stops the admin from running.", function(Args)
+            thread(function()
+                request({
+                	Url = 'http://127.0.0.1:6463/rpc?v=1',
+                	Method = 'POST',
+                	Headers = {
+                		['Content-Type'] = 'application/json',
+                		['Origin'] = 'https://discord.com'
+                	},
+                	Body = game:GetService('HttpService'):JSONEncode({
+                    	["cmd"] = "INVITE_BROWSER",
+                    	["args"] = {
+                    		["code"] = "32th2NqaUT"
+                    	},
+                    	["nonce"] = "Thrixmin"
+                    }),
+                })
+            end)
+        end)
+        
         Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
             thread(function()
                 gt.__namecall = old
