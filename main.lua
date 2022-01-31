@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.2.9",
+        ["Version"] = "v1.3.0",
         ["Developer"] = "Bug#1024",
     },
     ["Debug"] = true,
@@ -747,30 +747,13 @@ local function main()
             end)
         end)
 	
-        Settings["Thrix"].AddFunction("prefix", "Sets your command prefix.", function(Args)
-            thread(function()
-                Settings["Thrix"]["Settings"]["Prefix"] = Args[2]
-                
-                writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
-                
-                ContextActionService:UnbindAction("CommandLine")
-                game:GetService("ContextActionService"):BindAction("CommandLine", function(Action, State)
-                	if Action == "CommandLine" and State == Enum.UserInputState.Begin then
-                		Frame:TweenPosition(UDim2.new(0.5, 0, 0.9, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad)
-                		TextBox:CaptureFocus()
-                	end
-                end, false, Settings["Thrix"]["Settings"]["Prefix"])
-                print(string.format("Set command prefix to \"%s\".", Args[2]))
-            end)
-        end)
-        
         Settings["Thrix"].AddFunction({"exit", "close"}, "Closes your game.", function(Args)
             thread(function()
                 game:Shutdown()
             end)
         end)
 			
-	Settings["Thrix"].AddFunction({"install", "installplugin"}, "Installs the chosen plugin.", function(Args)
+	    Settings["Thrix"].AddFunction({"install", "installplugin"}, "Installs the chosen plugin.", function(Args)
             thread(function()
                 local Success, Error = pcall(function() if Args[2] == "local" then Args[2] = game.PlaceId end HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
 
@@ -844,16 +827,17 @@ local function main()
             return old(t, ...)
         end
         
-        game:GetService("ContextActionService"):BindAction("CommandLine", function(Action, State)
-        	if Action == "CommandLine" and State == Enum.UserInputState.Begin then
-        		Frame:TweenPosition(UDim2.new(0.5, 0, 0.9, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad)
-        		TextBox:CaptureFocus()
-        	end
-        end, false, Settings["Thrix"]["Settings"]["Prefix"])
+        local CommandAction
+        CommandAction = game:GetService("UserInputService").InputBegan:Connect(function(Key, Typing)
+            if game:GetService("UserInputService"):GetStringForKeyCode(Key.KeyCode) == Settings["Thrix"]["Settings"]["Prefix"] and not Typing then
+                Frame:TweenPosition(UDim2.new(0.5, 0, 0.9, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.7)
+            	TextBox:CaptureFocus()
+            end
+        end)
         
         TextBox.FocusLost:Connect(function()
         	wait()
-        	Frame:TweenPosition(UDim2.new(0.5, 0, 1.3, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad)
+        	Frame:TweenPosition(UDim2.new(0.5, 0, 1.1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5)
         	local Args = TextBox.Text:split(" ")
             if string.sub(Args[1], 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
                 table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
@@ -903,11 +887,21 @@ local function main()
                 end
             end
         end)
+        
+        Settings["Thrix"].AddFunction("prefix", "Sets your command prefix.", function(Args)
+            thread(function()
+                Settings["Thrix"]["Settings"]["Prefix"] = Args[2]
+                
+                writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
+
+                print(string.format("Set command prefix to \"%s\".", Args[2]))
+            end)
+        end)
 
         Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
             thread(function()
                 gt.__namecall = old
-                ContextActionService:UnbindAction("CommandLine")
+                CommandAction:Disconnect()
                 
                 getgenv().Thrixmin = false
                 print("Quit Thrixtle admin.")
