@@ -44,7 +44,7 @@ local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
         ["Version"] = "v1.3.0",
-        ["Developer"] = "Bug#1024",
+        ["Developer"] = "Bug#3018",
     },
     ["Debug"] = true,
     ["Thrix"] = {
