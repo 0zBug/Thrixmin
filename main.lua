@@ -767,7 +767,8 @@ local function main()
                     
                     for i,v in next, Files do
                         writefile("Thrixmin/Plugins/" .. v, HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v:gsub(" ", "%%20")))
-                        print(string.format("Installed %s from plugin: %s", v, Args[2]))
+                        repeat wait() until isfile("Thrixmin/Plugins/" .. v)
+			print(string.format("Installed %s from plugin: %s", v, Args[2]))
                         for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
                             if type(Command[1]) == "string" then
                                 Command[1] = {Command[1]}
