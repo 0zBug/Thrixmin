@@ -9,7 +9,7 @@ return {
               end
 
               for i,v in pairs(game.Players:GetCharacterAppearanceInfoAsync(Args[2]).assets) do
-                  game.Players:Chat(string.format("-gh %s", tostring(v.id))
+                  game.Players:Chat(string.format("-gh %s", tostring(v.id)))
               end
         end)
     end}
