@@ -900,7 +900,7 @@ local function main()
             end)
         end)
 
-        Settings["Thrix"].AddFunction({"discord"}, "Stops the admin from running.", function(Args)
+        Settings["Thrix"].AddFunction({"discord", "Invites you to the discord server.", function(Args)
             thread(function()
                 request({
                 	Url = 'http://127.0.0.1:6463/rpc?v=1',
