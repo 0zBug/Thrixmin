@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.3.0",
+        ["Version"] = "v1.3.1",
         ["Developer"] = "Bug#3018",
     },
     ["Debug"] = true,
@@ -267,10 +267,14 @@ local function ASCII(text, font)
     return game:HttpGet("https://artii.herokuapp.com/make?text=" .. text:gsub(" ", "+") .. "&font=" .. font)
 end
 
-local function GetPlayer(name)
-    for i,v in next, game:GetService("Players"):GetChildren() do
-        if v:IsA("Player") and string.lower(string.sub((v.Name), 1, #name)) == string.sub((string.lower(name)), 1, #name) or string.lower(string.sub((v.DisplayName), 1, #name)) == string.sub((string.lower(name)), 1, #name) then
-            return v
+local function GetPlayer(Name)
+    if string.lower(Name) == "random" then
+        return game.Players:GetPlayers()[math.random(1, #game.Players:GetPlayers())]
+    else
+        for i,v in next, game:GetService("Players"):GetChildren() do
+            if v:IsA("Player") and string.lower(string.sub((v.Name), 1, #Name)) == string.sub((string.lower(Name)), 1, #Name) or string.lower(string.sub((v.DisplayName), 1, #Name)) == string.sub((string.lower(Name)), 1, #Name) then
+                return v
+            end
         end
     end
     
@@ -373,30 +377,35 @@ local function main()
         Settings["Thrix"].AddFunction({"walkspeed", "ws"}, "Sets your character's walkspeed to the chosen amount.", function(Args)
             thread(function()
                 LocalPlayer.Character.Humanoid.WalkSpeed = Args[2] or 16
+                print(string.format("Set Walk Speed to %s.", Args[2] or 16))
             end)
         end)
         
         Settings["Thrix"].AddFunction({"jumppower", "jp"}, "Sets your character's jumppower to the chosen amount.", function(Args)
             thread(function()
                 LocalPlayer.Character.Humanoid.JumpPower = Args[2] or 50
+                print(string.format("Set Jump Power to %s.", Args[2] or 50))
             end)
         end)
 
         Settings["Thrix"].AddFunction({"hipheight", "height"}, "Sets your hip height to the chosen amount.", function(Args)
             thread(function()
                 LocalPlayer.Character.Humanoid.HipHeight = Args[2] or 2
+                print(string.format("Set Hip Height to %s.", Args[2] or 2))
             end)
         end)
         
         Settings["Thrix"].AddFunction({"gravity", "grav"}, "Sets the workspace's gravity to the chosen amount.", function(Args)
             thread(function()
                 game.Workspace.Gravity = Args[2] or 196.2
+                print(string.format("Set Gravity to %s.", Args[2] or 196.2))
             end)
         end)
 
         Settings["Thrix"].AddFunction({"timeofday", "time"}, "Sets the time to the selected time.", function(Args)
             thread(function()
                 game.Lighting.ClockTime = Args[2] or 14
+                print(string.format("Set Clock Time to %s.", Args[2] or 14))
             end)
         end)
 
@@ -479,7 +488,7 @@ local function main()
             thread(function()
                 for _,v in next, GetPlayer(Args[2]).Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
                     for _,v2 in next, LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
-                        v.TimePosition = v2.TimePosition
+                        v2.TimePosition = v.TimePosition
                     end
                 end
             end)
@@ -488,6 +497,7 @@ local function main()
         Settings["Thrix"].AddFunction({"view", "spectate"}, "Spectates the chosen player.", function(Args)
             thread(function()
                 game.Workspace.Camera.CameraSubject = GetPlayer(Args[2]).Character.Humanoid
+                print(string.format("Spectating %s.", GetPlayer(Args[2]).Name))
             end)
         end)
         
@@ -725,7 +735,7 @@ local function main()
             end)
         end)
 			
-	Settings["Thrix"].AddFunction({"load", "exec"}, "Runs the chosen file.", function(Args)
+        Settings["Thrix"].AddFunction({"load", "exec"}, "Runs the chosen file.", function(Args)
             thread(function()
                 if isfile(Args[2]) then
 		            loadstring(readfile(Args[2]))()
@@ -735,7 +745,7 @@ local function main()
             end)
         end)
         
-	Settings["Thrix"].AddFunction({"delete", "del", "delfile"}, "Deletes the chosen file.", function(Args)
+        Settings["Thrix"].AddFunction({"delete", "del", "delfile"}, "Deletes the chosen file.", function(Args)
             thread(function()
                 if isfolder(Args[2]) then
                     delfolder(Args[2])
@@ -767,7 +777,7 @@ local function main()
                     
                     for i,v in next, Files do
                         writefile("Thrixmin/Plugins/" .. v, HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v:gsub(" ", "%%20")))
-			print(string.format("Installed %s from plugin: %s", v, Args[2]))
+                        print(string.format("Installed %s from plugin: %s", v, Args[2]))
                         for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
                             if type(Command[1]) == "string" then
                                 Command[1] = {Command[1]}
@@ -900,7 +910,7 @@ local function main()
             end)
         end)
 
-        Settings["Thrix"].AddFunction({"discord", "Invites you to the discord server.", function(Args)
+        Settings["Thrix"].AddFunction({"discord"}, "Stops the admin from running.", function(Args)
             thread(function()
                 request({
                 	Url = 'http://127.0.0.1:6463/rpc?v=1',
