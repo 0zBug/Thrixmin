@@ -40,6 +40,9 @@ return {
         
         for i,v in next, Points do
             Parts[i]:Destroy()
+		    if v.Action == Enum.PathWaypointAction.Jump then
+                game.Players.LocalPlayer.Character.Humanoid.Jump = true
+            end
             game.Players.LocalPlayer.Character.Humanoid:MoveTo(v.Position)
             game.Players.LocalPlayer.Character.Humanoid.MoveToFinished:Wait()
         end
