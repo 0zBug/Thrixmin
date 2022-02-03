@@ -179,8 +179,8 @@ Frame.Size = UDim2.new(0.6, 0, 0.07, 0)
 local UIGradient = Instance.new("UIGradient", Frame)
 UIGradient.Rotation = -90
 UIGradient.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(39, 40, 49)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 28, 42))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(39, 40, 49)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 28, 42))
 })
 
 local UICorner = Instance.new("UICorner", Frame)
