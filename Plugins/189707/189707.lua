@@ -7,5 +7,10 @@ return {
             	Balloon.Parent = game:GetService("Players").LocalPlayer.Backpack
             end
         end)
+    end},
+    {{"nofalldamage", "nodamage"}, "Removes fall damage.", function(Args)
+        spawn(function()
+            game.Players.LocalPlayer.Character.FallDamageScript:Destroy()
+        end)
     end}
 }
