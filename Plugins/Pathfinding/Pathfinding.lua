@@ -2,6 +2,21 @@
 local function GetPlayer(Name)
     if string.lower(Name) == "random" then
         return game.Players:GetPlayers()[math.random(1, #game.Players:GetPlayers())]
+    elseif string.lower(Name) == "closest" then
+        local Closest
+        local Distance = math.huge
+        local HumanoidRootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
+        
+        for _, Player in ipairs(game.Players:GetPlayers()) do
+        	if Player ~= game.Players.LocalPlayer then
+        		if Player:DistanceFromCharacter(HumanoidRootPart.Position) < Distance then
+        			Closest = Player
+        			Distance = Player:DistanceFromCharacter(HumanoidRootPart.Position)
+        		end
+        	end
+        end
+        
+        return Closest
     else
         for i,v in next, game:GetService("Players"):GetChildren() do
             if v:IsA("Player") and string.lower(string.sub((v.Name), 1, #Name)) == string.sub((string.lower(Name)), 1, #Name) or string.lower(string.sub((v.DisplayName), 1, #Name)) == string.sub((string.lower(Name)), 1, #Name) then
