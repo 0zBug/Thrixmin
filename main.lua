@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.3.3",
+        ["Version"] = "v1.3.4",
         ["Developer"] = "Bug#3018",
     },
     ["Debug"] = true,
@@ -923,26 +923,26 @@ local function main()
                 end
             end)
         end)
-
+        
         local gt = getrawmetatable(game)
         setreadonly(gt, false)
         local old = gt.__namecall
         
-        gt.__namecall = function(t, ...)
-            if getnamecallmethod() == "FireServer" and tostring(t) == "SayMessageRequest" then
+        gt.__namecall = newcclosure(function(self, ...)
+            if getnamecallmethod()== "FireServer" and tostring(self) == "SayMessageRequest" then
                 local Args = (({...})[1]):split(" ")
                 if string.sub(Args[1], 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
-                    return table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
+                    return old(table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
                         if string.lower(Args[1]) == string.lower(Settings["Thrix"]["Settings"]["Prefix"] .. Command) then
                             Settings["Thrix"]["Functions"][Command]:Execute(Args)
-                            return
-                    	end
-                    end)
+                            return self, ""
+                        end
+                    end))
                 end
             end
             
-            return old(t, ...)
-        end
+            return old(self, ...)
+        end)
         
         local CommandAction
         CommandAction = game:GetService("UserInputService").InputBegan:Connect(function(Key, Typing)
