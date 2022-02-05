@@ -285,6 +285,21 @@ local function GetPlayer(Name)
         end
         
         return Closest
+    elseif string.lower(Name) == "farthest" then
+        local Farthest
+        local Distance = 0
+        local HumanoidRootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
+        
+        for _, Player in ipairs(game.Players:GetPlayers()) do
+        	if Player ~= game.Players.LocalPlayer then
+        		if Player:DistanceFromCharacter(HumanoidRootPart.Position) > Distance then
+        			Farthest = Player
+        			Distance = Player:DistanceFromCharacter(HumanoidRootPart.Position)
+        		end
+        	end
+        end
+        
+        return Farthest
     else
         for i,v in next, game:GetService("Players"):GetChildren() do
             if v:IsA("Player") and string.lower(string.sub((v.Name), 1, #Name)) == string.sub((string.lower(Name)), 1, #Name) or string.lower(string.sub((v.DisplayName), 1, #Name)) == string.sub((string.lower(Name)), 1, #Name) then
