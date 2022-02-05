@@ -337,7 +337,7 @@ Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec, Plugi
         end
         
         local PluginName = PluginName or "main"
-        local CommandDocs = string.format("Imported %s from %s - %s ", FuncNames[1], PluginName, FuncDesc)
+        local CommandDocs = string.format("imported %s from %s - %s ", FuncNames[1], PluginName, FuncDesc)
         if #FuncNames > 1 then
             table.remove(FuncNames, 1)
             CommandDocs = CommandDocs .. "(Aliases: \"" .. table.concat(FuncNames, "\", \"") .. "\")"
