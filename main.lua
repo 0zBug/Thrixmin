@@ -1014,8 +1014,22 @@ local function main()
                 print(string.format("Set command prefix to \"%s\".", Args[2]))
             end)
         end)
+        
+        Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
+            thread(function()
+                gt.__namecall = old
+                CommandAction:Disconnect()
+                
+                getgenv().Thrixmin = false
+                print("Quit Thrixtle admin.")
+                
+                wait(1)
+                
+                ScreenGui:Destroy()
+            end)
+        end)
 
-        Settings["Thrix"].AddFunction({"discord"}, "Stops the admin from running.", function(Args)
+        Settings["Thrix"].AddFunction("discord", "Invites you to the Thrixmin discord.", function(Args)
             thread(function()
                 request({
                 	Url = 'http://127.0.0.1:6463/rpc?v=1',
@@ -1032,20 +1046,6 @@ local function main()
                     	["nonce"] = "Thrixmin"
                     }),
                 })
-            end)
-        end)
-        
-        Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
-            thread(function()
-                gt.__namecall = old
-                CommandAction:Disconnect()
-                
-                getgenv().Thrixmin = false
-                print("Quit Thrixtle admin.")
-                
-                wait(1)
-                
-                ScreenGui:Destroy()
             end)
         end)
 			
