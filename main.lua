@@ -311,10 +311,6 @@ local function GetPlayer(Name)
     return false
 end
 
-local function HttpGet(Url)
-    return request({Url = Url, Method = "GET"}).Body
-end
-
 local function thread(f)
     return spawn(function()
         if syn then
@@ -365,6 +361,8 @@ Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec, Plugi
         return FunctionOutput
     end
 end
+
+getgenv().AddFunction = Settings["Thrix"]["AddFunction"]
 
 --[[
     ███╗   ███╗ █████╗ ██╗███╗   ██╗
@@ -474,6 +472,10 @@ local function main()
                 LocalPlayer.Character.HumanoidRootPart.Anchored = false
             end)
         end)
+
+        Settings["Thrix"].AddFunction("offset", "Offsets your player with a x, y and z value.", function(Args)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(Args[2] or 0, Args[3] or 0, Args[4] or 0)
+        end)
         
         local Noclip
         local Clip = true
@@ -503,7 +505,7 @@ local function main()
         
         Settings["Thrix"].AddFunction({"serverhop", "sh"}, "Teleports you to a different server.", function(Args)
             thread(function()
-                for i, v in pairs(game.HttpService:JSONDecode(HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
+                for i, v in pairs(game.HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
                     if v.playing < v.maxPlayers then
                         print(string.format("Teleporting to https://roblox.com/discover#/rg-join/%s/%s/, Players: %s, MaxPlayers: %s, Ping: %s, Fps: %s", game.PlaceId, v.id, v.playing, v.maxPlayers, v.ping, v.fps))
                         game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, v.id)
@@ -820,14 +822,14 @@ local function main()
                 local Amount = Args[3]
                 
                 local Sources = {
-                    {"Swearing", HttpGet("https://pastebin.com/raw/RvHUZ1mB"):split("\n")},
-                    {"Inappropriate Username", HttpGet("https://pastebin.com/raw/Yvig7WyT"):split("\n")},
-                    {"Bullying", HttpGet("https://pastebin.com/raw/4FbW7D6A"):split("\n")},
-                    {"Scamming", HttpGet("https://pastebin.com/raw/S9xvqgg0"):split("\n")},
-                    {"Dating", HttpGet("https://pastebin.com/raw/eyXihwT6"):split("\n")},
-                    {"Cheating/Exploiting", HttpGet("https://pastebin.com/raw/MrPGTkuU"):split("\n")},
-                    {"Personal Question", HttpGet("https://pastebin.com/raw/Kht6Z4h1"):split("\n")},
-                    {"Offsite Links", HttpGet("https://pastebin.com/raw/S9xvqgg0"):split("\n")},
+                    {"Swearing", game:HttpGet("https://pastebin.com/raw/RvHUZ1mB"):split("\n")},
+                    {"Inappropriate Username", game:HttpGet("https://pastebin.com/raw/Yvig7WyT"):split("\n")},
+                    {"Bullying", game:HttpGet("https://pastebin.com/raw/4FbW7D6A"):split("\n")},
+                    {"Scamming", game:HttpGet("https://pastebin.com/raw/S9xvqgg0"):split("\n")},
+                    {"Dating", game:HttpGet("https://pastebin.com/raw/eyXihwT6"):split("\n")},
+                    {"Cheating/Exploiting", game:HttpGet("https://pastebin.com/raw/MrPGTkuU"):split("\n")},
+                    {"Personal Question", game:HttpGet("https://pastebin.com/raw/Kht6Z4h1"):split("\n")},
+                    {"Offsite Links", game:HttpGet("https://pastebin.com/raw/S9xvqgg0"):split("\n")},
                 }
                 
                 for i = 1, Amount do
@@ -863,6 +865,12 @@ local function main()
         		end
             end)
         end)
+
+        Settings["Thrix"].AddFunction({"chatlogs", "clogs"}, "Opens chat logs.", function(Args)
+            thread(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Scripts/ChatLogs.lua"))()
+            end)
+        end)
 	
         Settings["Thrix"].AddFunction({"exit", "close"}, "Closes your game.", function(Args)
             thread(function()
@@ -872,16 +880,16 @@ local function main()
 			
 	    Settings["Thrix"].AddFunction({"install", "installplugin"}, "Installs the chosen plugin.", function(Args)
             thread(function()
-                local Success, Error = pcall(function() if Args[2] == "local" then Args[2] = game.PlaceId end HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
+                local Success, Error = pcall(function() if Args[2] == "local" then Args[2] = game.PlaceId end game:HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
 
                 if not Success then
                     warn("Plugin not found.")
                     return
                 else
-                    local Files = loadstring(HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
+                    local Files = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
                     
                     for i,v in next, Files do
-                        writefile("Thrixmin/Plugins/" .. v, HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v:gsub(" ", "%%20")))
+                        writefile("Thrixmin/Plugins/" .. v, game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v:gsub(" ", "%%20")))
                         print(string.format("Installed %s from plugin: %s", v, Args[2]))
                         for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
                             if type(Command[1]) == "string" then
@@ -900,13 +908,13 @@ local function main()
         
         Settings["Thrix"].AddFunction({"uninstall", "uninstallplugin"}, "Uninstalls the chosen plugin.", function(Args)
             thread(function()
-                local Success, Error = pcall(function() if Args[2] == "local" then Args[2] = game.PlaceId end HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
+                local Success, Error = pcall(function() if Args[2] == "local" then Args[2] = game.PlaceId end game:HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
 
                 if not Success then
                     warn("Plugin not found.")
                     return
                 else
-                    local Files = loadstring(HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
+                    local Files = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
                     
                     for i,v in next, Files do
                         for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
