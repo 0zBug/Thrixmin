@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.3.5",
+        ["Version"] = "v1.3.4",
         ["Developer"] = "Bug#3018",
     },
     ["Debug"] = true,
@@ -821,23 +821,14 @@ local function main()
                 local Player = GetPlayer(Args[2])
                 local Amount = Args[3]
                 
-                local Sources = {
-                    {"Swearing", game:HttpGet("https://pastebin.com/raw/RvHUZ1mB"):split("\n")},
-                    {"Inappropriate Username", game:HttpGet("https://pastebin.com/raw/Yvig7WyT"):split("\n")},
-                    {"Bullying", game:HttpGet("https://pastebin.com/raw/4FbW7D6A"):split("\n")},
-                    {"Scamming", game:HttpGet("https://pastebin.com/raw/S9xvqgg0"):split("\n")},
-                    {"Dating", game:HttpGet("https://pastebin.com/raw/eyXihwT6"):split("\n")},
-                    {"Cheating/Exploiting", game:HttpGet("https://pastebin.com/raw/MrPGTkuU"):split("\n")},
-                    {"Personal Question", game:HttpGet("https://pastebin.com/raw/Kht6Z4h1"):split("\n")},
-                    {"Offsite Links", game:HttpGet("https://pastebin.com/raw/S9xvqgg0"):split("\n")},
-                }
+                local Sources = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/ReportReasons.lua"))()
                 
                 for i = 1, Amount do
                     local Catagory = Sources[math.random(1, #Sources)]
                     local Reason = Catagory[2][math.random(1, #Catagory[2])]
                     game:GetService("Players"):ReportAbuse(Player, Catagory[1], Reason)
                     print(string.format("Reported %s for %s with message: %s", Player.Name, Catagory[1], Reason))
-                    swait()
+                    wait()
                 end
             end)
         end)
