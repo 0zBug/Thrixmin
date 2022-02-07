@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.3.4",
+        ["Version"] = "v1.3.5",
         ["Developer"] = "Bug#3018",
     },
     ["Debug"] = true,
