@@ -826,7 +826,7 @@ local function main()
                     local Reason = Catagory[2][math.random(1, #Catagory[2])]
                     game:GetService("Players"):ReportAbuse(Player, Catagory[1], Reason)
                     print(string.format("Reported %s for %s with message: %s", Player.Name, Catagory[1], Reason))
-                    wait(0.1)
+                    wait(0.5)
                 end
             end)
         end)
