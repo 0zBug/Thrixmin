@@ -362,8 +362,6 @@ Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec, Plugi
     end
 end
 
-getgenv().AddFunction = Settings["Thrix"]["AddFunction"]
-
 --[[
     ███╗   ███╗ █████╗ ██╗███╗   ██╗
     ████╗ ████║██╔══██╗██║████╗  ██║
