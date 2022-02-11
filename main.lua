@@ -962,7 +962,7 @@ local function main()
                 end)
             end
         	wait()
-        	TextBox.Text = ""
+            TextBox.Text = ""
         end)
 
         TextBox:GetPropertyChangedSignal("Text"):Connect(function()
