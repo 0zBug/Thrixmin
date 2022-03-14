@@ -995,7 +995,7 @@ local function main()
                         ["code"] = "32th2NqaUT"
                     },
                     ["nonce"] = "Thrixmin"
-                }),
+                })
             })
         end)
 			
