@@ -452,7 +452,7 @@ local function main()
         Settings["Thrix"].AddFunction("spin", "Spins your character.", function(Args)
             if LocalPlayer.Character.HumanoidRootPart:FindFirstChild("Spin") then
                 LocalPlayer.Character.HumanoidRootPart.Spin:Destroy()
-            end -- 
+            end
 
             local Spin = Instance.new("BodyAngularVelocity", LocalPlayer.Character.HumanoidRootPart)
             Spin.Name = "Spin"
