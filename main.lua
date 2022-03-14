@@ -43,8 +43,8 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.3.4",
-        ["Developer"] = "Bug#3018",
+        ["Version"] = "v1.3.5",
+        ["Developer"] = "Bug#1024",
     },
     ["Debug"] = true,
     ["Thrix"] = {
@@ -340,10 +340,12 @@ Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec, Plugi
             Settings["Thrix"]["Functions"][FuncName] = {}
             local NewFunction = Settings["Thrix"]["Functions"][FuncName]
             NewFunction["Execute"] = function(self, args)
-                self.Arguments = {
-                    args
-                }
-                pcall(FuncExec, args)
+                thread(function()
+                    self.Arguments = {
+                        args
+                    }
+                    pcall(FuncExec, args)
+                end)
             end
         end
         
@@ -377,275 +379,323 @@ local function main()
     
     local Source, Error = pcall(function()
         Settings["Thrix"].AddFunction({"goto", "tp"}, "Teleports your player to the selected player.", function(Args)
-            thread(function()
-                LocalPlayer.Character.HumanoidRootPart.CFrame = GetPlayer(Args[2]).Character.HumanoidRootPart.CFrame
-            end)
+            LocalPlayer.Character.HumanoidRootPart.CFrame = GetPlayer(Args[2]).Character.HumanoidRootPart.CFrame
         end)
         
         Settings["Thrix"].AddFunction({"ruinreplication", "breaknet"}, "Breaks the selected players net.", function(Args)
-            thread(function()
-                for _,v in next, GetPlayer(Args[2]).Character:GetDescendants() do
-                    if v:IsA("Part") or v:IsA("BasePart") then
-                        game:GetService("RunService").Heartbeat:Connect(function()
-                    	    sethiddenproperty(v, "NetworkIsSleeping", true)
-                    	end)
-                    end
+            for _,v in next, GetPlayer(Args[2]).Character:GetDescendants() do
+                if v:IsA("Part") or v:IsA("BasePart") then
+                    game:GetService("RunService").Heartbeat:Connect(function()
+                    	sethiddenproperty(v, "NetworkIsSleeping", true)
+                    end)
                 end
-            end)
+            end
         end)
         
         Settings["Thrix"].AddFunction({"gameteleport", "gametp"}, "Teleports you to the selected game.", function(Args)
-            thread(function()
-                game:GetService("TeleportService"):Teleport(Args[2], game.Players.LocalPlayer)
-            end)
+            game:GetService("TeleportService"):Teleport(Args[2], game.Players.LocalPlayer)
         end)
         
         Settings["Thrix"].AddFunction({"walkspeed", "ws"}, "Sets your character's walkspeed to the chosen amount.", function(Args)
-            thread(function()
-                LocalPlayer.Character.Humanoid.WalkSpeed = Args[2] or 16
-                print(string.format("Set Walk Speed to %s.", Args[2] or 16))
-            end)
+            LocalPlayer.Character.Humanoid.WalkSpeed = Args[2] or 16
+            print(string.format("Set Walk Speed to %s.", Args[2] or 16))
         end)
         
         Settings["Thrix"].AddFunction({"jumppower", "jp"}, "Sets your character's jumppower to the chosen amount.", function(Args)
-            thread(function()
-                LocalPlayer.Character.Humanoid.JumpPower = Args[2] or 50
-                print(string.format("Set Jump Power to %s.", Args[2] or 50))
-            end)
+            LocalPlayer.Character.Humanoid.JumpPower = Args[2] or 50
+            print(string.format("Set Jump Power to %s.", Args[2] or 50))
         end)
 
         Settings["Thrix"].AddFunction({"hipheight", "height"}, "Sets your hip height to the chosen amount.", function(Args)
-            thread(function()
-                LocalPlayer.Character.Humanoid.HipHeight = Args[2] or 2
-                print(string.format("Set Hip Height to %s.", Args[2] or 2))
-            end)
+            LocalPlayer.Character.Humanoid.HipHeight = Args[2] or 2
+            print(string.format("Set Hip Height to %s.", Args[2] or 2))
         end)
         
         Settings["Thrix"].AddFunction({"gravity", "grav"}, "Sets the workspace's gravity to the chosen amount.", function(Args)
-            thread(function()
-                game.Workspace.Gravity = Args[2] or 196.2
-                print(string.format("Set Gravity to %s.", Args[2] or 196.2))
-            end)
+            game.Workspace.Gravity = Args[2] or 196.2
+            print(string.format("Set Gravity to %s.", Args[2] or 196.2))
         end)
 
         Settings["Thrix"].AddFunction({"timeofday", "time"}, "Sets the time to the selected time.", function(Args)
-            thread(function()
-                game.Lighting.ClockTime = Args[2] or 14
-                print(string.format("Set Clock Time to %s.", Args[2] or 14))
-            end)
+            game.Lighting.ClockTime = Args[2] or 14
+            print(string.format("Set Clock Time to %s.", Args[2] or 14))
         end)
 
         Settings["Thrix"].AddFunction("sit", "Makes your player sit down.", function(Args)
-            thread(function()
-                LocalPlayer.Character.Humanoid.Sit = true
-            end)
+            LocalPlayer.Character.Humanoid.Sit = true
         end)
 
         Settings["Thrix"].AddFunction("unsit", "Makes your player stand up.", function(Args)
-            thread(function()
-                LocalPlayer.Character.Humanoid.Sit = false
-            end)
+            LocalPlayer.Character.Humanoid.Sit = false
         end)
 
         Settings["Thrix"].AddFunction({"platformstand", "stun"}, "Stuns your player.", function(Args)
-            thread(function()
-                LocalPlayer.Character.Humanoid.PlatformStand = true
-            end)
+            LocalPlayer.Character.Humanoid.PlatformStand = true
         end)
 
         Settings["Thrix"].AddFunction({"unplatformstand", "unstun"}, "Unstuns your player.", function(Args)
-            thread(function()
-                LocalPlayer.Character.Humanoid.PlatformStand = false
-            end)
+            LocalPlayer.Character.Humanoid.PlatformStand = false
         end)
 
         Settings["Thrix"].AddFunction({"freeze", "fr"}, "Freezes your player in place.", function(Args)
-            thread(function()
-                LocalPlayer.Character.HumanoidRootPart.Anchored = true
-            end)
+            LocalPlayer.Character.HumanoidRootPart.Anchored = true
         end)
 
         Settings["Thrix"].AddFunction({"unfreeze", "unfr"}, "Unfreezes your player in place.", function(Args)
-            thread(function()
-                LocalPlayer.Character.HumanoidRootPart.Anchored = false
-            end)
+            LocalPlayer.Character.HumanoidRootPart.Anchored = false
         end)
 
         Settings["Thrix"].AddFunction("offset", "Offsets your player with a x, y and z value.", function(Args)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(Args[2] or 0, Args[3] or 0, Args[4] or 0)
+            LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(Args[2] or 0, Args[3] or 0, Args[4] or 0)
         end)
         
+        Settings["Thrix"].AddFunction("spin", "Spins your character.", function(Args)
+            if LocalPlayer.Character.HumanoidRootPart:FindFirstChild("Spin") then
+                LocalPlayer.Character.HumanoidRootPart.Spin:Destroy()
+            end
+
+            local Spin = Instance.new("BodyAngularVelocity", LocalPlayer.Character.HumanoidRootPart)
+            Spin.Name = "Spin"
+            Spin.MaxTorque = Vector3.new(0, math.huge, 0)
+            Spin.AngularVelocity = Vector3.new(0, tonumber(Args[2]) or 5, 0)
+        end)
+
+        Settings["Thrix"].AddFunction("unspin", "Unspins your character.", function(Args)
+            if LocalPlayer.Character.HumanoidRootPart:FindFirstChild("Spin") then
+                LocalPlayer.Character.HumanoidRootPart.Spin:Destroy()
+            end
+        end)
+
+        Settings["Thrix"].AddFunction("animspeed", "Changes the speed of your players animation.", function(Args)
+            for i,v in next, game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
+                v:AdjustSpeed(tonumber(Args[2]) or 1)
+            end
+        end)
+
+        Settings["Thrix"].AddFunction("noanim", "Stops your players animation.", function(Args)
+            game.Players.LocalPlayer.Character.Animate.Disabled = true
+        end)
+
+        Settings["Thrix"].AddFunction("reanim", "Starts your players animation.", function(Args)
+            game.Players.LocalPlayer.Character.Animate.Disabled = false
+        end)
+
         local Noclip
         local Clip = true
         Settings["Thrix"].AddFunction("noclip", "Noclips your character.", function(Args)
-            thread(function()
-                Clip = false
-                Noclip = game:GetService("RunService").RenderStepped:Connect(function()
-                    if Clip == false and game:GetService("Players").LocalPlayer.Character then
-                        for i, v in pairs(game:GetService("Players").LocalPlayer.Character:GetDescendants()) do
-                        	if v:IsA("BasePart") and v.CanCollide == true then
-                        		v.CanCollide = false
-                        	end
+            Clip = false
+            Noclip = game:GetService("RunService").RenderStepped:Connect(function()
+                if Clip == false and game:GetService("Players").LocalPlayer.Character then
+                    for i, v in pairs(game:GetService("Players").LocalPlayer.Character:GetDescendants()) do
+                        if v:IsA("BasePart") and v.CanCollide == true then
+                        	v.CanCollide = false
                         end
                     end
-                end)
+                end
             end)
         end)
 
         Settings["Thrix"].AddFunction("clip", "Clips your character.", function(Args)
-            thread(function()
-                if Noclip then
-                    Noclip:Disconnect()
-                end
-                Clip = true
-            end)
+            if Noclip then
+                Noclip:Disconnect()
+            end
+            Clip = true
         end)
         
         Settings["Thrix"].AddFunction({"serverhop", "sh"}, "Teleports you to a different server.", function(Args)
-            thread(function()
-                for i, v in pairs(game.HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
-                    if v.playing < v.maxPlayers then
-                        print(string.format("Teleporting to https://roblox.com/discover#/rg-join/%s/%s/, Players: %s, MaxPlayers: %s, Ping: %s, Fps: %s", game.PlaceId, v.id, v.playing, v.maxPlayers, v.ping, v.fps))
-                        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, v.id)
-                    end
+            for i, v in pairs(game.HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
+                if v.playing < v.maxPlayers then
+                    print(string.format("Teleporting to https://roblox.com/discover#/rg-join/%s/%s/, Players: %s, MaxPlayers: %s, Ping: %s, Fps: %s", game.PlaceId, v.id, v.playing, v.maxPlayers, v.ping, v.fps))
+                    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, v.id)
                 end
+            end
 
-                print("No servers found.")
-            end)
+            print("No servers found.")
         end)
 
         Settings["Thrix"].AddFunction({"sync", "syncanim"}, "Synchronizes your current animation with another players.", function(Args)
-            thread(function()
-                for _,v in next, GetPlayer(Args[2]).Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
-                    for _,v2 in next, LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
-                        v2.TimePosition = v.TimePosition
-                    end
+            for _,v in next, GetPlayer(Args[2]).Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
+                for _,v2 in next, LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
+                    v2.TimePosition = v.TimePosition
                 end
-            end)
+            end
         end)
 
         Settings["Thrix"].AddFunction({"view", "spectate"}, "Spectates the chosen player.", function(Args)
-            thread(function()
-                game.Workspace.Camera.CameraSubject = GetPlayer(Args[2]).Character.Humanoid
-                print(string.format("Spectating %s.", GetPlayer(Args[2]).Name))
-            end)
+            game.Workspace.Camera.CameraSubject = GetPlayer(Args[2]).Character.Humanoid
+            print(string.format("Spectating %s.", GetPlayer(Args[2]).Name))
         end)
         
         Settings["Thrix"].AddFunction({"unview", "unspectate"}, "Makes your camera go back to your player.", function(Args)
-            thread(function()
-                game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
-            end)
+            game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
         end)
         
         local Flying = false
         Settings["Thrix"].AddFunction({"fly", "vfly", "vehiclefly"}, "Makes your player fly.", function(Args)
-            thread(function()
-                if Flying then Flying = false end
-                local Speed = tonumber(Args[2]) or 1
-                if KeyDown or KeyUp then 
-            	    KeyDown:Disconnect() 
-            	    KeyUp:Disconnect() 
-                end
-        	
-        	    if string.lower(Args[1]) == "-fly" then
-                    game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = true
-                end
+            if Flying then Flying = false end
+            local Speed = tonumber(Args[2]) or 1
+            if KeyDown or KeyUp then 
+                KeyDown:Disconnect() 
+                KeyUp:Disconnect() 
+            end
+        
+            if string.lower(Args[1]) == "-fly" then
+                game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = true
+            end
+        
+            local Controls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+            local lControls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+            local sSpeed = 0
             
-            	local Controls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
-            	local lControls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
-                local sSpeed = 0
-                
-            	KeyDown = game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(Key)
-            		if Key:lower() == "w" then
-            			Controls.F = Speed
-            		elseif Key:lower() == "s" then
-            			Controls.B = -Speed
-            		elseif Key:lower() == "a" then
-            			Controls.L = -Speed
-            		elseif Key:lower() == "d" then
-            			Controls.R = Speed
-            		elseif Key:lower() == "e" then
-            			Controls.Q = Speed * 2
-            		elseif Key:lower() == "q" then
-            			Controls.E = -Speed * 2
-            		end
-            		pcall(function() workspace.CurrentCamera.CameraType = Enum.CameraType.Track end)
-            	end)
-            	
-            	KeyUp = game.Players.LocalPlayer:GetMouse().KeyUp:Connect(function(Key)
-            		if Key:lower() == "w" then
-            			Controls.F = 0
-            		elseif Key:lower() == "s" then
-            			Controls.B = 0
-            		elseif Key:lower() == "a" then
-            			Controls.L = 0
-            		elseif Key:lower() == "d" then
-            			Controls.R = 0
-            		elseif Key:lower() == "e" then
-            			Controls.Q = 0
-            		elseif Key:lower() == "q" then
-            			Controls.E = 0
-            		end
-            	end)
-            	
-            	Flying = true
-            	
-                local BodyGyro = Instance.new("BodyGyro")
-                local BodyVelocity = Instance.new("BodyVelocity")
-                BodyGyro.P = 9e4
-                BodyGyro.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                BodyVelocity.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                BodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
-                BodyGyro.CFrame = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame
-                BodyVelocity.Velocity = Vector3.new(0, 0, 0)
-                BodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-                
-                while Flying and wait() do
-                    if Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0 then
-                        sSpeed = 50
-                    elseif not (Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0) and SPEED ~= 0 then
-                        sSpeed = 0
-                    end
-                    if (Controls.L + Controls.R) ~= 0 or (Controls.F + Controls.B) ~= 0 or (Controls.Q + Controls.E) ~= 0 then
-                        BodyVelocity.Velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (Controls.F + Controls.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(Controls.L + Controls.R, (Controls.F + Controls.B + Controls.Q + Controls.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * sSpeed
-                        lControls = {F = Controls.F, B = Controls.B, L = Controls.L, R = Controls.R}
-                    elseif (Controls.L + Controls.R) == 0 and (Controls.F + Controls.B) == 0 and (Controls.Q + Controls.E) == 0 and SPEED ~= 0 then
-                        BodyVelocity.Velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lControls.F + lControls.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lControls.L + lControls.R, (lControls.F + lControls.B + Controls.Q + Controls.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * sSpeed
-                    else
-                        BodyVelocity.Velocity = Vector3.new(0, 0, 0)
-                    end
-                    BodyGyro.CFrame = workspace.CurrentCamera.CoordinateFrame
+            KeyDown = game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(Key)
+                if Key:lower() == "w" then
+                    Controls.F = Speed
+                elseif Key:lower() == "s" then
+                    Controls.B = -Speed
+                elseif Key:lower() == "a" then
+                    Controls.L = -Speed
+                elseif Key:lower() == "d" then
+                    Controls.R = Speed
+                elseif Key:lower() == "e" then
+                    Controls.Q = Speed * 2
+                elseif Key:lower() == "q" then
+                    Controls.E = -Speed * 2
                 end
-                
-                Controls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
-                lControls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
-                sSpeed = 0
-                
-                BodyGyro:Destroy()
-                BodyVelocity:Destroy()
+                pcall(function() workspace.CurrentCamera.CameraType = Enum.CameraType.Track end)
             end)
+            
+            KeyUp = game.Players.LocalPlayer:GetMouse().KeyUp:Connect(function(Key)
+                if Key:lower() == "w" then
+                    Controls.F = 0
+                elseif Key:lower() == "s" then
+                    Controls.B = 0
+                elseif Key:lower() == "a" then
+                    Controls.L = 0
+                elseif Key:lower() == "d" then
+                    Controls.R = 0
+                elseif Key:lower() == "e" then
+                    Controls.Q = 0
+                elseif Key:lower() == "q" then
+                    Controls.E = 0
+                end
+            end)
+            
+            Flying = true
+            
+            local BodyGyro = Instance.new("BodyGyro")
+            local BodyVelocity = Instance.new("BodyVelocity")
+            BodyGyro.P = 9e4
+            BodyGyro.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            BodyVelocity.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            BodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+            BodyGyro.CFrame = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame
+            BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+            BodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+            
+            while Flying and wait() do
+                if Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0 then
+                    sSpeed = 50
+                elseif not (Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0) and SPEED ~= 0 then
+                    sSpeed = 0
+                end
+                if (Controls.L + Controls.R) ~= 0 or (Controls.F + Controls.B) ~= 0 or (Controls.Q + Controls.E) ~= 0 then
+                    BodyVelocity.Velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (Controls.F + Controls.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(Controls.L + Controls.R, (Controls.F + Controls.B + Controls.Q + Controls.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * sSpeed
+                    lControls = {F = Controls.F, B = Controls.B, L = Controls.L, R = Controls.R}
+                elseif (Controls.L + Controls.R) == 0 and (Controls.F + Controls.B) == 0 and (Controls.Q + Controls.E) == 0 and SPEED ~= 0 then
+                    BodyVelocity.Velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lControls.F + lControls.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lControls.L + lControls.R, (lControls.F + lControls.B + Controls.Q + Controls.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * sSpeed
+                else
+                    BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+                end
+                BodyGyro.CFrame = workspace.CurrentCamera.CoordinateFrame
+            end
+            
+            Controls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+            lControls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+            sSpeed = 0
+            
+            BodyGyro:Destroy()
+            BodyVelocity:Destroy()
         end)
         
         Settings["Thrix"].AddFunction({"unfly", "unvfly", "unvehiclefly"}, "Makes your player stop flying.", function(Args)
-            thread(function()
-                Flying = false
-                game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = false
+            Flying = false
+            game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = false
+        
+            if KeyDown or KeyUp then 
+                KeyDown:Disconnect() 
+                KeyUp:Disconnect() 
+            end
             
-                if KeyDown or KeyUp then 
-                	KeyDown:Disconnect() 
-                    KeyUp:Disconnect() 
-            	end
-                
-                pcall(function() 
-                	workspace.CurrentCamera.CameraType = Enum.CameraType.Custom 
-                end)
+            pcall(function() 
+                workspace.CurrentCamera.CameraType = Enum.CameraType.Custom 
             end)
         end)
         
         Settings["Thrix"].AddFunction({"pathfind", "walkto"}, "Walks to the selected player using pathfinding.", function(Args)
-            thread(function()
-                local Player = GetPlayer(Args[2])
-                local To = Player.Character.HumanoidRootPart.Position
+            local Player = GetPlayer(Args[2])
+            local To = Player.Character.HumanoidRootPart.Position
+            local From =  game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+            
+            local Path = game:GetService("PathfindingService"):FindPathAsync(From, To)
+            local Points = Path:GetWaypoints()
+            local Parts = {}
+            
+            for i,v in next, Points do
+                local Part = Instance.new("Part", game.Workspace)
+                Part.Size = Vector3.new(1, 1, 1)
+                Part.Color = Color3.new(0, 1, 0)
+                Part.Transparency = 0.5
+                Part.Shape = "Ball"
+                Part.Anchored = true
+                Part.Position = v.Position + Vector3.new(0, 3, 0)
+                Part.CanCollide = false
+                Part.TopSurface = "Smooth"
+                Part.BottomSurface = "Smooth"
+                
+                table.insert(Parts, Part)
+            end
+            
+            for i,v in next, Points do
+                Parts[i]:Destroy()
+                if v.Action == Enum.PathWaypointAction.Jump then
+                    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+                end
+                game.Players.LocalPlayer.Character.Humanoid:MoveTo(v.Position)
+                game.Players.LocalPlayer.Character.Humanoid.MoveToFinished:Wait()
+            end
+        end)
+        
+        if Settings["Thrix"]["Settings"]["Waypoints"] == nil then
+            Settings["Thrix"]["Settings"]["Waypoints"] = {}
+            writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
+        end
+        
+        Settings["Thrix"].AddFunction({"setwaypoint", "setwp"}, "Creates a waypoint at your current location.", function(Args)
+            Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] = string.split(tostring(LocalPlayer.Character.HumanoidRootPart.CFrame), ", ")
+            writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
+        end)
+        
+        Settings["Thrix"].AddFunction({"deletewaypoint", "delwp"}, "Deletes the selected waypoint.", function(Args)
+            if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
+                Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] = nil
+            else
+                warn("Invalid Waypoint.")
+            end
+            
+            writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
+        end)
+
+        Settings["Thrix"].AddFunction({"waypoint", "wp"}, "Teleports you to the selected waypoint.", function(Args)
+            if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(table.unpack(Settings["Thrix"]["Settings"]["Waypoints"][Args[2]]))
+            else
+                warn("Invalid Waypoint.")
+            end
+        end)
+        
+        Settings["Thrix"].AddFunction({"pathfindwaypoint", "pfwp"}, "Makes you walt to the selected waypoint.", function(Args)
+            if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
+                local To = CFrame.new(table.unpack(Settings["Thrix"]["Settings"]["Waypoints"][Args[2]])).p
                 local From =  game.Players.LocalPlayer.Character.HumanoidRootPart.Position
                 
                 local Path = game:GetService("PathfindingService"):FindPathAsync(From, To)
@@ -669,256 +719,165 @@ local function main()
                 
                 for i,v in next, Points do
                     Parts[i]:Destroy()
-        		    if v.Action == Enum.PathWaypointAction.Jump then
+                    if v.Action == Enum.PathWaypointAction.Jump then
                         game.Players.LocalPlayer.Character.Humanoid.Jump = true
                     end
                     game.Players.LocalPlayer.Character.Humanoid:MoveTo(v.Position)
                     game.Players.LocalPlayer.Character.Humanoid.MoveToFinished:Wait()
                 end
-            end)
-        end)
-        
-        if Settings["Thrix"]["Settings"]["Waypoints"] == nil then
-            thread(function()
-                Settings["Thrix"]["Settings"]["Waypoints"] = {}
-                writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
-            end)
-        end
-        
-        Settings["Thrix"].AddFunction({"setwaypoint", "setwp"}, "Creates a waypoint at your current location.", function(Args)
-            thread(function()
-                Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] = string.split(tostring(LocalPlayer.Character.HumanoidRootPart.CFrame), ", ")
-                writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
-            end)
-        end)
-        
-        Settings["Thrix"].AddFunction({"deletewaypoint", "delwp"}, "Deletes the selected waypoint.", function(Args)
-            thread(function()
-                if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
-                    Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] = nil
-                else
-                    warn("Invalid Waypoint.")
-                end
-                
-                writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
-            end)
-        end)
-
-        Settings["Thrix"].AddFunction({"waypoint", "wp"}, "Teleports you to the selected waypoint.", function(Args)
-            thread(function()
-                if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(table.unpack(Settings["Thrix"]["Settings"]["Waypoints"][Args[2]]))
-                else
-                    warn("Invalid Waypoint.")
-                end
-            end)
-        end)
-        
-        Settings["Thrix"].AddFunction({"pathfindwaypoint", "pfwp"}, "Makes you walt to the selected waypoint.", function(Args)
-            thread(function()
-                if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
-                    local To = CFrame.new(table.unpack(Settings["Thrix"]["Settings"]["Waypoints"][Args[2]])).p
-                    local From =  game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-                    
-                    local Path = game:GetService("PathfindingService"):FindPathAsync(From, To)
-                    local Points = Path:GetWaypoints()
-                    local Parts = {}
-                    
-                    for i,v in next, Points do
-                        local Part = Instance.new("Part", game.Workspace)
-                        Part.Size = Vector3.new(1, 1, 1)
-                        Part.Color = Color3.new(0, 1, 0)
-                        Part.Transparency = 0.5
-                        Part.Shape = "Ball"
-                        Part.Anchored = true
-                        Part.Position = v.Position + Vector3.new(0, 3, 0)
-                        Part.CanCollide = false
-                        Part.TopSurface = "Smooth"
-                        Part.BottomSurface = "Smooth"
-                        
-                        table.insert(Parts, Part)
-                    end
-                    
-                    for i,v in next, Points do
-                        Parts[i]:Destroy()
-            		    if v.Action == Enum.PathWaypointAction.Jump then
-                            game.Players.LocalPlayer.Character.Humanoid.Jump = true
-                        end
-                        game.Players.LocalPlayer.Character.Humanoid:MoveTo(v.Position)
-                        game.Players.LocalPlayer.Character.Humanoid.MoveToFinished:Wait()
-                    end
-                else
-                    warn("Invalid Waypoint.")
-                end
-            end)
+            else
+                warn("Invalid Waypoint.")
+            end
         end)
 
         Settings["Thrix"].AddFunction({"firecd", "fireclickdetectors"}, "Fires all clickdetectors in the workspace.", function(Args)
-            thread(function()
-                for _,v in pairs(workspace:GetDescendants()) do
-            		if v:IsA("ClickDetector") then
-            			fireclickdetector(v)
-            		end
+            for _,v in pairs(workspace:GetDescendants()) do
+                if v:IsA("ClickDetector") then
+                    fireclickdetector(v)
                 end
-    	    end)
+            end
         end)
         
         Settings["Thrix"].AddFunction({"firetouch", "firetouchinterests"}, "Fires all touchinterests in the workspace.", function(Args)
-            thread(function()
-                for _,v in pairs(workspace:GetDescendants()) do
-            		if v:IsA("TouchTransmitter") then
-            			firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0)
-            			firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1) 
-            		end
+            for _,v in pairs(workspace:GetDescendants()) do
+                if v:IsA("TouchTransmitter") then
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0)
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1) 
                 end
-        	end)
+            end
         end)
         
         Settings["Thrix"].AddFunction({"fireprox", "fireproximityprompts"}, "Fires all proximityprompts in the workspace.", function(Args)
-            thread(function()
-                for _,v in pairs(workspace:GetDescendants()) do
-            		if v:IsA("ProximityPrompt") then
-            			fireproximityprompt(v)
-            		end
+            for _,v in pairs(workspace:GetDescendants()) do
+                if v:IsA("ProximityPrompt") then
+                    fireproximityprompt(v)
                 end
-    	    end)
+            end
         end)
         
         Settings["Thrix"].AddFunction({"reset", "re"}, "Resets your player.", function(Args)
-            thread(function()
-                local Position = LocalPlayer.Character.HumanoidRootPart.CFrame
-                if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then 
-                    LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(15) 
-                end
-                LocalPlayer.Character:ClearAllChildren()
-                
-                LocalPlayer.Character = Instance.new("Model", workspace)
-                LocalPlayer.Character:Destroy()
-                LocalPlayer.CharacterAdded:Wait()
-                LocalPlayer.Character:WaitForChild("HumanoidRootPart")
-                LocalPlayer.Character.HumanoidRootPart.CFrame = Position
-            end)
+            local Position = LocalPlayer.Character.HumanoidRootPart.CFrame
+            if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then 
+                LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(15) 
+            end
+            LocalPlayer.Character:ClearAllChildren()
+            
+            LocalPlayer.Character = Instance.new("Model", workspace)
+            LocalPlayer.Character:Destroy()
+            LocalPlayer.CharacterAdded:Wait()
+            LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+            LocalPlayer.Character.HumanoidRootPart.CFrame = Position
         end)
         
         Settings["Thrix"].AddFunction({"rejoin", "rj"}, "Makes your player rejoin.", function(Args)
-            thread(function()
-                queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer loadstring(game:HttpGet(\"https://raw.githubusercontent.com/0zBug/Thrixmin/main/main.lua\"))()")
-                game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
-            end)
+            queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer loadstring(game:HttpGet(\"https://raw.githubusercontent.com/0zBug/Thrixmin/main/main.lua\"))()")
+            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
         end)
         
         Settings["Thrix"].AddFunction("posrj", "Makes your player rejoin and teleport to your current position.", function(Args)
-            thread(function()
-                queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer repeat wait() until game:GetService('Players').LocalPlayer.Character repeat wait() until game:GetService('Players').LocalPlayer.Character.HumanoidRootPart wait() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(" .. tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame) .. ") loadstring(game:HttpGet(\"https://raw.githubusercontent.com/0zBug/Thrixmin/main/main.lua\"))()")
-                game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
-            end)
+            queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer repeat wait() until game:GetService('Players').LocalPlayer.Character repeat wait() until game:GetService('Players').LocalPlayer.Character.HumanoidRootPart wait() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(" .. tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame) .. ") loadstring(game:HttpGet(\"https://raw.githubusercontent.com/0zBug/Thrixmin/main/main.lua\"))()")
+            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
         end)
         
         Settings["Thrix"].AddFunction("report", "Reports the chosen player the chosen amount of times.", function(Args)
-            thread(function()
-                local Player = GetPlayer(Args[2])
-                local Amount = Args[3]
-                
-                local Sources = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/ReportReasons.lua"))()
-                
-                for i = 1, Amount do
-                    local Catagory = Sources[math.random(1, #Sources)]
-                    local Reason = Catagory[2][math.random(1, #Catagory[2])]
-                    game:GetService("Players"):ReportAbuse(Player, Catagory[1], Reason)
-                    print(string.format("Reported %s for %s with message: %s", Player.Name, Catagory[1], Reason))
-                    wait(0.5)
-                end
-            end)
+            local Player = GetPlayer(Args[2])
+            local Amount = Args[3]
+            
+            local Sources = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/ReportReasons.lua"))()
+            
+            for i = 1, Amount do
+                local Catagory = Sources[math.random(1, #Sources)]
+                local Reason = Catagory[2][math.random(1, #Catagory[2])]
+                game:GetService("Players"):ReportAbuse(Player, Catagory[1], Reason)
+                print(string.format("Reported %s for %s with message: %s", Player.Name, Catagory[1], Reason))
+                wait(0.5)
+            end
         end)
 			
         Settings["Thrix"].AddFunction({"load", "exec"}, "Runs the chosen file.", function(Args)
-            thread(function()
-                if isfile(Args[2]) then
-		            loadstring(readfile(Args[2]))()
-                else
-                    print("404: File not found.")
-                end
-            end)
+            if isfile(Args[2]) then
+                loadstring(readfile(Args[2]))()
+            else
+                print("404: File not found.")
+            end
         end)
         
         Settings["Thrix"].AddFunction({"delete", "del", "delfile"}, "Deletes the chosen file.", function(Args)
-            thread(function()
-                if isfolder(Args[2]) then
-                    delfolder(Args[2])
-                    print("Deleted folder: " .. Args[2])
-                elseif isfile(Args[2]) then
+            if isfolder(Args[2]) then
+                delfolder(Args[2])
+                print("Deleted folder: " .. Args[2])
+            elseif isfile(Args[2]) then
         	    delfile(Args[2])
         	    print("Deleted file: " .. Args[2])
         	else 
         	    print("404: File not found.")
         	end
-            end)
         end)
 
         Settings["Thrix"].AddFunction({"chatlogs", "clogs"}, "Opens chat logs.", function(Args)
-            thread(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Scripts/ChatLogs.lua"))()
-            end)
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Scripts/ChatLogs.lua"))()
         end)
 	
+        Settings["Thrix"].AddFunction({"remotespy", "rspy"}, "Opens remote spy", function(Args)
+            loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))() -- Credits to exxtremestuffs
+        end)
+
+        Settings["Thrix"].AddFunction({"dex", "explorer"}, "Opens dex.", function(Args)
+            loadstring(game:HttpGet("https://pastebin.com/raw/YREfugjX"))()
+        end)
+
         Settings["Thrix"].AddFunction({"exit", "close"}, "Closes your game.", function(Args)
-            thread(function()
-                game:Shutdown()
-            end)
+            game:Shutdown()
         end)
 			
 	    Settings["Thrix"].AddFunction({"install", "installplugin"}, "Installs the chosen plugin.", function(Args)
-            thread(function()
-                local Success, Error = pcall(function() if Args[2] == "local" then Args[2] = game.PlaceId end game:HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
+            local Success, Error = pcall(function() if Args[2] == "local" then Args[2] = game.PlaceId end game:HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
 
-                if not Success then
-                    warn("Plugin not found.")
-                    return
-                else
-                    local Files = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
-                    
-                    for i,v in next, Files do
-                        writefile("Thrixmin/Plugins/" .. v, game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v:gsub(" ", "%%20")))
-                        print(string.format("Installed %s from plugin: %s", v, Args[2]))
-                        for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
-                            if type(Command[1]) == "string" then
-                                Command[1] = {Command[1]}
-                            end
-                            Settings["Thrix"].AddFunction(Command[1], Command[2], function(Args)
-                                thread(function()
-                                    Command[3](Args)
-                                end)
-                            end, Args[2])
+            if not Success then
+                warn("Plugin not found.")
+                return
+            else
+                local Files = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
+                
+                for i,v in next, Files do
+                    writefile("Thrixmin/Plugins/" .. v, game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v:gsub(" ", "%%20")))
+                    print(string.format("Installed %s from plugin: %s", v, Args[2]))
+                    for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
+                        if type(Command[1]) == "string" then
+                            Command[1] = {Command[1]}
                         end
+                        Settings["Thrix"].AddFunction(Command[1], Command[2], function(Args)
+                            thread(function()
+                                Command[3](Args)
+                            end)
+                        end, Args[2])
                     end
                 end
-            end)
+            end
         end)
         
         Settings["Thrix"].AddFunction({"uninstall", "uninstallplugin"}, "Uninstalls the chosen plugin.", function(Args)
-            thread(function()
-                local Success, Error = pcall(function() if Args[2] == "local" then Args[2] = game.PlaceId end game:HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
+            local Success, Error = pcall(function() if Args[2] == "local" then Args[2] = game.PlaceId end game:HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Args[2]) end)
 
-                if not Success then
-                    warn("Plugin not found.")
-                    return
-                else
-                    local Files = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
-                    
-                    for i,v in next, Files do
-                        for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
-                            if type(Command[1]) == "string" then
-                                Command[1] = {Command[1]}
-                            end
-                            for i,v in next, Command[1] do
-                                Settings["Thrix"]["Functions"][v] = nil
-                            end
+            if not Success then
+                warn("Plugin not found.")
+                return
+            else
+                local Files = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/install.lua"))()
+                
+                for i,v in next, Files do
+                    for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
+                        if type(Command[1]) == "string" then
+                            Command[1] = {Command[1]}
                         end
-                        delfile("Thrixmin/Plugins/" .. v)
-                        print(string.format("Deleted %s from plugin: %s", v, Args[2]))
+                        for i,v in next, Command[1] do
+                            Settings["Thrix"]["Functions"][v] = nil
+                        end
                     end
+                    delfile("Thrixmin/Plugins/" .. v)
+                    print(string.format("Deleted %s from plugin: %s", v, Args[2]))
                 end
-            end)
+            end
         end)
         
         local gt = getrawmetatable(game)
@@ -1003,47 +962,41 @@ local function main()
         end)
         
         Settings["Thrix"].AddFunction("prefix", "Sets your command prefix.", function(Args)
-            thread(function()
-                Settings["Thrix"]["Settings"]["Prefix"] = Args[2]
-                
-                writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
+            Settings["Thrix"]["Settings"]["Prefix"] = Args[2]
+            
+            writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
 
-                print(string.format("Set command prefix to \"%s\".", Args[2]))
-            end)
+            print(string.format("Set command prefix to \"%s\".", Args[2]))
         end)
         
         Settings["Thrix"].AddFunction({"end", "quit"}, "Stops the admin from running.", function(Args)
-            thread(function()
-                gt.__namecall = old
-                CommandAction:Disconnect()
-                
-                getgenv().Thrixmin = false
-                print("Quit Thrixtle admin.")
-                
-                wait(1)
-                
-                ScreenGui:Destroy()
-            end)
+            gt.__namecall = old
+            CommandAction:Disconnect()
+            
+            getgenv().Thrixmin = false
+            print("Quit Thrixtle admin.")
+            
+            wait(1)
+            
+            ScreenGui:Destroy()
         end)
 
         Settings["Thrix"].AddFunction("discord", "Invites you to the Thrixmin discord.", function(Args)
-            thread(function()
-                request({
-                	Url = 'http://127.0.0.1:6463/rpc?v=1',
-                	Method = 'POST',
-                	Headers = {
-                		['Content-Type'] = 'application/json',
-                		['Origin'] = 'https://discord.com'
-                	},
-                	Body = game:GetService('HttpService'):JSONEncode({
-                    	["cmd"] = "INVITE_BROWSER",
-                    	["args"] = {
-                    		["code"] = "32th2NqaUT"
-                    	},
-                    	["nonce"] = "Thrixmin"
-                    }),
-                })
-            end)
+            request({
+                Url = 'http://127.0.0.1:6463/rpc?v=1',
+                Method = 'POST',
+                Headers = {
+                    ['Content-Type'] = 'application/json',
+                    ['Origin'] = 'https://discord.com'
+                },
+                Body = game:GetService('HttpService'):JSONEncode({
+                    ["cmd"] = "INVITE_BROWSER",
+                    ["args"] = {
+                        ["code"] = "32th2NqaUT"
+                    },
+                    ["nonce"] = "Thrixmin"
+                }),
+            })
         end)
 			
         for _,File in next, listfiles("Thrixmin/Plugins") do
