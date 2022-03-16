@@ -12,7 +12,7 @@ if Thrixmin then
     warn("Thrixmin has already been ran!")
     return
 else
-    getgenv().Thrixmin = true
+    --getgenv().Thrixmin = true
 end
 
 repeat wait() until game:IsLoaded()
@@ -263,10 +263,6 @@ local function swait(t)
     return coroutine.yield()
 end
 
-local function ASCII(text, font)
-    return game:HttpGet("https://artii.herokuapp.com/make?text=" .. text:gsub(" ", "+") .. "&font=" .. font)
-end
-
 local function GetPlayer(Name)
     if string.lower(Name) == "random" then
         return game.Players:GetPlayers()[math.random(1, #game.Players:GetPlayers())]
@@ -350,7 +346,7 @@ Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec, Plugi
         end
         
         local PluginName = PluginName or "main"
-        local CommandDocs = string.format("imported %s from %s - %s ", FuncNames[1], PluginName, FuncDesc)
+        local CommandDocs = string.format("Imported %s from %s - %s ", FuncNames[1], PluginName, FuncDesc)
         if #FuncNames > 1 then
             table.remove(FuncNames, 1)
             CommandDocs = CommandDocs .. "(Aliases: \"" .. table.concat(FuncNames, "\", \"") .. "\")"
@@ -374,7 +370,7 @@ end
 ]]--
         
 local function main()
-    print("\n" .. ASCII(Settings["Info"]["Name"], "standard") .. "\n" .. ASCII(Settings["Info"]["Version"]:gsub("%.", " . "):gsub("v", "v "), "small"))
+    print(Settings["Info"]["Name"], Settings["Info"]["Version"], "Loaded")
     print(string.format("Prefix - \"%s\"", Settings["Thrix"]["Settings"]["Prefix"]))
     
     local Source, Error = pcall(function()
