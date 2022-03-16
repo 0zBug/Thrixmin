@@ -12,7 +12,7 @@ if Thrixmin then
     warn("Thrixmin has already been ran!")
     return
 else
-    --getgenv().Thrixmin = true
+    getgenv().Thrixmin = true
 end
 
 repeat wait() until game:IsLoaded()
@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.3.6",
+        ["Version"] = "v1.3.7",
         ["Developer"] = "Bug#1024",
     },
     ["Debug"] = true,
