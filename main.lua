@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.3.5",
+        ["Version"] = "v1.3.6",
         ["Developer"] = "Bug#1024",
     },
     ["Debug"] = true,
@@ -755,6 +755,35 @@ local function main()
             end
         end)
         
+        Settings["Thrix"].AddFunction("team", "If possible, switch to the selected team.", function(Args)
+            table.remove(Args, 1)
+
+            if LocalPlayer.Character and LocalPlayer.Character.Parent and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                local Character = LocalPlayer.Character
+                local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+
+                local CurrentTeam
+                
+                for _, v in next, game:GetService('Teams'):GetChildren() do
+                    if v.Name == table.concat(Args, " ") then
+                        CurrentTeam = v
+                    end
+                end
+                
+                if CurrentTeam then
+                    for _, v in next, game:GetService('Workspace'):GetDescendants() do
+                        if v:IsA("SpawnLocation") and v.TeamColor == CurrentTeam.TeamColor and v.AllowTeamChangeOnTouch then
+                            for i = 0, 1 do
+                                firetouchinterest(HumanoidRootPart, v, i)
+                            end
+                        end
+                    end
+                else
+                    print("Team not found.")
+                end
+            end
+        end)
+
         Settings["Thrix"].AddFunction({"reset", "re"}, "Resets your player.", function(Args)
             local Position = LocalPlayer.Character.HumanoidRootPart.CFrame
             if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then 
