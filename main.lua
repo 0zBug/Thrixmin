@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.3.7",
+        ["Version"] = "v1.3.8",
         ["Developer"] = "Bug#4193",
     },
     ["Debug"] = true,
@@ -170,6 +170,8 @@ local request = request or syn.request
 
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 ScreenGui.ResetOnSpawn = false
+
+local WaypointFolder = Instance.new("Folder", ScreenGui)
 
 local Frame = Instance.new("Frame", ScreenGui)
 Frame.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -665,15 +667,92 @@ local function main()
             Settings["Thrix"]["Settings"]["Waypoints"] = {}
             writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
         end
+
+        local Waypoints = {}
+        local function Waypoint(Name, Position)
+            local Part = Instance.new("Part", Workspace)
+            Part.BottomSurface = Enum.SurfaceType.Smooth
+            Part.CanCollide = false
+            Part.CanQuery = false
+            Part.CanTouch = false
+            Part.Size = Vector3.new(0.001, 0.001, 0.001)
+            Part.TopSurface = Enum.SurfaceType.Smooth
+            Part.Transparency = 1
+            Part.CFrame = Position * CFrame.new(0, -1.5, 0)
+            Part.Anchored = true
+            
+            local Waypoint = Instance.new("BillboardGui", WaypointFolder)
+            Waypoint.Active = true
+            Waypoint.AlwaysOnTop = true
+            Waypoint.Size = UDim2.fromOffset(50, 50)
+            Waypoint.SizeOffset = Vector2.new(0, 0.75)
+            Waypoint.StudsOffsetWorldSpace = Vector3.new(0, 0, 0)
+            Waypoint.Adornee = Part
+
+            local Frame = Instance.new("Frame", Waypoint)
+            Frame.BackgroundTransparency = 1
+            Frame.Size = UDim2.fromScale(1, 1)
+
+            local Content = Instance.new("Frame", Frame)
+            Content.BackgroundTransparency = 1
+            Content.Size = UDim2.fromScale(1, 1)
+
+            local Tail = Instance.new("Frame", Content)
+            Tail.AnchorPoint = Vector2.new(0.5, 0.5)
+            Tail.BackgroundColor3 = Color3.fromRGB(229, 229, 229)
+            Tail.BorderSizePixel = 0
+            Tail.Position = UDim2.fromScale(0.5, 0.854)
+            Tail.Rotation = 45
+            Tail.Size = UDim2.fromScale(0.5, 0.5)
+                
+            local Border = Instance.new("Frame", Content)
+            Border.BackgroundColor3 = Color3.fromRGB(229, 229, 229)
+            Border.Size = UDim2.fromScale(1, 1)
+
+            local Circle = Instance.new("UICorner", Border)
+            Circle.CornerRadius = UDim.new(1, 0)
+
+            local Label = Instance.new("TextButton", Content)
+            Label.Font = Enum.Font.SourceSans
+            Label.TextColor3 = Color3.fromRGB(0, 0, 0)
+            Label.TextSize = 14
+            Label.AnchorPoint = Vector2.new(0.5, 0.5)
+            Label.BackgroundColor3 = Color3.fromRGB(229, 229, 229)
+            Label.Position = UDim2.fromScale(0.5, 0.5)
+            Label.Size = UDim2.fromScale(0.9, 0.9)
+            Label.Text = Name
+            Label.ZIndex = 2
+            Label.AutoButtonColor = false
+
+            Label.MouseButton1Click:Connect(function()
+                if LocalPlayer.Character then
+                    LocalPlayer.Character.HumanoidRootPart.CFrame = Position
+                end
+            end)
+
+            local Circle = Instance.new("UICorner", Label)
+            Circle.CornerRadius = UDim.new(1, 0)
+            
+            if Waypoints[Name] then Waypoints[Name]:Destroy() end
+            Waypoints[Name] = Waypoint
+
+            return Waypoint
+        end
+
+        for i,v in pairs(Settings["Thrix"]["Settings"]["Waypoints"]) do
+            Waypoint(i, CFrame.new(table.unpack(v)))
+        end
         
         Settings["Thrix"].AddFunction({"setwaypoint", "setwp"}, "Creates a waypoint at your current location.", function(Args)
             Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] = string.split(tostring(LocalPlayer.Character.HumanoidRootPart.CFrame), ", ")
+            Waypoint(Args[2], LocalPlayer.Character.HumanoidRootPart.CFrame)
             writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
         end)
         
         Settings["Thrix"].AddFunction({"deletewaypoint", "delwp"}, "Deletes the selected waypoint.", function(Args)
             if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
                 Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] = nil
+                Waypoints[Args[2]]:Destroy()
             else
                 warn("Invalid Waypoint.")
             end
