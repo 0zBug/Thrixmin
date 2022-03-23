@@ -1,13 +1,12 @@
-
 {
+  "BackgroundGradient": [
+    [0, [39, 40, 49]],
+    [1, [25, 28, 42]]
+  ],
   "UIStroke": {
     "Thickness": 1.8,
     "Transparency": 0.6,
     "Color": [39, 39, 39]
-  },
-  "BackgroundGradient": {
-    "0": [39, 40, 49],
-    "1": [25, 28, 42]
   },
   "Text": {
     "Font": "Code",
