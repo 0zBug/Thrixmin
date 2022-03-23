@@ -1,7 +1,7 @@
 {
   "BackgroundGradient": [
-    [0, [39, 40, 49]],
-    [1, [25, 28, 42]]
+    [0, [53, 53, 53]],
+    [1, [63, 63, 63]]
   ],
   "UIStroke": {
     "Thickness": 1.8,
@@ -15,5 +15,9 @@
       "AutoComplete": [120, 120, 120]
     },
     "TextSize": 14
+  },
+  "CustomIcon": {
+    "Enabled": false,
+    "Url": "https://freepngimg.com/thumb/compact%20disc/18-compact-cd-dvd-disk-png-image.png"
   }
 }
