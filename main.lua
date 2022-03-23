@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.3.8",
+        ["Version"] = "v1.3.9",
         ["Developer"] = "Bug#4193",
     },
     ["Debug"] = true,
@@ -662,11 +662,17 @@ local function main()
                 game.Players.LocalPlayer.Character.Humanoid.MoveToFinished:Wait()
             end
         end)
-        
+		
         if Settings["Thrix"]["Settings"]["Waypoints"] == nil then
             Settings["Thrix"]["Settings"]["Waypoints"] = {}
             writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
         end
+		
+		local PlaceID = tostring(game.PlaceId)
+		if Settings["Thrix"]["Settings"]["Waypoints"][PlaceID] == nil then
+			Settings["Thrix"]["Settings"]["Waypoints"][PlaceID] = {}
+			writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
+		end
 
         local Waypoints = {}
         local function Waypoint(Name, Position)
@@ -739,19 +745,19 @@ local function main()
             return Waypoint
         end
 
-        for i,v in pairs(Settings["Thrix"]["Settings"]["Waypoints"]) do
+        for i,v in pairs(Settings["Thrix"]["Settings"]["Waypoints"][PlaceID]) do
             Waypoint(i, CFrame.new(table.unpack(v)))
         end
         
         Settings["Thrix"].AddFunction({"setwaypoint", "setwp"}, "Creates a waypoint at your current location.", function(Args)
-            Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] = string.split(tostring(LocalPlayer.Character.HumanoidRootPart.CFrame), ", ")
+            Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]] = string.split(tostring(LocalPlayer.Character.HumanoidRootPart.CFrame), ", ")
             Waypoint(Args[2], LocalPlayer.Character.HumanoidRootPart.CFrame)
             writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
         end)
         
         Settings["Thrix"].AddFunction({"deletewaypoint", "delwp"}, "Deletes the selected waypoint.", function(Args)
-            if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
-                Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] = nil
+            if Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]] then
+                Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]] = nil
                 Waypoints[Args[2]]:Destroy()
             else
                 warn("Invalid Waypoint.")
@@ -761,16 +767,16 @@ local function main()
         end)
 
         Settings["Thrix"].AddFunction({"waypoint", "wp"}, "Teleports you to the selected waypoint.", function(Args)
-            if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(table.unpack(Settings["Thrix"]["Settings"]["Waypoints"][Args[2]]))
+            if Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]] then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(table.unpack(Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]]))
             else
                 warn("Invalid Waypoint.")
             end
         end)
         
         Settings["Thrix"].AddFunction({"pathfindwaypoint", "pfwp"}, "Makes you walt to the selected waypoint.", function(Args)
-            if Settings["Thrix"]["Settings"]["Waypoints"][Args[2]] then
-                local To = CFrame.new(table.unpack(Settings["Thrix"]["Settings"]["Waypoints"][Args[2]])).p
+            if Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]] then
+                local To = CFrame.new(table.unpack(Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]])).p
                 local From =  game.Players.LocalPlayer.Character.HumanoidRootPart.Position
                 
                 local Path = game:GetService("PathfindingService"):FindPathAsync(From, To)
@@ -874,12 +880,11 @@ local function main()
         end)
         
         Settings["Thrix"].AddFunction({"rejoin", "rj"}, "Makes your player rejoin.", function(Args)
-            queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer loadstring(game:HttpGet(\"https://raw.githubusercontent.com/0zBug/Thrixmin/main/main.lua\"))()")
             game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
         end)
         
         Settings["Thrix"].AddFunction("posrj", "Makes your player rejoin and teleport to your current position.", function(Args)
-            queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer repeat wait() until game:GetService('Players').LocalPlayer.Character repeat wait() until game:GetService('Players').LocalPlayer.Character.HumanoidRootPart wait() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(" .. tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame) .. ") loadstring(game:HttpGet(\"https://raw.githubusercontent.com/0zBug/Thrixmin/main/main.lua\"))()")
+            queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer repeat wait() until game:GetService('Players').LocalPlayer.Character repeat wait() until game:GetService('Players').LocalPlayer.Character.HumanoidRootPart wait() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(" .. tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame) .. ")")
             game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
         end)
         
