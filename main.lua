@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.3.9",
+        ["Version"] = "v1.4.0",
         ["Developer"] = "Bug#4193",
     },
     ["Debug"] = true,
@@ -67,6 +67,12 @@ else
     end
     writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
 end
+
+if not isfile("Thrixmin/UISettings.json") then
+	writefile("Thrixmin/UISettings.json", game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/UISettings.json"))
+end
+
+Settings["Thrix"]["UI"] = game:GetService("HttpService"):JSONDecode(readfile("Thrixmin/UISettings.json"))
 
 if not isfolder("Thrixmin/Plugins") then
     makefolder("Thrixmin/Plugins")
@@ -180,18 +186,23 @@ Frame.Size = UDim2.new(0.6, 0, 0.07, 0)
 
 local UIGradient = Instance.new("UIGradient", Frame)
 UIGradient.Rotation = -90
-UIGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(39, 40, 49)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 28, 42))
-})
+
+local Gradient = {}
+for i = 1, #Settings["Thrix"]["UI"]["BackgroundGradient"] do
+	local Keypoint = Settings["Thrix"]["UI"]["BackgroundGradient"][i]
+	local Index, Color = Keypoint[1], Keypoint[2]
+	table.insert(Gradient, ColorSequenceKeypoint.new(Index, Color3.fromRGB(Color[1], Color[2], Color[3])))
+end
+
+UIGradient.Color = ColorSequence.new(Gradient)
 
 local UICorner = Instance.new("UICorner", Frame)
 
 local UIStroke = Instance.new("UIStroke", Frame)
 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 UIStroke.Color = Color3.fromRGB(39, 39, 39)
-UIStroke.Transparency = 0.6
-UIStroke.Thickness = 1.8
+UIStroke.Transparency = Settings["Thrix"]["UI"]["UIStroke"]["Transparency"]
+UIStroke.Thickness = Settings["Thrix"]["UI"]["UIStroke"]["Thickness"]
 
 local ImageLabel = Instance.new("ImageLabel", Frame)
 ImageLabel.BackgroundTransparency = 1
@@ -200,14 +211,15 @@ ImageLabel.Position = UDim2.new(0.05, 0, 0.5, 0)
 ImageLabel.Size = UDim2.new(0.09, 0, 1, 0)
 ImageLabel.Image = getcustomasset("Thrixmin/Assets/Logo.png")
 
+local TextColor = Settings["Thrix"]["UI"]["Text"]["Color"]
 local TextBox = Instance.new("TextBox", Frame)
 TextBox.AnchorPoint = Vector2.new(0.5, 0.5)
 TextBox.Position = UDim2.new(0.5, 0, 0.5, 0)
 TextBox.Size = UDim2.new(1, 0, 1, 0)
 TextBox.BackgroundTransparency = 1
-TextBox.Font = Enum.Font.Code
-TextBox.TextSize = "14"
-TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.Font = Enum.Font[Settings["Thrix"]["UI"]["Text"]["Font"]]
+TextBox.TextSize = tostring(Settings["Thrix"]["UI"]["Text"]["TextSize"])
+TextBox.TextColor3 = Color3.fromRGB(TextColor["Normal"][1], TextColor["Normal"][2], TextColor["Normal"][3])
 TextBox.Text = ""
 TextBox.PlaceholderText = "Enter Command"
 TextBox.ZIndex = 3
@@ -217,9 +229,9 @@ AutoComplete.AnchorPoint = Vector2.new(0.5, 0.5)
 AutoComplete.Position = UDim2.new(0.5, 0, 0.5, 0)
 AutoComplete.Size = UDim2.new(1, 0, 1, 0)
 AutoComplete.BackgroundTransparency = 1
-AutoComplete.Font = Enum.Font.Code
-AutoComplete.TextSize = "14"
-AutoComplete.TextColor3 = Color3.fromRGB(120, 120, 120)
+AutoComplete.Font = Enum.Font[Settings["Thrix"]["UI"]["Text"]["Font"]]
+AutoComplete.TextSize = tostring(Settings["Thrix"]["UI"]["Text"]["TextSize"])
+AutoComplete.TextColor3 = Color3.fromRGB(TextColor["AutoComplete"][1], TextColor["AutoComplete"][2], TextColor["AutoComplete"][3])
 AutoComplete.Text = ""
 
 --[[
