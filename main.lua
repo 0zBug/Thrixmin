@@ -209,7 +209,12 @@ ImageLabel.BackgroundTransparency = 1
 ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 ImageLabel.Position = UDim2.new(0.05, 0, 0.5, 0)
 ImageLabel.Size = UDim2.new(0.09, 0, 1, 0)
-ImageLabel.Image = getcustomasset("Thrixmin/Assets/Logo.png")
+if Settings["Thrix"]["UI"]["CustomIcon"]["Enabled"] then
+	writefile("Thrixmin/Assets/Icon.png", game:HttpGet(Settings["Thrix"]["UI"]["CustomIcon"]["Url"]))
+	ImageLabel.Image = getcustomasset("Thrixmin/Assets/Icon.png")
+else
+	ImageLabel.Image = getcustomasset("Thrixmin/Assets/Logo.png")
+end
 
 local TextColor = Settings["Thrix"]["UI"]["Text"]["Color"]
 local TextBox = Instance.new("TextBox", Frame)
