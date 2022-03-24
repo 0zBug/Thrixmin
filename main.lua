@@ -210,8 +210,13 @@ ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 ImageLabel.Position = UDim2.new(0.05, 0, 0.5, 0)
 ImageLabel.Size = UDim2.new(0.09, 0, 1, 0)
 if Settings["Thrix"]["UI"]["CustomIcon"]["Enabled"] then
-	writefile("Thrixmin/Assets/Icon.png", game:HttpGet(Settings["Thrix"]["UI"]["CustomIcon"]["Url"]))
-	ImageLabel.Image = getcustomasset("Thrixmin/Assets/Icon.png")
+	local FileName = string.format("Thrixmin/Assets/%s.png", HttpService:GenerateGUID(false))
+	writefile(FileName, game:HttpGet(Settings["Thrix"]["UI"]["CustomIcon"]["Url"]))
+	ImageLabel.Image = getcustomasset(FileName)
+	spawn(function()
+		wait(5)
+		delfile(FileName)
+	end)
 else
 	ImageLabel.Image = getcustomasset("Thrixmin/Assets/Logo.png")
 end
