@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.4.0",
+        ["Version"] = "v1.4.1",
         ["Developer"] = "Bug#4193",
     },
     ["Debug"] = true,
@@ -329,6 +329,46 @@ local function GetPlayer(Name)
     end
     
     return false
+end
+
+local Git = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/CodeTransfer/Git.lua"))()
+
+local function GetCodes()
+    return HttpService:JSONDecode(game:HttpGet("https://raw.githubusercontent.com/Thrixmin/JoinCodes/main/Codes.json"))
+end
+
+local function FlushCodes(Codes)
+    for i,v in next, Codes do 
+        if os.clock() - v.Time > 10800 then
+            Codes[i] = nil
+        end
+    end
+
+    return Codes
+end
+
+local function GenerateCode()
+    return string.format("%04d", math.random(1, 9999)), {
+        PlaceID = game.PlaceId,
+        JobId = game.JobId,
+        Time = os.clock()
+    }
+end
+
+function UpdateCodes()
+    local Codes = FlushCodes(GetCodes())
+    local Code, CodeData = GenerateCode()
+    Codes[Code] = CodeData
+
+    Git.Push("Thrixmin/JoinCodes", "Codes.json", HttpService:JSONEncode(Codes))
+
+    return Code
+end
+
+function TeleportToCode(Code)
+    local Codes = FlushCodes(GetCodes())
+
+    TeleportService:TeleportToPlaceInstance(Codes[Code].PlaceID, Codes[Code].JobId)
 end
 
 local function thread(f)
@@ -943,6 +983,20 @@ local function main()
         	else 
         	    print("404: File not found.")
         	end
+        end)
+
+        Settings["Thrix"].AddFunction("join", "Teleports you to the game of the join code.", function(Args)
+            TeleportToCode(Args[2])
+        end)
+
+        Settings["Thrix"].AddFunction("gencode", "Generates a join code.", function(Args)
+            local Code = UpdateCodes()
+
+            setclipboard(Code)
+            StarterGui:SetCore("SendNotification", {
+                Title = "Join Code",
+                Text = "Copied code to clipboard: " .. Code,
+            })
         end)
 
         Settings["Thrix"].AddFunction({"chatlogs", "clogs"}, "Opens chat logs.", function(Args)
