@@ -4,7 +4,7 @@
 local HttpService = game:GetService("HttpService")
 local request = request or syn.request
 local HttpService = game:GetService("HttpService")
-local Base64 = loadstring(game:HttpGet("https://raw.githubusercontent.com/Thrixmin/JoinCodes/main/Base64.lua"))()
+local Base64 = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/CodeTransfer/Base64.lua"))()
 
 local Git = {}
 
