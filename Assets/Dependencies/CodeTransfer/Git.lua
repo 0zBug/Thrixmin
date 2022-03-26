@@ -1,4 +1,6 @@
 
+-- Tokens are encrypted so github won't remove them
+
 local HttpService = game:GetService("HttpService")
 local request = request or syn.request
 local HttpService = game:GetService("HttpService")
