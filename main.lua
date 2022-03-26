@@ -77,7 +77,7 @@ Settings["Thrix"]["UI"] = game:GetService("HttpService"):JSONDecode(readfile("Th
 if not isfolder("Thrixmin/Plugins") then
     makefolder("Thrixmin/Plugins")
 end
-
+ 
 if not isfolder("Thrixmin/Assets") then
     makefolder("Thrixmin/Assets")
 end
