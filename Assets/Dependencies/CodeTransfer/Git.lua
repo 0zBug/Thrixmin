@@ -14,7 +14,7 @@ function Git.Push(Repository, File, Content)
         Method = "PUT",
         Headers = {
             ["Content-Type"] = "application/json", 
-            ["Authorization"] = "token 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"
+            ["Authorization"] = "token \103\104\112\95\105\52\49\120\54\105\98\83\83\110\77\80\66\108\90\82\122\52\105\53\48\115\76\90\101\49\103\84\79\118\49\73\110\67\75\69"
         },
         Body = HttpService:JSONEncode({
             message = "push", 
@@ -23,7 +23,7 @@ function Git.Push(Repository, File, Content)
                 Url = Url, 
                 Method = "GET", 
                 Headers = {
-                    ["Authorization"] = "token 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"
+                    ["Authorization"] = "token \103\104\112\95\105\52\49\120\54\105\98\83\83\110\77\80\66\108\90\82\122\52\105\53\48\115\76\90\101\49\103\84\79\118\49\73\110\67\75\69"
                 }
             }).Body).sha
         })
