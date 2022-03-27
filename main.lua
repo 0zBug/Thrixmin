@@ -971,17 +971,15 @@ local function main()
                 end
     
                 Climbing = (Rays[1] or Rays[2]) and true or false
-                if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
-                    if (Rays[1] or Rays[2]) and (Rays[1] or Rays[2]).Normal.Y == 0 then
-                        if Rays[1] or Rays[2] then
-                            SetStatesEnabled(false)
-    
-                            if Humanoid:GetState() ~= Enum.HumanoidStateType.Climbing then
-                                Humanoid:ChangeState(Enum.HumanoidStateType.Climbing)
-                            end
-                            
-                            HumanoidRootPart.Velocity = Vector3.new(HumanoidRootPart.Velocity.X - (HumanoidRootPart.CFrame.lookVector.X / 2), Speed, HumanoidRootPart.Velocity.Z - (HumanoidRootPart.CFrame.lookVector.Z / 2))
+                if (Rays[1] or Rays[2]) and (Rays[1] or Rays[2]).Normal.Y == 0 then
+                    if Rays[1] or Rays[2] then
+                        SetStatesEnabled(false)
+
+                        if Humanoid:GetState() ~= Enum.HumanoidStateType.Climbing then
+                            Humanoid:ChangeState(Enum.HumanoidStateType.Climbing)
                         end
+                        
+                        HumanoidRootPart.Velocity = Vector3.new(HumanoidRootPart.Velocity.X - (HumanoidRootPart.CFrame.lookVector.X / 2), Speed, HumanoidRootPart.Velocity.Z - (HumanoidRootPart.CFrame.lookVector.Z / 2))
                     end
                 end
             end)
