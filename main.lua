@@ -294,10 +294,10 @@ local function GetPlayer(Name)
     elseif string.lower(Name) == "closest" then
         local Closest
         local Distance = math.huge
-        local HumanoidRootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
+        local HumanoidRootPart = LocalPlayer.Character.HumanoidRootPart
         
         for _, Player in ipairs(game.Players:GetPlayers()) do
-        	if Player ~= game.Players.LocalPlayer then
+        	if Player ~= LocalPlayer then
         		if Player:DistanceFromCharacter(HumanoidRootPart.Position) < Distance then
         			Closest = Player
         			Distance = Player:DistanceFromCharacter(HumanoidRootPart.Position)
@@ -309,10 +309,10 @@ local function GetPlayer(Name)
     elseif string.lower(Name) == "farthest" then
         local Farthest
         local Distance = 0
-        local HumanoidRootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
+        local HumanoidRootPart = LocalPlayer.Character.HumanoidRootPart
         
         for _, Player in ipairs(game.Players:GetPlayers()) do
-        	if Player ~= game.Players.LocalPlayer then
+        	if Player ~= LocalPlayer then
         		if Player:DistanceFromCharacter(HumanoidRootPart.Position) > Distance then
         			Farthest = Player
         			Distance = Player:DistanceFromCharacter(HumanoidRootPart.Position)
@@ -335,7 +335,7 @@ end
 local States = {"Climbing", "FallingDown", "Flying", "Jumping", "Running", "Swimming", "Freefall", "GettingUp", "Landed", "Seated", "PlatformStanding", "Ragdoll", "Physics", "RunningNoPhysics", "StrafingNoPhysics"}
 local SetStatesEnabled = function(Enabled)
     for _,v in pairs(States) do
-        game.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType[v], Enabled)
+        LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType[v], Enabled)
     end
 end
 
@@ -461,7 +461,7 @@ local function main()
         end)
         
         Settings["Thrix"].AddFunction({"gameteleport", "gametp"}, "Teleports you to the selected game.", function(Args)
-            game:GetService("TeleportService"):Teleport(Args[2], game.Players.LocalPlayer)
+            game:GetService("TeleportService"):Teleport(Args[2], LocalPlayer)
         end)
         
         Settings["Thrix"].AddFunction({"walkspeed", "ws"}, "Sets your character's walkspeed to the chosen amount.", function(Args)
@@ -535,17 +535,17 @@ local function main()
         end)
 
         Settings["Thrix"].AddFunction("animspeed", "Changes the speed of your players animation.", function(Args)
-            for i,v in next, game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
+            for i,v in next, LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
                 v:AdjustSpeed(tonumber(Args[2]) or 1)
             end
         end)
 
         Settings["Thrix"].AddFunction("noanim", "Stops your players animation.", function(Args)
-            game.Players.LocalPlayer.Character.Animate.Disabled = true
+            LocalPlayer.Character.Animate.Disabled = true
         end)
 
         Settings["Thrix"].AddFunction("reanim", "Starts your players animation.", function(Args)
-            game.Players.LocalPlayer.Character.Animate.Disabled = false
+            LocalPlayer.Character.Animate.Disabled = false
         end)
 
         local Noclip
@@ -595,7 +595,7 @@ local function main()
         end)
         
         Settings["Thrix"].AddFunction({"unview", "unspectate"}, "Makes your camera go back to your player.", function(Args)
-            game.Workspace.Camera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
+            game.Workspace.Camera.CameraSubject = LocalPlayer.Character.Humanoid
         end)
         
         local Flying = false
@@ -607,15 +607,15 @@ local function main()
                 KeyUp:Disconnect() 
             end
         
-            if string.lower(Args[1]) == "-fly" then
-                game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = true
+            if string.lower(Args[1]) == Settings["Thrix"]["Settings"]["Prefix"] .. "fly" then
+                LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = true
             end
         
             local Controls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
             local lControls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
             local sSpeed = 0
             
-            KeyDown = game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(Key)
+            KeyDown = LocalPlayer:GetMouse().KeyDown:Connect(function(Key)
                 if Key:lower() == "w" then
                     Controls.F = Speed
                 elseif Key:lower() == "s" then
@@ -632,7 +632,7 @@ local function main()
                 pcall(function() workspace.CurrentCamera.CameraType = Enum.CameraType.Track end)
             end)
             
-            KeyUp = game.Players.LocalPlayer:GetMouse().KeyUp:Connect(function(Key)
+            KeyUp = LocalPlayer:GetMouse().KeyUp:Connect(function(Key)
                 if Key:lower() == "w" then
                     Controls.F = 0
                 elseif Key:lower() == "s" then
@@ -653,10 +653,10 @@ local function main()
             local BodyGyro = Instance.new("BodyGyro")
             local BodyVelocity = Instance.new("BodyVelocity")
             BodyGyro.P = 9e4
-            BodyGyro.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-            BodyVelocity.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            BodyGyro.Parent = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            BodyVelocity.Parent = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
             BodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
-            BodyGyro.CFrame = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame
+            BodyGyro.CFrame = LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame
             BodyVelocity.Velocity = Vector3.new(0, 0, 0)
             BodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
             
@@ -687,7 +687,7 @@ local function main()
         
         Settings["Thrix"].AddFunction({"unfly", "unvfly", "unvehiclefly"}, "Makes your player stop flying.", function(Args)
             Flying = false
-            game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = false
+            LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = false
         
             if KeyDown or KeyUp then 
                 KeyDown:Disconnect() 
@@ -702,7 +702,7 @@ local function main()
         Settings["Thrix"].AddFunction({"pathfind", "walkto"}, "Walks to the selected player using pathfinding.", function(Args)
             local Player = GetPlayer(Args[2])
             local To = Player.Character.HumanoidRootPart.Position
-            local From =  game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+            local From =  LocalPlayer.Character.HumanoidRootPart.Position
             
             local Path = game:GetService("PathfindingService"):FindPathAsync(From, To)
             local Points = Path:GetWaypoints()
@@ -726,10 +726,10 @@ local function main()
             for i,v in next, Points do
                 Parts[i]:Destroy()
                 if v.Action == Enum.PathWaypointAction.Jump then
-                    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+                    LocalPlayer.Character.Humanoid.Jump = true
                 end
-                game.Players.LocalPlayer.Character.Humanoid:MoveTo(v.Position)
-                game.Players.LocalPlayer.Character.Humanoid.MoveToFinished:Wait()
+                LocalPlayer.Character.Humanoid:MoveTo(v.Position)
+                LocalPlayer.Character.Humanoid.MoveToFinished:Wait()
             end
         end)
 		
@@ -838,7 +838,7 @@ local function main()
 
         Settings["Thrix"].AddFunction({"waypoint", "wp"}, "Teleports you to the selected waypoint.", function(Args)
             if Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]] then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(table.unpack(Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]]))
+                LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(table.unpack(Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]]))
             else
                 warn("Invalid Waypoint.")
             end
@@ -847,7 +847,7 @@ local function main()
         Settings["Thrix"].AddFunction({"pathfindwaypoint", "pfwp"}, "Makes you walt to the selected waypoint.", function(Args)
             if Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]] then
                 local To = CFrame.new(table.unpack(Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[2]])).p
-                local From =  game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                local From = LocalPlayer.Character.HumanoidRootPart.Position
                 
                 local Path = game:GetService("PathfindingService"):FindPathAsync(From, To)
                 local Points = Path:GetWaypoints()
@@ -871,10 +871,10 @@ local function main()
                 for i,v in next, Points do
                     Parts[i]:Destroy()
                     if v.Action == Enum.PathWaypointAction.Jump then
-                        game.Players.LocalPlayer.Character.Humanoid.Jump = true
+                        LocalPlayer.Character.Humanoid.Jump = true
                     end
-                    game.Players.LocalPlayer.Character.Humanoid:MoveTo(v.Position)
-                    game.Players.LocalPlayer.Character.Humanoid.MoveToFinished:Wait()
+                    LocalPlayer.Character.Humanoid:MoveTo(v.Position)
+                    LocalPlayer.Character.Humanoid.MoveToFinished:Wait()
                 end
             else
                 warn("Invalid Waypoint.")
@@ -892,8 +892,8 @@ local function main()
         Settings["Thrix"].AddFunction({"firetouch", "firetouchinterests"}, "Fires all touchinterests in the workspace.", function(Args)
             for _,v in pairs(workspace:GetDescendants()) do
                 if v:IsA("TouchTransmitter") then
-                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0)
-                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1) 
+                    firetouchinterest(LocalPlayer.Character.HumanoidRootPart, v.Parent, 0)
+                    firetouchinterest(LocalPlayer.Character.HumanoidRootPart, v.Parent, 1) 
                 end
             end
         end)
@@ -967,16 +967,14 @@ local function main()
                 if Climbing and not Rays[1] and not Rays[2] then
                     HumanoidRootPart.Velocity = Vector3.new(HumanoidRootPart.Velocity.X, 0, HumanoidRootPart.Velocity.Z)
                 elseif not Climbing then
-                    Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, true)
-                    Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
+                    SetStatesEnabled(true)
                 end
     
                 Climbing = (Rays[1] or Rays[2]) and true or false
                 if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
                     if (Rays[1] or Rays[2]) and (Rays[1] or Rays[2]).Normal.Y == 0 then
                         if Rays[1] or Rays[2] then
-                            Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
-                            Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+                            SetStatesEnabled(false)
     
                             if Humanoid:GetState() ~= Enum.HumanoidStateType.Climbing then
                                 Humanoid:ChangeState(Enum.HumanoidStateType.Climbing)
@@ -992,13 +990,14 @@ local function main()
         Settings["Thrix"].AddFunction({"unspider", "unwallclimb"}, "Stops climbing on walls.", function(Args)
             if ClimbStepped then
                 ClimbStepped:Disconnect()
+                SetStatesEnabled(true)
             end
         end)
 
         Settings["Thrix"].AddFunction("swim", "Lets you swim in the air.", function(Args)
             SetStatesEnabled(false)
             game.Workspace.Gravity = 0
-            game.Players.LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Swimming)
+            LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Swimming)
         end)
 
         Settings["Thrix"].AddFunction("unswim", "Stops swimming in the air.", function(Args)
