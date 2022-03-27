@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.4.1",
+        ["Version"] = "v1.4.2",
         ["Developer"] = "Bug#4193",
     },
     ["Debug"] = true,
@@ -143,6 +143,7 @@ local GamePassService = game:GetService("GamePassService")
 local ReplicatedFirst = game:GetService("ReplicatedFirst")
 local TeleportService = game:GetService("TeleportService")
 local AnalyticsService = game:GetService("AnalyticsService")
+local UserInputService = game:GetService("UserInputService")
 local AppStorageService = game:GetService("AppStorageService")
 local CollectionService = game:GetService("CollectionService")
 local HttpRbxApiService = game:GetService("HttpRbxApiService")
@@ -329,6 +330,13 @@ local function GetPlayer(Name)
     end
     
     return false
+end
+
+local States = {"Climbing", "FallingDown", "Flying", "Jumping", "Running", "Swimming", "Freefall", "GettingUp", "Landed", "Seated", "PlatformStanding", "Ragdoll", "Physics", "RunningNoPhysics", "StrafingNoPhysics"}
+local SetStatesEnabled = function(Enabled)
+    for _,v in pairs(States) do
+        game.Players.LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType[v], Enabled)
+    end
 end
 
 local Git = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/CodeTransfer/Git.lua"))()
@@ -925,6 +933,77 @@ local function main()
                     print("Team not found.")
                 end
             end
+        end)
+
+        local ClimbStepped
+        Settings["Thrix"].AddFunction({"spider", "wallclimb"}, "Lets you climb on walls.", function(Args)
+            if ClimbStepped then
+                ClimbStepped:Disconnect()
+            end
+
+            local Climbing = false
+            local Speed = Args[2] or 15
+
+            ClimbStepped = RunService.RenderStepped:Connect(function()
+                local Character = LocalPlayer.Character
+                local HumanoidRootPart = Character.HumanoidRootPart
+                local Humanoid = Character.Humanoid
+    
+                local Characters = {}
+                for _,v in pairs(Players:GetChildren()) do
+                    table.insert(Characters, v.Character)
+                end
+    
+                local MoveDirection = (Humanoid.MoveDirection ~= Vector3.new(0, 0, 0) and Humanoid.MoveDirection.Unit * 2 or Vector3.new(0, 0, 0))
+                local RaycastParams = RaycastParams.new()
+                RaycastParams.FilterDescendantsInstances = Characters
+                RaycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    
+                local Rays = {
+                    Workspace:Raycast(HumanoidRootPart.Position, MoveDirection + Vector3.new(0, 0.1, 0), RaycastParams),
+                    Workspace:Raycast(HumanoidRootPart.Position, MoveDirection - Vector3.new(0, Humanoid.HipHeight, 0), RaycastParams)
+                }
+    
+                if Climbing and not Rays[1] and not Rays[2] then
+                    HumanoidRootPart.Velocity = Vector3.new(HumanoidRootPart.Velocity.X, 0, HumanoidRootPart.Velocity.Z)
+                elseif not Climbing then
+                    Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, true)
+                    Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
+                end
+    
+                Climbing = (Rays[1] or Rays[2]) and true or false
+                if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+                    if (Rays[1] or Rays[2]) and (Rays[1] or Rays[2]).Normal.Y == 0 then
+                        if Rays[1] or Rays[2] then
+                            Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
+                            Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+    
+                            if Humanoid:GetState() ~= Enum.HumanoidStateType.Climbing then
+                                Humanoid:ChangeState(Enum.HumanoidStateType.Climbing)
+                            end
+                            
+                            HumanoidRootPart.Velocity = Vector3.new(HumanoidRootPart.Velocity.X - (HumanoidRootPart.CFrame.lookVector.X / 2), Speed, HumanoidRootPart.Velocity.Z - (HumanoidRootPart.CFrame.lookVector.Z / 2))
+                        end
+                    end
+                end
+            end)
+        end)
+
+        Settings["Thrix"].AddFunction({"unspider", "unwallclimb"}, "Stops climbing on walls.", function(Args)
+            if ClimbStepped then
+                ClimbStepped:Disconnect()
+            end
+        end)
+
+        Settings["Thrix"].AddFunction("swim", "Lets you swim in the air.", function(Args)
+            SetStatesEnabled(false)
+            game.Workspace.Gravity = 0
+            game.Players.LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Swimming)
+        end)
+
+        Settings["Thrix"].AddFunction("unswim", "Stops swimming in the air.", function(Args)
+            SetStatesEnabled(true)
+            game.Workspace.Gravity = 196.2
         end)
 
         Settings["Thrix"].AddFunction({"reset", "re"}, "Resets your player.", function(Args)
