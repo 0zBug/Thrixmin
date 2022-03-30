@@ -43,7 +43,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.4.2",
+        ["Version"] = "v1.4.3",
         ["Developer"] = "Bug#4193",
     },
     ["Debug"] = true,
@@ -340,6 +340,7 @@ local SetStatesEnabled = function(Enabled)
 end
 
 local Git = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/CodeTransfer/Git.lua"))()
+local Highlight = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/Highlight.lua"))()
 
 local function GetCodes()
     return HttpService:JSONDecode(game:HttpGet("https://raw.githubusercontent.com/Thrixmin/JoinCodes/main/Codes.json"))
@@ -396,7 +397,7 @@ Settings["Thrix"]["BuildFunctionOutput"] = function()
     
     return Output
 end
-    
+
 Settings["Thrix"]["AddFunction"] = function(FuncNames, FuncDesc, FuncExec, PluginName)
     local FuncOutput = Settings["Thrix"]["BuildFunctionOutput"]()
     if type(FuncNames) == "string" then
@@ -440,7 +441,7 @@ end
     ██║ ╚═╝ ██║██║  ██║██║██║ ╚████║
     ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
 ]]--
-        
+
 local function main()
     print(Settings["Info"]["Name"], Settings["Info"]["Version"], "Loaded")
     print(string.format("Prefix - \"%s\"", Settings["Thrix"]["Settings"]["Prefix"]))
@@ -881,6 +882,94 @@ local function main()
             end
         end)
 
+        local ChamsConnections = {}
+
+        Settings["Thrix"].AddFunction({"chams", "esp"}, "Highlights Players through walls.", function(Args)
+            local Color = Color3.fromRGB(Args[1] or 255, Args[2] or 255, Args[3] or 255)
+            
+            Highlight.RemoveHighlightGuis()
+            
+            for i,v in next, ChamsConnections do
+                v:Disconnect()
+            end
+            
+            ChamsConnections = {}
+            
+            Highlight.CreateGui()
+            
+            for Index,Player in next, game.Players:GetChildren() do
+                if Player ~= game.Players.LocalPlayer then
+                    if Player.Character then
+                        Highlight.HighlightBody(Player.Character, Color)
+                    end
+                    local Connection = Player.CharacterAdded:Connect(function(Character)
+                        local Humanoid = Character:WaitForChild("Humanoid")
+                        Highlight.HighlightBody(Character, Color)
+                    end)
+                    
+                    table.insert(ChamsConnections, Connection)
+                end
+            end
+            
+            local Connection = game:GetService("Players").PlayerAdded:Connect(function(Player)
+                local Connection = Player.CharacterAdded:Connect(function(Character)
+                    local Humanoid = Character:WaitForChild("Humanoid")
+                    Highlight.HighlightBody(Character, Color)
+                end)
+                
+                table.insert(ChamsConnections, Connection)
+            end)
+            
+            table.insert(ChamsConnections, Connection)
+        end)
+
+        Settings["Thrix"].AddFunction({"teamchams", "teamesp"}, "Highlights Players through walls by team.", function(Args)
+            Highlight.RemoveHighlightGuis()
+        
+            for i,v in next, ChamsConnections do
+                v:Disconnect()
+            end
+            
+            ChamsConnections = {}
+            
+            Highlight.CreateGui()
+            
+            for Index,Player in next, game.Players:GetChildren() do
+                if Player ~= game.Players.LocalPlayer then
+                    if Player.Character then
+                        Highlight.HighlightBody(Player.Character, Player.TeamColor)
+                    end
+                    local Connection = Player.CharacterAdded:Connect(function(Character)
+                        local Humanoid = Character:WaitForChild("Humanoid")
+                        Highlight.HighlightBody(Character, Player.TeamColor)
+                    end)
+                    
+                    table.insert(ChamsConnections, Connection)
+                end
+            end
+            
+            local Connection = game:GetService("Players").PlayerAdded:Connect(function(Player)
+                local Connection = Player.CharacterAdded:Connect(function(Character)
+                    local Humanoid = Character:WaitForChild("Humanoid")
+                    Highlight.HighlightBody(Character, Player.TeamColor)
+                end)
+                
+                table.insert(ChamsConnections, Connection)
+            end)
+            
+            table.insert(ChamsConnections, Connection)
+        end)
+
+        Settings["Thrix"].AddFunction({"nochams", "noesp"}, "Disables chams.", function(Args)
+            Highlight.RemoveHighlightGuis()
+        
+            for i,v in next, ChamsConnections do
+                v:Disconnect()
+            end
+            
+            ChamsConnections = {}
+        end)
+
         Settings["Thrix"].AddFunction({"firecd", "fireclickdetectors"}, "Fires all clickdetectors in the workspace.", function(Args)
             for _,v in pairs(workspace:GetDescendants()) do
                 if v:IsA("ClickDetector") then
@@ -1262,15 +1351,10 @@ local function main()
 			
         for _,File in next, listfiles("Thrixmin/Plugins") do
             if isfile(File) then
-                for _,Command in next, loadstring(readfile(File))() do
-                    if type(Command[1]) == "string" then
-                        Command[1] = {Command[1]}
-                    end
-                    Settings["Thrix"].AddFunction(Command[1], Command[2], function(Args)
-                        thread(function()
-                            Command[3](Args)
-                        end)
-                    end, string.split(string.split(File, "\\")[#string.split(File, "\\")], ".")[1])
+                local Plugin = loadstring(readfile(File))()
+
+                for Name, Command in next, Plugin.Commands do
+                    Settings["Thrix"].AddFunction({Name, unpack(Command.Aliases or {})}, Command.Description, Command.Function, Plugin.Name)
                 end
             end
         end

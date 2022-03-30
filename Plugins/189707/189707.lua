@@ -1,16 +1,25 @@
 
-return {
-    {{"balloon", "getballoon"}, "Clones a balloon from someones character.", function(Args)
-        spawn(function() 
-            if game:FindFirstChild("GreenBalloon", true) then 
-            	Balloon = game:FindFirstChild("GreenBalloon", true):Clone()
-            	Balloon.Parent = game:GetService("Players").LocalPlayer.Backpack
+local Plugin = {
+    ["Name"] = "189707",
+    ["Commands"] = {
+        ["balloon"] = {
+            ["Description"] = "Clones a balloon from someones character.",
+            ["Aliases"] = {"getballoon"},
+            ["Function"] = function(Args)
+                if game:FindFirstChild("GreenBalloon", true) then 
+                    Balloon = game:FindFirstChild("GreenBalloon", true):Clone()
+                    Balloon.Parent = game:GetService("Players").LocalPlayer.Backpack
+                end
             end
-        end)
-    end},
-    {{"nofalldamage", "nodamage"}, "Removes fall damage.", function(Args)
-        spawn(function()
-            game.Players.LocalPlayer.Character.FallDamageScript:Destroy()
-        end)
-    end}
+        },
+        ["nofalldamage"] = {
+            ["Description"] = "Removes fall damage.",
+            ["Aliases"] = {"nodamage"},
+            ["Function"] = function(Args)
+                game.Players.LocalPlayer.Character.FallDamageScript:Destroy()
+            end
+        }
+    }
 }
+
+return Plugin
