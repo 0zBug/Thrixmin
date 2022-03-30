@@ -1192,6 +1192,7 @@ local function main()
                 for i,v in next, Files do
                     writefile("Thrixmin/Plugins/" .. v, game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v:gsub(" ", "%%20")))
                     print(string.format("Installed %s from plugin: %s", v, Args[2]))
+                    
                     local Plugin = loadstring(readfile(File))()
 
                     for Name, Command in next, Plugin.Commands do
@@ -1216,7 +1217,7 @@ local function main()
                             Settings["Thrix"]["Functions"][v] = nil
                         end
                     end
-                    
+
                     delfile("Thrixmin/Plugins/" .. v)
                     print(string.format("Deleted %s from plugin: %s", v, Args[2]))
                 end
