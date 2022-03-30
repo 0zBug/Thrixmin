@@ -49,7 +49,8 @@ local Settings = {
     ["Debug"] = true,
     ["Thrix"] = {
         ["Settings"] = {
-            ["Prefix"] = "-"
+            ["Prefix"] = "-",
+            ["Silent"] = true
         },
         ["OutputTypes"] = {
               Output = {},
@@ -1192,7 +1193,7 @@ local function main()
                 for i,v in next, Files do
                     writefile("Thrixmin/Plugins/" .. v, game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v:gsub(" ", "%%20")))
                     print(string.format("Installed %s from plugin: %s", v, Args[2]))
-                    
+
                     local Plugin = loadstring(readfile(File))()
 
                     for Name, Command in next, Plugin.Commands do
@@ -1229,15 +1230,17 @@ local function main()
         local old = gt.__namecall
         
         gt.__namecall = newcclosure(function(self, ...)
-            if getnamecallmethod()== "FireServer" and tostring(self) == "SayMessageRequest" then
+            if getnamecallmethod() == "FireServer" and tostring(self) == "SayMessageRequest" then
                 local Args = (({...})[1]):split(" ")
                 if string.sub(Args[1], 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
-                    return old(table.foreach(Settings["Thrix"]["Functions"], function(Command, v)
-                        if string.lower(Args[1]) == string.lower(Settings["Thrix"]["Settings"]["Prefix"] .. Command) then
-                            Settings["Thrix"]["Functions"][Command]:Execute(Args)
+                    local Command = Settings["Thrix"]["Functions"][string.sub(string.lower(Args[1]), #Settings["Thrix"]["Settings"]["Prefix"] + 1)]
+
+                    if Command then
+                        Command:Execute(Args)
+                        if Settings["Thrix"]["Settings"]["Silent"] then
                             return self, ""
                         end
-                    end))
+                    end
                 end
             end
             
@@ -1305,6 +1308,20 @@ local function main()
             end
         end)
         
+        Settings["Thrix"].AddFunction("silent", "Enables silent chat.", function(Args)
+            Settings["Thrix"]["Settings"]["Silent"] = true
+
+            writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
+            print("Enabled silent chat.")
+        end)
+
+        Settings["Thrix"].AddFunction("unsilent", "Disables silent chat.", function(Args)
+            Settings["Thrix"]["Settings"]["Silent"] = false
+
+            writefile("Thrixmin/Settings.json", game:GetService("HttpService"):JSONEncode(Settings["Thrix"]["Settings"]))
+            print("Disabled silent chat.")
+        end)
+
         Settings["Thrix"].AddFunction("prefix", "Sets your command prefix.", function(Args)
             Settings["Thrix"]["Settings"]["Prefix"] = Args[2]
             
