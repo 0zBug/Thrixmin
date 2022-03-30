@@ -1192,15 +1192,10 @@ local function main()
                 for i,v in next, Files do
                     writefile("Thrixmin/Plugins/" .. v, game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[2] .. "/" .. v:gsub(" ", "%%20")))
                     print(string.format("Installed %s from plugin: %s", v, Args[2]))
-                    for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
-                        if type(Command[1]) == "string" then
-                            Command[1] = {Command[1]}
-                        end
-                        Settings["Thrix"].AddFunction(Command[1], Command[2], function(Args)
-                            thread(function()
-                                Command[3](Args)
-                            end)
-                        end, Args[2])
+                    local Plugin = loadstring(readfile(File))()
+
+                    for Name, Command in next, Plugin.Commands do
+                        Settings["Thrix"].AddFunction({Name, unpack(Command.Aliases or {})}, Command.Description, Command.Function, Plugin.Name)
                     end
                 end
             end
@@ -1217,13 +1212,11 @@ local function main()
                 
                 for i,v in next, Files do
                     for _,Command in next, loadstring(readfile("Thrixmin/Plugins/" .. v))() do
-                        if type(Command[1]) == "string" then
-                            Command[1] = {Command[1]}
-                        end
-                        for i,v in next, Command[1] do
+                        for i,v in next, {Name, unpack(Command.Aliases or {})} do
                             Settings["Thrix"]["Functions"][v] = nil
                         end
                     end
+                    
                     delfile("Thrixmin/Plugins/" .. v)
                     print(string.format("Deleted %s from plugin: %s", v, Args[2]))
                 end
