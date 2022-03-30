@@ -552,7 +552,7 @@ local function main()
         local Clip = true
         Settings["Thrix"].AddFunction("noclip", "Noclips your character.", function(Args)
             Clip = false
-            Noclip = game:GetService("RunService").RenderStepped:Connect(function()
+            Noclip = game:GetService("RunService").Stepped:Connect(function()
                 if Clip == false and game:GetService("Players").LocalPlayer.Character then
                     for i, v in pairs(game:GetService("Players").LocalPlayer.Character:GetDescendants()) do
                         if v:IsA("BasePart") and v.CanCollide == true then
