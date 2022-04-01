@@ -1341,7 +1341,7 @@ local function main()
             
             ScreenGui:Destroy()
         end)
-
+        
         Settings["Thrix"].AddFunction("discord", "Invites you to the Thrixmin discord.", function(Args)
             request({
                 Url = 'http://127.0.0.1:6463/rpc?v=1',
@@ -1359,13 +1359,13 @@ local function main()
                 })
             })
         end)
-			
+		
         for _,File in next, listfiles("Thrixmin/Plugins") do
             if isfile(File) then
                 local Plugin = loadstring(readfile(File))()
 
                 for Name, Command in next, Plugin.Commands do
-                    Settings["Thrix"].AddFunction({Name, unpack(Command.Aliases or {})}, Command.Description, Command.Function, Plugin.Name)
+                    Settings["Thrix"].AddFunction({Name, unpack(Command.Aliases or {})}, Command.Description, Command.Function, Plugin.Name or Plugin.PluginName)
                 end
             end
         end
