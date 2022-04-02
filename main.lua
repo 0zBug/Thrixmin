@@ -1221,6 +1221,14 @@ local function main()
             game.Workspace.Gravity = 196.2
         end)
 
+        AddFunction({"noname", "nobillboardgui"}, "Disables nametags in some games.", function(Args)
+            for _,v in pairs(LocalPlayer.Character:GetDescendants())do
+                if v:IsA("BillboardGui") or v:IsA("SurfaceGui") then
+                    v:Destroy()
+                end
+            end
+        end)
+
         AddFunction({"reset", "re"}, "Resets your player.", function(Args)
             local Position = LocalPlayer.Character.HumanoidRootPart.CFrame
             if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then 
@@ -1404,7 +1412,7 @@ local function main()
         	local Args = TextBox.Text:split(" ")
 
             if string.sub(TextBox.Text, 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
-                local Command = Settings["Thrix"]["Functions"][string.sub(string.lower(TextBox.Text), #Settings["Thrix"]["Settings"]["Prefix"] + 1)]
+                local Command = Settings["Thrix"]["Functions"][string.sub(string.lower(Args[1]), #Settings["Thrix"]["Settings"]["Prefix"] + 1)]
 
                 if Command then
                     table.remove(Args, 1)
