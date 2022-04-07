@@ -881,7 +881,7 @@ local function main()
             writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
         end
 
-        local Waypoints = {}
+    local Waypoints = {}
         local function Waypoint(Name, Position)
             local Part = Instance.new("Part", Workspace)
             Part.BottomSurface = Enum.SurfaceType.Smooth
@@ -984,11 +984,7 @@ local function main()
 
         AddFunction({"hidewaypoints", "hidewps"}, "Disables waypoint markers.", function(Args)
             for _, Waypoint in pairs(Waypoints) do
-<<<<<<< HEAD
                 Waypoint.Enabled = false
-=======
-                Waypoint.Active = false
->>>>>>> 0cd3de5e50ac330c527e0cbcac76bb02a4609b9e
             end
 
             Settings["Thrix"]["Settings"]["Markers"] = false
@@ -998,11 +994,7 @@ local function main()
 
         AddFunction({"showwaypoints", "showwps"}, "Enables waypoint markers.", function(Args)
             for _, Waypoint in pairs(Waypoints) do
-<<<<<<< HEAD
-                Waypoints.Enabled = true
-=======
-                Waypoints.Active = true
->>>>>>> 0cd3de5e50ac330c527e0cbcac76bb02a4609b9e
+                Waypoint.Enabled = true
             end
 
             Settings["Thrix"]["Settings"]["Markers"] = true
