@@ -50,7 +50,8 @@ local Settings = {
     ["Thrix"] = {
         ["Settings"] = {
             ["Prefix"] = "-",
-            ["Silent"] = true
+            ["Silent"] = true,
+            ["Markers"] = true
         },
         ["OutputTypes"] = {
               Output = {},
@@ -169,6 +170,7 @@ else
     if not isfolder("Thrixmin") then
         makefolder("Thrixmin")
     end
+
     writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
 end
 
@@ -428,49 +430,52 @@ local function thread(f)
         if syn then
             syn.set_thread_identity(7)
         end
+
         f()
     end)
 end
 
-Settings["Thrix"]["BuildFunctionOutput"] = function()
-    local Output = {}
-    Output.Output = {}
-    Output.SyntaxErrors = {}
-    Output.FunctionErrors = {}
-    
-    return Output
-end
+function AddFunction(Aliases, Description, Execute, Plugin)
+    local Output = {
+        Output = {},
+        SyntaxErrors = {},
+        FunctionErrors = {}
+    }
 
-function AddFunction(FuncNames, FuncDesc, FuncExec, PluginName)
-    local FuncOutput = Settings["Thrix"]["BuildFunctionOutput"]()
-    if type(FuncNames) == "string" then
-        FuncNames = {FuncNames}
+    if type(Aliases) == "string" then
+        Aliases = {Aliases}
     end
     
-    if #FuncOutput.SyntaxErrors == 0 then
-        for _,FuncName in next, FuncNames do
-            Settings["Thrix"]["Functions"][FuncName] = {}
-            local NewFunction = Settings["Thrix"]["Functions"][FuncName]
-            NewFunction["Execute"] = function(self, args)
+    if #Output.SyntaxErrors == 0 then
+        for _, Command in next, Aliases do
+            Settings["Thrix"]["Functions"][Command] = {}
+
+            Settings["Thrix"]["Functions"][Command]["Execute"] = function(self, args)
                 thread(function()
                     self.Arguments = {
                         args
                     }
-                    pcall(FuncExec, args)
+
+                    local Success, Error = pcall(Execute, args)
+
+                    if not Success then 
+                        warn(string.format("Error with command %s\n", Command), Error)
+                    end
                 end)
             end
         end
         
-        local PluginName = PluginName or "main"
-        local CommandDocs = string.format("Imported %s from %s - %s ", FuncNames[1], PluginName, FuncDesc)
-        if #FuncNames > 1 then
-            table.remove(FuncNames, 1)
-            CommandDocs = CommandDocs .. "(Aliases: \"" .. table.concat(FuncNames, "\", \"") .. "\")"
+        local Plugin = Plugin or "main"
+        local CommandDocs = string.format("Imported %s from %s - %s ", Aliases[1], Plugin, Description)
+        
+        if #Aliases > 1 then
+            table.remove(Aliases, 1)
+            CommandDocs = CommandDocs .. "(Aliases: \"" .. table.concat(Aliases, "\", \"") .. "\")"
         end
 
         print(CommandDocs)
 
-        return FuncOutput
+        return Output
     else
         return FunctionOutput
     end
@@ -890,7 +895,7 @@ local function main()
             Part.Anchored = true
             
             local Waypoint = Instance.new("BillboardGui", WaypointFolder)
-            Waypoint.Active = true
+            Waypoint.Active = Settings["Thrix"]["Settings"]["Markers"]
             Waypoint.AlwaysOnTop = true
             Waypoint.Size = UDim2.fromOffset(50, 50)
             Waypoint.SizeOffset = Vector2.new(0, 0.75)
@@ -974,6 +979,26 @@ local function main()
             else
                 warn("Invalid Waypoint.")
             end
+        end)
+
+        AddFunction({"hidewaypoints", "hidewps"}, "Disables waypoint markers.", function(Args)
+            for _, Waypoint in pairs(Waypoints) do
+                Waypoint.Active = false
+            end
+
+            Settings["Thrix"]["Settings"]["Markers"] = false
+
+            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
+        end)
+
+        AddFunction({"showwaypoints", "showwps"}, "Enables waypoint markers.", function(Args)
+            for _, Waypoint in pairs(Waypoints) do
+                Waypoints.Active = true
+            end
+
+            Settings["Thrix"]["Settings"]["Markers"] = true
+
+            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
         end)
         
         AddFunction({"pathfindwaypoint", "pfwp"}, "Makes you walt to the selected waypoint.", function(Args)
