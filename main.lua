@@ -875,11 +875,11 @@ local function main()
             writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
         end
 		
-		local PlaceID = tostring(game.PlaceId)
-		if Settings["Thrix"]["Settings"]["Waypoints"][PlaceID] == nil then
-			Settings["Thrix"]["Settings"]["Waypoints"][PlaceID] = {}
-			writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
-		end
+        local PlaceID = tostring(game.PlaceId)
+        if Settings["Thrix"]["Settings"]["Waypoints"][PlaceID] == nil then
+            Settings["Thrix"]["Settings"]["Waypoints"][PlaceID] = {}
+            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
+        end
 
         local Waypoints = {}
         local function Waypoint(Name, Position)
