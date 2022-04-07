@@ -4,4 +4,4 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/m
 ```
 ![](https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Logo.png)
 
-Open sourced and free to use with credit.
+Open sourced and free to use.

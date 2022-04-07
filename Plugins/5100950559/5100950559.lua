@@ -11,7 +11,7 @@ local Plugin = {
                     end
                 end
 
-                for i,v in pairs(game.Players:GetCharacterAppearanceInfoAsync(Args[2]).assets) do
+                for i,v in pairs(game.Players:GetCharacterAppearanceInfoAsync(Args[1]).assets) do
                     game.Players:Chat(string.format("-gh %s", tostring(v.id)))
                 end
             end

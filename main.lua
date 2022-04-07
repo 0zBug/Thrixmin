@@ -895,7 +895,7 @@ local function main()
             Part.Anchored = true
             
             local Waypoint = Instance.new("BillboardGui", WaypointFolder)
-            Waypoint.Active = true
+            Waypoint.Active = Settings["Thrix"]["Settings"]["Markers"]
             Waypoint.AlwaysOnTop = true
             Waypoint.Size = UDim2.fromOffset(50, 50)
             Waypoint.SizeOffset = Vector2.new(0, 0.75)
@@ -984,7 +984,11 @@ local function main()
 
         AddFunction({"hidewaypoints", "hidewps"}, "Disables waypoint markers.", function(Args)
             for _, Waypoint in pairs(Waypoints) do
+<<<<<<< HEAD
                 Waypoint.Enabled = false
+=======
+                Waypoint.Active = false
+>>>>>>> 0cd3de5e50ac330c527e0cbcac76bb02a4609b9e
             end
 
             Settings["Thrix"]["Settings"]["Markers"] = false
@@ -994,7 +998,11 @@ local function main()
 
         AddFunction({"showwaypoints", "showwps"}, "Enables waypoint markers.", function(Args)
             for _, Waypoint in pairs(Waypoints) do
+<<<<<<< HEAD
                 Waypoints.Enabled = true
+=======
+                Waypoints.Active = true
+>>>>>>> 0cd3de5e50ac330c527e0cbcac76bb02a4609b9e
             end
 
             Settings["Thrix"]["Settings"]["Markers"] = true
