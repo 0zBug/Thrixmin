@@ -1,6 +1,4 @@
 
--- Tokens are encoded so github won't remove them
-
 local HttpService = game:GetService("HttpService")
 local request = request or syn.request
 local HttpService = game:GetService("HttpService")
@@ -16,7 +14,7 @@ function Git.Push(Repository, File, Content)
         Method = "PUT",
         Headers = {
             ["Content-Type"] = "application/json", 
-            ["Authorization"] = "token \103\104\112\95\105\52\49\120\54\105\98\83\83\110\77\80\66\108\90\82\122\52\105\53\48\115\76\90\101\49\103\84\79\118\49\73\110\67\75\69"
+            ["Authorization"] = "token \52\98\55\52\57\102\97\101\101\56\49\50\101\56\56\48\49\54\101\101\97\54\101\53\102\99\49\57\51\55\52\101\102\52\55\102\50\56\57\48"
         },
         Body = HttpService:JSONEncode({
             message = "push", 
@@ -25,7 +23,7 @@ function Git.Push(Repository, File, Content)
                 Url = Url, 
                 Method = "GET", 
                 Headers = {
-                    ["Authorization"] = "token \103\104\112\95\105\52\49\120\54\105\98\83\83\110\77\80\66\108\90\82\122\52\105\53\48\115\76\90\101\49\103\84\79\118\49\73\110\67\75\69"
+                    ["Authorization"] = "token \52\98\55\52\57\102\97\101\101\56\49\50\101\56\56\48\49\54\101\101\97\54\101\53\102\99\49\57\51\55\52\101\102\52\55\102\50\56\57\48"
                 }
             }).Body).sha
         })
