@@ -1,5 +1,4 @@
 # Thrixmin Admin
-https://discord.gg/32th2NqaUT
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/main.lua"))()
 ```
