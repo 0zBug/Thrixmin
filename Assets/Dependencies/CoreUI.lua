@@ -73,8 +73,6 @@ function Library.Section(Sectione)
     end
 
     Section.Button = function(Text, Callback)
-        local n = {} for i = 1, 9 do table.insert(n, string.char(string.sub(string.format("%09d", #Frame:GetChildren()), i, i) + 97)) end
-
         local Button = Instance.new("ImageButton", Frame)
         Button.Name = "Button"
         Button.LayoutOrder = #Frame:GetChildren()
