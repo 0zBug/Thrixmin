@@ -59,17 +59,8 @@ function Library.Section(Sectione)
         SectionTab.Icon.Title.Text = Title
     end
 
-    Section.Icon = function(Url)
-        local FileName = HttpService:GenerateGUID(false) .. ".png"
-
-        writefile(FileName, game:HttpGet(Url))
-
-        SectionTab.Icon.Image = getcustomasset(FileName)
-
-        spawn(function()
-            wait(3)
-            delfile(FileName)
-        end)
+    Section.Icon = function(File)
+        SectionTab.Icon.Image = getcustomasset(File)
     end
 
     Section.Button = function(Text, Callback)

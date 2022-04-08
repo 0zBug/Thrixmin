@@ -191,8 +191,20 @@ if not isfolder("Thrixmin/Assets") then
     makefolder("Thrixmin/Assets")
 end
 
+if not isfolder("Thrixmin/Assets") then
+    makefolder("Thrixmin/Assets")
+end
+
 if not isfile("Thrixmin/Assets/Logo.png") then
-    writefile("Thrixmin/Assets/Logo.png", game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Logo.png"))
+    writefile("Thrixmin/Assets/Logo.png", game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Images/Logo.png"))
+end
+
+if not isfile("Thrixmin/Assets/Logo-White.png") then
+    writefile("Thrixmin/Assets/Logo-White.png", game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Images/Logo-White.png"))
+end
+
+if not isfile("Thrixmin/Assets/Player.png") then
+    writefile("Thrixmin/Assets/Player.png", game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Images/Player.png"))
 end
 
 --[[
@@ -1579,7 +1591,7 @@ local function main()
         local Help = Core.Section("Help")
 
         Help.Title("Player")
-        Help.Icon("https://raw.githubusercontent.com/0zBug/Misc/main/Assets/Profile.png")
+        Help.Icon("Thrixmin/Assets/Player.png")
 
         Help.Slider("Walkspeed", 16, 0, 160, function(Value)
             game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
@@ -1600,7 +1612,7 @@ local function main()
         local Record = Core.Section("Record")
 
         Record.Title("Thrixmin")
-        Record.Icon("https://raw.githubusercontent.com/0zBug/Misc/main/Assets/ThrixminWhite.png")
+        Record.Icon("Thrixmin/Assets/Logo-White.png")
 
         Record.Divider("Thrixmin", "Edit the settings of Thrixmin.")
 
