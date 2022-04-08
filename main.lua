@@ -26,7 +26,9 @@ repeat wait() until game:IsLoaded()
     ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
                                                                                                                
     ⮚ Functions 
+        • ExecuteCommand - Executes a command.
         • AddFunction - Adds a function to the admin.
+        • CustomPlayerCase - Creates a custom player case.
         • GetPlayer - Returns a player of a shortend string of the player's name.
         • swait - A wait function that is ~10 times faster than a normal wait.
 ]]--
@@ -43,7 +45,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.4.3",
+        ["Version"] = "v1.4.5",
         ["Developer"] = "Bug#4193",
     },
     ["Debug"] = true,
@@ -72,6 +74,7 @@ local Settings = {
 
 local Git = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/CodeTransfer/Git.lua"))()
 local Highlight = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/Highlight.lua"))()
+local Core = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/CoreUI.lua"))()
 
 --[[
     ███████╗███████╗██████╗ ██╗   ██╗██╗ ██████╗███████╗███████╗
@@ -336,10 +339,11 @@ local function swait(t)
     return coroutine.yield()
 end
 
-local function GetPlayer(Name)
-    if string.lower(Name) == "random" then
-        return game.Players:GetPlayers()[math.random(1, #game.Players:GetPlayers())]
-    elseif string.lower(Name) == "closest" then
+local PlayerCases = {
+    ["random"] = function()
+        return Players:GetPlayers()[math.random(1, #Players:GetPlayers())]
+    end,
+    ["farthest"] = function()
         local Closest
         local Distance = math.huge
         local HumanoidRootPart = LocalPlayer.Character.HumanoidRootPart
@@ -354,7 +358,8 @@ local function GetPlayer(Name)
         end
         
         return Closest
-    elseif string.lower(Name) == "farthest" then
+    end,
+    ["closest"] = function()
         local Farthest
         local Distance = 0
         local HumanoidRootPart = LocalPlayer.Character.HumanoidRootPart
@@ -369,6 +374,19 @@ local function GetPlayer(Name)
         end
         
         return Farthest
+    end,
+    ["me"] = function()
+        return LocalPlayer
+    end
+}
+
+local function CustomPlayerCase(Name, Function)
+    PlayerCases[Name] = Function
+end
+
+local function GetPlayer(Name)
+    if PlayerCases[string.lower(Name)] then
+        return PlayerCases[string.lower(Name)]()
     else
         for i,v in next, Players:GetChildren() do
             if v:IsA("Player") and string.lower(string.sub((v.Name), 1, #Name)) == string.sub((string.lower(Name)), 1, #Name) or string.lower(string.sub((v.DisplayName), 1, #Name)) == string.sub((string.lower(Name)), 1, #Name) then
@@ -435,6 +453,10 @@ local function thread(f)
     end)
 end
 
+function ExecuteCommand(Command, ...)
+    Settings["Thrix"]["Functions"][Command]:Execute(table.pack(...))
+end
+
 function AddFunction(Aliases, Description, Execute, Plugin)
     local Output = {
         Output = {},
@@ -459,7 +481,7 @@ function AddFunction(Aliases, Description, Execute, Plugin)
                     local Success, Error = pcall(Execute, args)
 
                     if not Success then 
-                        warn(string.format("Error with command %s\n", Command), Error)
+                        warn(string.format("Error with command '%s'\n", Command), Error)
                     end
                 end)
             end
@@ -480,6 +502,11 @@ function AddFunction(Aliases, Description, Execute, Plugin)
         return FunctionOutput
     end
 end
+
+getgenv().GetPlayer = GetPlayer
+getgenv().AddFunction = AddFunction
+getgenv().ExecuteCommand = ExecuteCommand
+getgenv().CustomPlayerCase = CustomPlayerCase
 
 --[[
     ███╗   ███╗ █████╗ ██╗███╗   ██╗
@@ -1548,6 +1575,50 @@ local function main()
                 end
             end
         end
+
+        local Help = Core.Section("Help")
+
+        Help.Title("Player")
+        Help.Icon("https://raw.githubusercontent.com/0zBug/Misc/main/Assets/Profile.png")
+
+        Help.Slider("Walkspeed", 16, 0, 160, function(Value)
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+        end)
+
+        Help.Slider("Jumppower", 50, 0, 100, function(Value)
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+        end)
+
+        Help.Switch("Fly", false, function(Value)
+            if Value then
+                ExecuteCommand("fly")
+            else
+                ExecuteCommand("unfly")
+            end
+        end)
+
+        local Record = Core.Section("Record")
+
+        Record.Title("Thrixmin")
+        Record.Icon("https://raw.githubusercontent.com/0zBug/Misc/main/Assets/ThrixminWhite.png")
+
+        Record.Divider("Thrixmin", "Edit the settings of Thrixmin.")
+
+        Record.Switch("Silent Chat", true, function(Value)
+            if Value then
+                ExecuteCommand("silent")
+            else
+                ExecuteCommand("unsilent")
+            end
+        end)
+
+        Record.Switch("Waypoints", true, function(Value)
+            if Value then
+                ExecuteCommand("showwaypoints")
+            else
+                ExecuteCommand("hidewaypoints")
+            end
+        end)
     end)
     
     if not Source then
