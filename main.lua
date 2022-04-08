@@ -934,7 +934,7 @@ local function main()
             Part.Anchored = true
             
             local Waypoint = Instance.new("BillboardGui", WaypointFolder)
-            Waypoint.Active = Settings["Thrix"]["Settings"]["Markers"]
+            Waypoint.Active = true
             Waypoint.AlwaysOnTop = true
             Waypoint.Size = UDim2.fromOffset(50, 50)
             Waypoint.SizeOffset = Vector2.new(0, 0.75)
@@ -1616,7 +1616,7 @@ local function main()
 
         Record.Divider("Thrixmin", "Edit the settings of Thrixmin.")
 
-        Record.Switch("Silent Chat", true, function(Value)
+        Record.Switch("Silent Chat", Settings["Thrix"]["Settings"]["Silent"], function(Value)
             if Value then
                 ExecuteCommand("silent")
             else
@@ -1624,7 +1624,7 @@ local function main()
             end
         end)
 
-        Record.Switch("Waypoints", true, function(Value)
+        Record.Switch("Waypoints", Settings["Thrix"]["Settings"]["Markers"], function(Value)
             if Value then
                 ExecuteCommand("showwaypoints")
             else
