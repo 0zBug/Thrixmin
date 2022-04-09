@@ -459,17 +459,21 @@ local function thread(f)
     return spawn(function()
         if syn then
             syn.set_thread_identity(7)
+        elseif KRNL_LOADED then
+            setthreadcontext(7)
+        elseif getexecutorname and getexecutorname() == "ScriptWare" then
+            setthreadidentity(7)
         end
 
         f()
     end)
 end
 
-function ExecuteCommand(Command, ...)
+local function ExecuteCommand(Command, ...)
     Settings["Thrix"]["Functions"][Command]:Execute(table.pack(...))
 end
 
-function AddFunction(Aliases, Description, Execute, Plugin)
+local function AddFunction(Aliases, Description, Execute, Plugin)
     local Output = {
         Output = {},
         SyntaxErrors = {},
@@ -1020,26 +1024,6 @@ local function main()
                 warn("Invalid Waypoint.")
             end
         end)
-
-        AddFunction({"hidewaypoints", "hidewps"}, "Disables waypoint markers.", function(Args)
-            for _, Waypoint in pairs(Waypoints) do
-                Waypoint.Enabled = false
-            end
-
-            Settings["Thrix"]["Settings"]["Markers"] = false
-
-            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
-        end)
-
-        AddFunction({"showwaypoints", "showwps"}, "Enables waypoint markers.", function(Args)
-            for _, Waypoint in pairs(Waypoints) do
-                Waypoint.Enabled = true
-            end
-
-            Settings["Thrix"]["Settings"]["Markers"] = true
-
-            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
-        end)
         
         AddFunction({"pathfindwaypoint", "pfwp"}, "Makes you walt to the selected waypoint.", function(Args)
             if Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[1]] then
@@ -1524,20 +1508,6 @@ local function main()
                     end
                 end
             end
-        end)
-        
-        AddFunction("silent", "Enables silent chat.", function(Args)
-            Settings["Thrix"]["Settings"]["Silent"] = true
-
-            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
-            print("Enabled silent chat.")
-        end)
-
-        AddFunction("unsilent", "Disables silent chat.", function(Args)
-            Settings["Thrix"]["Settings"]["Silent"] = false
-
-            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
-            print("Disabled silent chat.")
         end)
 
         AddFunction("prefix", "Sets your command prefix.", function(Args)
