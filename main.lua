@@ -355,7 +355,7 @@ local PlayerCases = {
     ["random"] = function()
         return Players:GetPlayers()[math.random(1, #Players:GetPlayers())]
     end,
-    ["farthest"] = function()
+    ["closest"] = function()
         local Closest
         local Distance = math.huge
         local HumanoidRootPart = LocalPlayer.Character.HumanoidRootPart
@@ -371,7 +371,7 @@ local PlayerCases = {
         
         return Closest
     end,
-    ["closest"] = function()
+    ["farthest"] = function()
         local Farthest
         local Distance = 0
         local HumanoidRootPart = LocalPlayer.Character.HumanoidRootPart
