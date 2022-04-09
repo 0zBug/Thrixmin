@@ -493,7 +493,7 @@ function AddFunction(Aliases, Description, Execute, Plugin)
                     local Success, Error = pcall(Execute, args)
 
                     if not Success then 
-                        warn(string.format("Error with command '%s'\n", Command), Error)
+                        warn(string.format("\nError with command '%s'\n", Command), Error)
                     end
                 end)
             end
