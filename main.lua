@@ -603,6 +603,21 @@ local function main()
         AddFunction("offset", "Offsets your player with a x, y and z value.", function(Args)
             LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(Args[1] or 0, Args[2] or 0, Args[3] or 0)
         end)
+
+        local InfiniteJump = false
+        LocalPlayer:GetMouse().KeyDown:Connect(function(Key)
+            if InfiniteJump and Key == " " then
+                LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(3)
+            end
+        end)
+
+        AddFunction({"infintejump", "infjump"}, "Allows you to jump while not on the ground.", function(Args)
+            InfiniteJump = true
+        end)
+
+        AddFunction({"uninfintejump", "uninfjump"}, "Disables infinite jumping.", function(Args)
+            InfiniteJump = false
+        end)
         
         AddFunction("spin", "Spins your character.", function(Args)
             if LocalPlayer.Character.HumanoidRootPart:FindFirstChild("Spin") then
