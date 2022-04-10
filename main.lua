@@ -1674,19 +1674,25 @@ local function main()
         Record.Divider("Thrixmin", "Edit the settings of Thrixmin.")
 
         Record.Switch("Silent Chat", Settings["Thrix"]["Settings"]["Silent"], function(Value)
+            Settings["Thrix"]["Settings"]["Silent"] = Value
+
+            SaveSettings()
+
             if Value then
-                ExecuteCommand("silent")
+                print("Enabled silent chat.")
             else
-                ExecuteCommand("unsilent")
+                print("Disabled silent chat.")
             end
         end)
 
         Record.Switch("Waypoints", Settings["Thrix"]["Settings"]["Markers"], function(Value)
-            if Value then
-                ExecuteCommand("showwaypoints")
-            else
-                ExecuteCommand("hidewaypoints")
+            for _, Waypoint in pairs(Waypoints) do
+                Waypoint.Enabled = Value
             end
+
+            Settings["Thrix"]["Settings"]["Markers"] = false
+
+            SaveSettings()
         end)
     end)
     
