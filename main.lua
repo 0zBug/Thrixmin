@@ -30,6 +30,7 @@ repeat wait() until game:IsLoaded()
         • AddFunction - Adds a function to the admin.
         • CustomPlayerCase - Creates a custom player case.
         • GetPlayer - Returns a player of a shortend string of the player's name.
+        • SaveSettings - Saves Thrixmin's settings to the workspace.
         • swait - A wait function that is ~10 times faster than a normal wait.
 ]]--
 
@@ -45,7 +46,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.4.5",
+        ["Version"] = "v1.4.6",
         ["Developer"] = "Bug#4193",
     },
     ["Debug"] = true,
@@ -174,7 +175,7 @@ else
         makefolder("Thrixmin")
     end
 
-    writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
+    SaveSettings()
 end
 
 if not isfile("Thrixmin/UISettings.json") then
@@ -519,8 +520,13 @@ local function AddFunction(Aliases, Description, Execute, Plugin)
     end
 end
 
+local function SaveSettings()
+    writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
+end
+
 getgenv().GetPlayer = GetPlayer
 getgenv().AddFunction = AddFunction
+getgenv().SaveSettings = SaveSettings
 getgenv().ExecuteCommand = ExecuteCommand
 getgenv().CustomPlayerCase = CustomPlayerCase
 
@@ -930,13 +936,13 @@ local function main()
 		
         if Settings["Thrix"]["Settings"]["Waypoints"] == nil then
             Settings["Thrix"]["Settings"]["Waypoints"] = {}
-            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
+            SaveSettings()
         end
 		
         local PlaceID = tostring(game.PlaceId)
         if Settings["Thrix"]["Settings"]["Waypoints"][PlaceID] == nil then
             Settings["Thrix"]["Settings"]["Waypoints"][PlaceID] = {}
-            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
+            SaveSettings()
         end
 
     local Waypoints = {}
@@ -1018,7 +1024,7 @@ local function main()
         AddFunction({"setwaypoint", "setwp"}, "Creates a waypoint at your current location.", function(Args)
             Settings["Thrix"]["Settings"]["Waypoints"][PlaceID][Args[1]] = string.split(tostring(LocalPlayer.Character.HumanoidRootPart.CFrame), ", ")
             Waypoint(Args[1], LocalPlayer.Character.HumanoidRootPart.CFrame)
-            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
+            SaveSettings()
         end)
         
         AddFunction({"deletewaypoint", "delwp"}, "Deletes the selected waypoint.", function(Args)
@@ -1029,7 +1035,7 @@ local function main()
                 warn("Invalid Waypoint.")
             end
             
-            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
+            SaveSettings()
         end)
 
         AddFunction({"waypoint", "wp"}, "Teleports you to the selected waypoint.", function(Args)
@@ -1528,7 +1534,7 @@ local function main()
         AddFunction("prefix", "Sets your command prefix.", function(Args)
             Settings["Thrix"]["Settings"]["Prefix"] = table.concat(Args, " ")
             
-            writefile("Thrixmin/Settings.json", HttpService:JSONEncode(Settings["Thrix"]["Settings"]))
+            SaveSettings()
 
             print(string.format("Set command prefix to \"%s\".", Settings["Thrix"]["Settings"]["Prefix"]))
         end)
