@@ -31,7 +31,73 @@ repeat wait() until game:IsLoaded()
         • CustomPlayerCase - Creates a custom player case.
         • GetPlayer - Returns a player of a shortend string of the player's name.
         • SaveSettings - Saves Thrixmin's settings to the workspace.
-        • swait - A wait function that is ~10 times faster than a normal wait.
+
+    ⮚ Commands
+        • goto - Teleports your player to the selected player. (Aliases: "tp")
+        • ruinreplication - Breaks the selected players net. (Aliases: "breaknet")
+        • gameteleport - Teleports you to the selected game. (Aliases: "gametp")
+        • walkspeed - Sets your character's walkspeed to the chosen amount. (Aliases: "ws")
+        • jumppower - Sets your character's jumppower to the chosen amount. (Aliases: "jp")
+        • hipheight - Sets your hip height to the chosen amount. (Aliases: "height")
+        • gravity - Sets the workspace's gravity to the chosen amount. (Aliases: "grav")
+        • timeofday - Sets the time to the selected time. (Aliases: "time")
+        • sit - Makes your player sit down. 
+        • unsit - Makes your player stand up. 
+        • platformstand - Stuns your player. (Aliases: "stun")
+        • unplatformstand - Unstuns your player. (Aliases: "unstun")
+        • freeze - Freezes your player in place. (Aliases: "fr")
+        • unfreeze - Unfreezes your player in place. (Aliases: "unfr")
+        • offset - Offsets your player with a x, y and z value. 
+        • infintejump - Allows you to jump while not on the ground. (Aliases: "infjump")
+        • uninfintejump - Disables infinite jumping. (Aliases: "uninfjump")
+        • spin - Spins your character. 
+        • unspin - Unspins your character. 
+        • animspeed - Changes the speed of your players animation. 
+        • noanim - Stops your players animation. 
+        • reanim - Starts your players animation. 
+        • noclip - Noclips your character. 
+        • clip - Clips your character. 
+        • serverhop - Teleports you to a different server. (Aliases: "sh")
+        • sync - Synchronizes your current animation with another players. (Aliases: "syncanim")
+        • view - Spectates the chosen player. (Aliases: "spectate")
+        • unview - Makes your camera go back to your player. (Aliases: "unspectate")
+        • fly - Makes your player fly. 
+        • vfly - Makes your player fly in vehicles. (Aliases: "vehiclefly")
+        • unfly - Makes your player stop flying. (Aliases: "unvfly", "unvehiclefly")
+        • pathfind - Walks to the selected player using pathfinding. (Aliases: "walkto")
+        • setwaypoint - Creates a waypoint at your current location. (Aliases: "setwp")
+        • deletewaypoint - Deletes the selected waypoint. (Aliases: "delwp")
+        • waypoint - Teleports you to the selected waypoint. (Aliases: "wp")
+        • pathfindwaypoint - Makes you walt to the selected waypoint. (Aliases: "pfwp")
+        • chams - Highlights Players through walls. (Aliases: "esp")
+        • teamchams - Highlights Players through walls by team. (Aliases: "teamesp")
+        • nochams - Disables chams. (Aliases: "noesp")
+        • firecd - Fires all clickdetectors in the workspace. (Aliases: "fireclickdetectors")
+        • firetouch - Fires all touchinterests in the workspace. (Aliases: "firetouchinterests")
+        • fireprox - Fires all proximityprompts in the workspace. (Aliases: "fireproximityprompts")
+        • team - If possible, switch to the selected team. 
+        • spider - Lets you climb on walls. (Aliases: "wallclimb")
+        • unspider - Stops climbing on walls. (Aliases: "unwallclimb")
+        • swim - Lets you swim in the air. 
+        • unswim - Stops swimming in the air. 
+        • noname - Disables nametags in some games. (Aliases: "nobillboardgui")
+        • reset - Resets your player. (Aliases: "re")
+        • rejoin - Makes your player rejoin. (Aliases: "rj")
+        • posrj - Makes your player rejoin and teleport to your current position. 
+        • report - Reports the chosen player the chosen amount of times. 
+        • load - Runs the chosen file. (Aliases: "exec")
+        • delete - Deletes the chosen file. (Aliases: "del", "delfile")
+        • join - Teleports you to the game of the join code. 
+        • gencode - Generates a join code. 
+        • chatlogs - Opens chat logs. (Aliases: "clogs")
+        • remotespy - Opens remote spy (Aliases: "rspy")
+        • dex - Opens dex. (Aliases: "explorer")
+        • exit - Closes your game. (Aliases: "close")
+        • install - Installs the chosen plugin. (Aliases: "installplugin")
+        • uninstall - Uninstalls the chosen plugin. (Aliases: "uninstallplugin")
+        • prefix - Sets your command prefix. 
+        • end - Stops the admin from running. (Aliases: "quit")
+        • discord - Invites you to the Thrixmin discord.
 ]]--
 
 --[[
