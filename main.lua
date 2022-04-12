@@ -620,16 +620,6 @@ local function main()
             LocalPlayer.Character.HumanoidRootPart.CFrame = GetPlayer(Args[1]).Character.HumanoidRootPart.CFrame
         end)
         
-        AddFunction({"ruinreplication", "breaknet"}, "Breaks the selected players net.", function(Args)
-            for _,v in next, GetPlayer(Args[1]).Character:GetDescendants() do
-                if v:IsA("Part") or v:IsA("BasePart") then
-                    Heartbeat:Connect(function()
-                    	sethiddenproperty(v, "NetworkIsSleeping", true)
-                    end)
-                end
-            end
-        end)
-        
         AddFunction({"gameteleport", "gametp"}, "Teleports you to the selected game.", function(Args)
             TeleportService:Teleport(Args[1], LocalPlayer)
         end)
@@ -765,6 +755,16 @@ local function main()
             for _,v in next, GetPlayer(Args[1]).Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
                 for _,v2 in next, LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):GetPlayingAnimationTracks() do
                     v2.TimePosition = v.TimePosition
+                end
+            end
+        end)
+
+        AddFunction({"ruinreplication", "breaknet"}, "Breaks the selected players net.", function(Args)
+            for _,v in next, GetPlayer(Args[1]).Character:GetDescendants() do
+                if v:IsA("Part") or v:IsA("BasePart") then
+                    Heartbeat:Connect(function()
+                    	sethiddenproperty(v, "NetworkIsSleeping", true)
+                    end)
                 end
             end
         end)
