@@ -224,7 +224,6 @@ local RobloxReplicatedStorage = game:GetService("RobloxReplicatedStorage")
 local SolidModelContentProvider = game:GetService("SolidModelContentProvider")
 local NonReplicatedCSGDictionaryService = game:GetService("NonReplicatedCSGDictionaryService")
 
-
 --[[
     ███████╗███████╗████████╗██╗   ██╗██████╗ 
     ██╔════╝██╔════╝╚══██╔══╝██║   ██║██╔══██╗
@@ -477,7 +476,14 @@ local function GetPlayer(Name)
     return false
 end
 
-local States = {"Climbing", "FallingDown", "Flying", "Jumping", "Running", "Swimming", "Freefall", "GettingUp", "Landed", "Seated", "PlatformStanding", "Ragdoll", "Physics", "RunningNoPhysics", "StrafingNoPhysics"}
+local States = {
+    "GettingUp", "Ragdoll", "Swimming",
+    "FallingDown", "Running", "Jumping",
+    "PlatformStanding", "Seated", "Physics",
+    "RunningNoPhysics", "Landed", "Freefall",
+    "StrafingNoPhysics", "Flying", "Climbing"
+}
+
 local SetStatesEnabled = function(Enabled)
     for _,v in pairs(States) do
         LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType[v], Enabled)
