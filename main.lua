@@ -1704,6 +1704,8 @@ local function main()
     
     if not Source then
         warn(Error)
+
+        getgenv().Thrixmin = false
     end
 end
 
