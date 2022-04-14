@@ -570,7 +570,7 @@ local function AddFunction(Aliases, Description, Execute, Plugin)
                     local Success, Error = pcall(Execute, args)
 
                     if not Success then 
-                        warn(string.format("\nError with command '%s'\n", Command), Error)
+                        warn(Error)
                     end
                 end)
             end
