@@ -1017,7 +1017,7 @@ local function main()
             SaveSettings()
         end
 
-    local Waypoints = {}
+        local Waypoints = {}
         local function Waypoint(Name, Position)
             local Part = Instance.new("Part", Workspace)
             Part.BottomSurface = Enum.SurfaceType.Smooth
