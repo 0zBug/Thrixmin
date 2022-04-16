@@ -789,10 +789,8 @@ local function main()
                 KeyUp:Disconnect() 
             end
 
-            pcall(function() 
-                workspace.CurrentCamera.CameraType = Enum.CameraType.Custom 
-            end)
-        
+            wait()
+
             LocalPlayer.Character:FindFirstChildOfClass("Humanoid").PlatformStand = true
         
             local Controls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
@@ -847,13 +845,13 @@ local function main()
             while Flying and wait() do
                 if Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0 then
                     sSpeed = 50
-                elseif not (Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0) and SPEED ~= 0 then
+                elseif not (Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0) and Speed ~= 0 then
                     sSpeed = 0
                 end
                 if (Controls.L + Controls.R) ~= 0 or (Controls.F + Controls.B) ~= 0 or (Controls.Q + Controls.E) ~= 0 then
                     BodyVelocity.Velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (Controls.F + Controls.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(Controls.L + Controls.R, (Controls.F + Controls.B + Controls.Q + Controls.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * sSpeed
                     lControls = {F = Controls.F, B = Controls.B, L = Controls.L, R = Controls.R}
-                elseif (Controls.L + Controls.R) == 0 and (Controls.F + Controls.B) == 0 and (Controls.Q + Controls.E) == 0 and SPEED ~= 0 then
+                elseif (Controls.L + Controls.R) == 0 and (Controls.F + Controls.B) == 0 and (Controls.Q + Controls.E) == 0 and Speed ~= 0 then
                     BodyVelocity.Velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lControls.F + lControls.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lControls.L + lControls.R, (lControls.F + lControls.B + Controls.Q + Controls.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * sSpeed
                 else
                     BodyVelocity.Velocity = Vector3.new(0, 0, 0)
@@ -880,9 +878,7 @@ local function main()
                 KeyUp:Disconnect() 
             end
 
-            pcall(function() 
-                workspace.CurrentCamera.CameraType = Enum.CameraType.Custom 
-            end)
+            wait()
         
             local Controls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
             local lControls = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
@@ -936,13 +932,13 @@ local function main()
             while Flying and wait() do
                 if Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0 then
                     sSpeed = 50
-                elseif not (Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0) and SPEED ~= 0 then
+                elseif not (Controls.L + Controls.R ~= 0 or Controls.F + Controls.B ~= 0 or Controls.Q + Controls.E ~= 0) and Speed ~= 0 then
                     sSpeed = 0
                 end
                 if (Controls.L + Controls.R) ~= 0 or (Controls.F + Controls.B) ~= 0 or (Controls.Q + Controls.E) ~= 0 then
                     BodyVelocity.Velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (Controls.F + Controls.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(Controls.L + Controls.R, (Controls.F + Controls.B + Controls.Q + Controls.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * sSpeed
                     lControls = {F = Controls.F, B = Controls.B, L = Controls.L, R = Controls.R}
-                elseif (Controls.L + Controls.R) == 0 and (Controls.F + Controls.B) == 0 and (Controls.Q + Controls.E) == 0 and SPEED ~= 0 then
+                elseif (Controls.L + Controls.R) == 0 and (Controls.F + Controls.B) == 0 and (Controls.Q + Controls.E) == 0 and Speed ~= 0 then
                     BodyVelocity.Velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lControls.F + lControls.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lControls.L + lControls.R, (lControls.F + lControls.B + Controls.Q + Controls.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * sSpeed
                 else
                     BodyVelocity.Velocity = Vector3.new(0, 0, 0)
