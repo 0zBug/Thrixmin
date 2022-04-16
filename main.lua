@@ -967,6 +967,65 @@ local function main()
                 workspace.CurrentCamera.CameraType = Enum.CameraType.Custom 
             end)
         end)
+
+        AddFunction("fling", "Flings the selected player.", function(Args)
+            local Player = GetPlayer(Args[1])
+            
+            if Player == LocalPlayer then return end
+
+            if Player then
+                if Character then
+                    local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+                    local Humanoid = Character:FindFirstChild("Humanoid")
+
+                    local Torso = Player.Character:FindFirstChild("Torso") or Player.Character:FindFirstChild("UpperTorso")
+
+                    if HumanoidRootPart and Humanoid and Torso then
+                        local Origin = HumanoidRootPart.CFrame
+                        local Offset = CFrame.new((Torso.Velocity.X / 6), -(Torso.Size.Y * 0.75) + (Torso.Velocity.Y / 6), (Torso.Velocity.Z / 6)) * CFrame.Angles(math.pi, math.pi, 0)
+
+                        local Heartbeat = RunService.Heartbeat:Connect(function()
+                            Humanoid:ChangeState(16)
+                            
+                            for _, v in next, LocalPlayer.Character:GetDescendants() do
+                                if v:IsA("BasePart") then
+                                    v.CanCollide = false
+                                    v.RotVelocity = Vector3.new()
+                                    v.Velocity = Vector3.new(11e11, 11e11, 11e11)
+                                end
+                            end
+
+                            HumanoidRootPart.CFrame = Torso.CFrame * Offset
+                        end)
+
+                        local t = os.clock()
+
+                        while HumanoidRootPart and Torso and Torso.Parent and Torso.Velocity.Magnitude < 500 and (os.clock() - t) < 2.4 do
+                            RunService.Heartbeat:Wait()
+                        end
+
+                        HumanoidRootPart.Anchored = true
+
+                        Heartbeat:Disconnect()
+
+                        for i = 1, 5 do
+                            RunService.Heartbeat:Wait()
+                            
+                            for _, v in next, LocalPlayer.Character:GetDescendants() do
+                                if v:IsA("BasePart") then
+                                    v.Velocity, v.RotVelocity = Vector3.new(), Vector3.new()
+                                end
+                            end
+                            
+                            HumanoidRootPart.CFrame = Origin
+                            Humanoid:ChangeState(8)
+                        end
+
+                        HumanoidRootPart.Anchored = false
+                    end
+                end
+            end
+        end)
         
         AddFunction({"pathfind", "walkto"}, "Walks to the selected player using pathfinding.", function(Args)
             local Player = GetPlayer(Args[1])
