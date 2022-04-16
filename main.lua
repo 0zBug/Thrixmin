@@ -239,8 +239,6 @@ else
     if not isfolder("Thrixmin") then
         makefolder("Thrixmin")
     end
-
-    SaveSettings()
 end
 
 if not isfile("Thrixmin/UISettings.json") then
@@ -616,6 +614,8 @@ local function main()
     print(string.format("Prefix - \"%s\"", Settings["Thrix"]["Settings"]["Prefix"]))
     
     local Source, Error = pcall(function()
+        SaveSettings()
+        
         AddFunction({"goto", "tp"}, "Teleports your player to the selected player.", function(Args)
             LocalPlayer.Character.HumanoidRootPart.CFrame = GetPlayer(Args[1]).Character.HumanoidRootPart.CFrame
         end)
