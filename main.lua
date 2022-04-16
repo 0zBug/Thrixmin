@@ -974,6 +974,8 @@ local function main()
             if Player == LocalPlayer then return end
 
             if Player then
+                local Character = LocalPlayer.Character
+                
                 if Character then
                     local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
                     local Humanoid = Character:FindFirstChild("Humanoid")
