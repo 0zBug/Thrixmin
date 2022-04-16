@@ -1696,7 +1696,7 @@ local function main()
                 Waypoint.Enabled = Value
             end
 
-            Settings["Thrix"]["Settings"]["Markers"] = false
+            Settings["Thrix"]["Settings"]["Markers"] = Value
 
             SaveSettings()
         end)
