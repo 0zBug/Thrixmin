@@ -1531,11 +1531,11 @@ local function main()
             else
                 local Files = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[1] .. "/install.lua"))()
                 
-                for i,v in next, Files do
-                    writefile("Thrixmin/Plugins/" .. v, game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[1] .. "/" .. v:gsub(" ", "%%20")))
-                    print(string.format("Installed %s from plugin: %s", v, Args[1]))
+                for _, File in next, Files do
+                    writefile("Thrixmin/Plugins/" .. File, game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Args[1] .. "/" .. File:gsub(" ", "%%20")))
+                    print(string.format("Installed %s from plugin: %s", File, Args[1]))
 
-                    local Plugin = loadstring(readfile(File))()
+                    local Plugin = loadfile("Thrixmin/Plugins/" .. File)()
 
                     for Name, Command in next, Plugin.Commands do
                         AddFunction({Name, unpack(Command.Aliases or {})}, Command.Description, Command.Function, Plugin.Name or Plugin.PluginName)
