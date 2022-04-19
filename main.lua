@@ -494,7 +494,7 @@ end
 
 local function FlushCodes(Codes)
     for i,v in next, Codes do 
-        if os.clock() - v.Time > 10800 then
+        if os.time() - v.Time > 10800 then
             Codes[i] = nil
         end
     end
@@ -506,7 +506,7 @@ local function GenerateCode()
     return string.format("%04d", math.random(1, 9999)), {
         PlaceID = game.PlaceId,
         JobId = game.JobId,
-        Time = os.clock()
+        Time = os.time()
     }
 end
 
