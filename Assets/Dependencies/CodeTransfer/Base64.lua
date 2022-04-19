@@ -1,74 +1,42 @@
-local FILLER_CHARACTER = 61
 
-local alphabet = {}
-local indexes = {}
+local Alphabet = {}
+local Indexes = {}
 
-for index = 65, 90 do table.insert(alphabet, index) end
-for index = 97, 122 do table.insert(alphabet, index) end
-for index = 48, 57 do table.insert(alphabet, index) end
-
-table.insert(alphabet, 43)
-table.insert(alphabet, 47) 
-
-for index, character in pairs(alphabet) do
-	indexes[character] = index
-end
-
-local function buildString(values)
-	local output = {}
-
-	for index = 1, #values, 4096 do
-		table.insert(output, string.char(
-			unpack(values, index, math.min(index + 4096 - 1, #values))
-		))
-	end
-
-	return table.concat(output, "")
+for i = 1, 64 do
+    local c = i < 27 and (i + 64) or i < 53 and (i + 70)  or i < 63 and (i - 5) or math.floor(((i - 62) * 3.5) + 40)
+    Alphabet[i] = c
+    Indexes[c] = i
 end
 
 local Base64 = {}
 
-function Base64.Encode(input)
-	local output = {}
+function Base64.Encode(Decoded)
+    local Encoded = {}
 
-	for index = 1, #input, 3 do
-		local C1, C2, C3 = string.byte(input, index, index + 2)
+    for i = 1, #Decoded, 3 do
+        local C1, C2, C3 = string.byte(Decoded, i, i + 2)
 
-		local A = bit32.rshift(C1, 2)
-		local B = bit32.lshift(bit32.band(C1, 3), 4) + bit32.rshift(C2 or 0, 4)
-		local C = bit32.lshift(bit32.band(C2 or 0, 15), 2) + bit32.rshift(C3 or 0, 6)
-		local D = bit32.band(C3 or 0, 63)
+        table.insert(Encoded, Alphabet[bit32.rshift(C1, 2) + 1])
+        table.insert(Encoded, Alphabet[bit32.lshift(bit32.band(C1, 3), 4) + bit32.rshift(C2 or 0, 4) + 1])
+        table.insert(Encoded, C2 and Alphabet[bit32.lshift(bit32.band(C2 or 0, 15), 2) + bit32.rshift(C3 or 0, 6) + 1] or 61)
+        table.insert(Encoded, C3 and Alphabet[bit32.band(C3 or 0, 63) + 1] or 61)
+    end
 
-		output[#output + 1] = alphabet[A + 1]
-		output[#output + 1] = alphabet[B + 1]
-		output[#output + 1] = C2 and alphabet[C + 1] or FILLER_CHARACTER
-		output[#output + 1] = C3 and alphabet[D + 1] or FILLER_CHARACTER
-	end
-
-	return buildString(output)
+    return string.char(unpack(Encoded))
 end
 
-function Base64.Decode(input)
-	local output = {}
+function Base64.Decode(Encoded)
+    local Decoded = {}
 
-	for index = 1, #input, 4 do
-		local C1, C2, C3, C4 = string.byte(input, index, index + 3)
+    for i = 1, #Encoded, 4 do
+        local C1, C2, C3, C4 = string.byte(Encoded, i, i + 3)
 
-		local I1 = indexes[C1] - 1
-		local I2 = indexes[C2] - 1
-		local I3 = (indexes[C3] or 1) - 1
-		local I4 = (indexes[C4] or 1) - 1
+        table.insert(Decoded, bit32.lshift(Indexes[C1] - 1, 2) + bit32.rshift(Indexes[C2] - 1, 4))
+        table.insert(Decoded, C3 ~= 61 and (bit32.lshift(bit32.band(Indexes[C2] - 1, 15), 4) + bit32.rshift((Indexes[C3] or 1) - 1, 2)) or nil)
+        table.insert(Decoded, C4 ~= 61 and (bit32.lshift(bit32.band((Indexes[C3] or 1) - 1, 3), 6) + (Indexes[C4] or 1) - 1) or nil)
+    end
 
-		local A = bit32.lshift(I1, 2) + bit32.rshift(I2, 4)
-		local B = bit32.lshift(bit32.band(I2, 15), 4) + bit32.rshift(I3, 2)
-		local C = bit32.lshift(bit32.band(I3, 3), 6) + I4
-
-		output[#output + 1] = A
-		if C3 ~= FILLER_CHARACTER then output[#output + 1] = B end
-		if C4 ~= FILLER_CHARACTER then output[#output + 1] = C end
-	end
-	
-	return buildString(output)
+    return string.char(unpack(Decoded))
 end
 
 return Base64
