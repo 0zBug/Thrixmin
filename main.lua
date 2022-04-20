@@ -972,20 +972,20 @@ local function main()
             local Player = GetPlayer(Args[1])
             
             if Player == LocalPlayer then return end
-
+        
             if Player then
                 local Character = LocalPlayer.Character
                 
                 if Character then
                     local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
                     local Humanoid = Character:FindFirstChild("Humanoid")
-
+        
                     local Torso = Player.Character:FindFirstChild("Torso") or Player.Character:FindFirstChild("UpperTorso")
-
+        
                     if HumanoidRootPart and Humanoid and Torso then
                         local Origin = HumanoidRootPart.CFrame
                         local Offset = CFrame.new((Torso.Velocity.X / 6), -(Torso.Size.Y * 0.75) + (Torso.Velocity.Y / 6), (Torso.Velocity.Z / 6)) * CFrame.Angles(math.pi, math.pi, 0)
-
+        
                         local Heartbeat = RunService.Heartbeat:Connect(function()
                             Humanoid:ChangeState(16)
                             
@@ -996,21 +996,21 @@ local function main()
                                     v.Velocity = Vector3.new(11e11, 11e11, 11e11)
                                 end
                             end
-
+        
                             HumanoidRootPart.CFrame = Torso.CFrame * Offset
                         end)
-
+        
                         local t = os.clock()
-
-                        while HumanoidRootPart and Torso and Torso.Parent and Torso.Velocity.Magnitude < 500 and (os.clock() - t) < 2.4 do
+        
+                        while HumanoidRootPart and Torso and Torso.Parent and Torso.Velocity.Magnitude < 500 and (os.clock() - t) < (Torso.Velocity.Magnitude * 0.02) + 0.2 do
                             RunService.Heartbeat:Wait()
                         end
-
+        
                         HumanoidRootPart.Anchored = true
-
+        
                         Heartbeat:Disconnect()
-
-                        for i = 1, 5 do
+        
+                        for i = 1, 3 do
                             RunService.Heartbeat:Wait()
                             
                             for _, v in next, LocalPlayer.Character:GetDescendants() do
@@ -1022,7 +1022,7 @@ local function main()
                             HumanoidRootPart.CFrame = Origin
                             Humanoid:ChangeState(8)
                         end
-
+        
                         HumanoidRootPart.Anchored = false
                     end
                 end
