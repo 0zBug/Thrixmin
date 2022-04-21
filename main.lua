@@ -64,6 +64,7 @@ repeat wait() until game:IsLoaded()
         • fly - Makes your player fly. 
         • vfly - Makes your player fly in vehicles. (Aliases: "vehiclefly")
         • unfly - Makes your player stop flying. (Aliases: "unvfly", "unvehiclefly")
+	• fling - Flings the selected player.
         • pathfind - Walks to the selected player using pathfinding. (Aliases: "walkto")
         • setwaypoint - Creates a waypoint at your current location. (Aliases: "setwp")
         • deletewaypoint - Deletes the selected waypoint. (Aliases: "delwp")
