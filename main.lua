@@ -983,6 +983,12 @@ local function main()
                     local Torso = Player.Character:FindFirstChild("Torso") or Player.Character:FindFirstChild("UpperTorso")
         
                     if HumanoidRootPart and Humanoid and Torso then
+                        for _, v in next, LocalPlayer.Character:GetDescendants() do
+                            if v:IsA("BasePart") then
+                                v.Velocity, v.RotVelocity = Vector3.new(), Vector3.new()
+                            end
+                        end
+                        
                         local Origin = HumanoidRootPart.CFrame
                         local Offset = CFrame.new((Torso.Velocity.X / 6), -(Torso.Size.Y * 0.75) + (Torso.Velocity.Y / 6), (Torso.Velocity.Z / 6)) * CFrame.Angles(math.pi, math.pi, 0)
         
@@ -1010,7 +1016,7 @@ local function main()
         
                         Heartbeat:Disconnect()
         
-                        for i = 1, 3 do
+                        for i = 1, 5 do
                             RunService.Heartbeat:Wait()
                             
                             for _, v in next, LocalPlayer.Character:GetDescendants() do
@@ -1024,6 +1030,12 @@ local function main()
                         end
         
                         HumanoidRootPart.Anchored = false
+
+                        for _, v in next, LocalPlayer.Character:GetDescendants() do
+                            if v:IsA("BasePart") then
+                                v.Velocity, v.RotVelocity = Vector3.new(), Vector3.new()
+                            end
+                        end
                     end
                 end
             end
