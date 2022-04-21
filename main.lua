@@ -1002,7 +1002,7 @@ local function main()
         
                         local t = os.clock()
         
-                        while HumanoidRootPart and Torso and Torso.Parent and Torso.Velocity.Magnitude < 500 and (os.clock() - t) < (Torso.Velocity.Magnitude * 0.02) + 0.2 do
+                        while HumanoidRootPart and Torso and Torso.Parent and Torso.Velocity.Magnitude < 500 and (os.clock() - t) < (Torso.Velocity.Magnitude * 0.02) + 0.3 do
                             RunService.Heartbeat:Wait()
                         end
         
