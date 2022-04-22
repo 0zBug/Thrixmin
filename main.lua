@@ -459,7 +459,7 @@ local PlayerCases = {
 
 local function CustomPlayerCase(Name, Function)
     PlayerCases[Name] = Function
-end
+end 
 
 local function GetPlayer(Name)
     if PlayerCases[string.lower(Name)] then
