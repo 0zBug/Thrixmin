@@ -64,7 +64,7 @@ repeat wait() until game:IsLoaded()
         • fly - Makes your player fly. 
         • vfly - Makes your player fly in vehicles. (Aliases: "vehiclefly")
         • unfly - Makes your player stop flying. (Aliases: "unvfly", "unvehiclefly")
-	• fling - Flings the selected player.
+        • fling - Flings the selected player.
         • pathfind - Walks to the selected player using pathfinding. (Aliases: "walkto")
         • setwaypoint - Creates a waypoint at your current location. (Aliases: "setwp")
         • deletewaypoint - Deletes the selected waypoint. (Aliases: "delwp")
@@ -989,9 +989,9 @@ local function main()
                                 v.Velocity, v.RotVelocity = Vector3.new(), Vector3.new()
                             end
                         end
-                        
+
                         local Origin = HumanoidRootPart.CFrame
-                        local Offset = CFrame.new((Torso.Velocity.X / 6), -(Torso.Size.Y * 0.75) + (Torso.Velocity.Y / 6), (Torso.Velocity.Z / 6)) * CFrame.Angles(math.pi, math.pi, 0)
+                        local Offset = -CFrame.new((Torso.Velocity.X / 6), -(Torso.Size.Y * 0.75) + (Torso.Velocity.Y / 6), (Torso.Velocity.Z / 6)) * CFrame.Angles(math.pi, math.pi, 0)
         
                         local Heartbeat = RunService.Heartbeat:Connect(function()
                             Humanoid:ChangeState(16)
