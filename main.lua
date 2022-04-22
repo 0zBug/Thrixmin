@@ -989,7 +989,7 @@ local function main()
                                 v.Velocity, v.RotVelocity = Vector3.new(), Vector3.new()
                             end
                         end
-
+        
                         local Origin = HumanoidRootPart.CFrame
                         local Offset = CFrame.new((Torso.Velocity.X / 6), -(Torso.Size.Y * 0.75) + (Torso.Velocity.Y / 6), (Torso.Velocity.Z / 6)) * CFrame.Angles(math.pi, math.pi, 0)
         
@@ -1004,12 +1004,12 @@ local function main()
                                 end
                             end
         
-                            HumanoidRootPart.CFrame = Torso.CFrame * Offset
+                            HumanoidRootPart.CFrame = Torso.CFrame * Offset * CFrame.new(-(Torso.Size.X / 3), 0, -(Torso.Size.Z / 3))
                         end)
         
                         local t = os.clock()
         
-                        while HumanoidRootPart and Torso and Torso.Parent and Torso.Velocity.Magnitude < 500 and (os.clock() - t) < (Torso.Velocity.Magnitude * 0.02) + 0.2 do
+                        while HumanoidRootPart and Torso and Torso.Parent and Torso.Velocity.Magnitude < 500 and (os.clock() - t) < (Torso.Velocity.Magnitude * 0.02) + 0.4 do
                             RunService.Heartbeat:Wait()
                         end
         
@@ -1031,7 +1031,7 @@ local function main()
                         end
         
                         HumanoidRootPart.Anchored = false
-
+        
                         for _, v in next, LocalPlayer.Character:GetDescendants() do
                             if v:IsA("BasePart") then
                                 v.Velocity, v.RotVelocity = Vector3.new(), Vector3.new()
