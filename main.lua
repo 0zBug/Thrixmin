@@ -999,7 +999,7 @@ local function main()
                             for _, v in next, LocalPlayer.Character:GetDescendants() do
                                 if v:IsA("BasePart") then
                                     v.CanCollide = false
-                                    v.RotVelocity = Vector3.new()
+                                    v.RotVelocity = Vector3.new(11e11, 11e11, 11e11)
                                     v.Velocity = Vector3.new(11e11, 11e11, 11e11)
                                 end
                             end
@@ -1009,7 +1009,7 @@ local function main()
         
                         local t = os.clock()
         
-                        while HumanoidRootPart and Torso and Torso.Parent and Torso.Velocity.Magnitude < 500 and (os.clock() - t) < (Torso.Velocity.Magnitude * 0.02) + 0.3 do
+                        while HumanoidRootPart and Torso and Torso.Parent and Torso.Velocity.Magnitude < 500 and (os.clock() - t) < (Torso.Velocity.Magnitude * 0.02) + 0.2 do
                             RunService.Heartbeat:Wait()
                         end
         
