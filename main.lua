@@ -991,7 +991,7 @@ local function main()
                         end
         
                         local Origin = HumanoidRootPart.CFrame
-                        local Offset = CFrame.new((Torso.Velocity.X / 6), -(Torso.Size.Y * 0.75) + (Torso.Velocity.Y / 6), (Torso.Velocity.Z / 6)) * CFrame.Angles(math.pi, math.pi, 0)
+                        local Offset = CFrame.new((Torso.Velocity.X / 6) - (Torso.Size.X / 3), -(Torso.Size.Y * 0.75) + (Torso.Velocity.Y / 6), (Torso.Velocity.Z / 6) - (Torso.Size.Z / 3)) * CFrame.Angles(math.pi, math.pi, 0)
         
                         local Heartbeat = RunService.Heartbeat:Connect(function()
                             Humanoid:ChangeState(16)
@@ -1004,7 +1004,7 @@ local function main()
                                 end
                             end
         
-                            HumanoidRootPart.CFrame = Torso.CFrame * Offset * CFrame.new(-(Torso.Size.X / 3), 0, -(Torso.Size.Z / 3))
+                            HumanoidRootPart.CFrame = Torso.CFrame * Offset
                         end)
         
                         local t = os.clock()
