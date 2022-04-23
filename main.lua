@@ -541,6 +541,35 @@ local function thread(f)
     end)
 end
 
+local function FindClosestCommand(Command)
+    local Distance = math.huge
+    local Closest
+
+    for Compare, Table in pairs(Settings["Thrix"]["Functions"]) do
+        local Leven = {
+            [0] = {
+                [0] = 0
+            }
+        }
+
+        for i = 1, #Command do
+            Leven[i] = {}
+            Leven[i][0] = i
+            for j = 1, #Compare do
+                Leven[0][j] = j
+                Leven[i][j] = math.min(Leven[i - 1][j] + 1, Leven[i][j - 1] + 1, Leven[i - 1][j - 1] + (string.byte(Command, i) == string.byte(Compare, j) and 0 or 1))
+            end
+        end    
+        
+        if (Leven[#Command][#Compare] < Distance) then
+            Distance = Leven[#Command][#Compare]
+            Closest = Table
+        end 
+    end
+
+    return Closest
+end
+
 local function ExecuteCommand(Command, ...)
     Settings["Thrix"]["Functions"][Command]:Execute(table.pack(...))
 end
@@ -1593,7 +1622,7 @@ local function main()
             if getnamecallmethod() == "FireServer" and tostring(self) == "SayMessageRequest" then
                 local Args = (({...})[1]):split(" ")
                 if string.sub(Args[1], 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
-                    local Command = Settings["Thrix"]["Functions"][string.sub(string.lower(Args[1]), #Settings["Thrix"]["Settings"]["Prefix"] + 1)]
+                    local Command = FindClosestCommand(string.sub(string.lower(Args[1]), #Settings["Thrix"]["Settings"]["Prefix"] + 1))
 
                     if Command then
                         table.remove(Args, 1)
@@ -1624,7 +1653,7 @@ local function main()
         	local Args = TextBox.Text:split(" ")
 
             if string.sub(TextBox.Text, 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
-                local Command = Settings["Thrix"]["Functions"][string.sub(string.lower(Args[1]), #Settings["Thrix"]["Settings"]["Prefix"] + 1)]
+                local Command = FindClosestCommand(string.sub(string.lower(Args[1]), #Settings["Thrix"]["Settings"]["Prefix"] + 1))
 
                 if Command then
                     table.remove(Args, 1)
