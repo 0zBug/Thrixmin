@@ -545,6 +545,10 @@ local function FindClosestCommand(Command)
     local Distance = math.huge
     local Closest
 
+    if Settings["Thrix"]["Functions"][Command] then
+        return Settings["Thrix"]["Functions"][Command]
+    end
+
     for Compare, Table in pairs(Settings["Thrix"]["Functions"]) do
         local Leven = {
             [0] = {
