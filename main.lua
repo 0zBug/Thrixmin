@@ -121,6 +121,7 @@ local Settings = {
         ["Settings"] = {
             ["Prefix"] = "-",
             ["Silent"] = true,
+            ["AutoCorrect"] = true,
             ["Markers"] = true
         },
         ["OutputTypes"] = {
@@ -545,7 +546,7 @@ local function FindClosestCommand(Command)
     local Distance = math.huge
     local Closest
 
-    if Settings["Thrix"]["Functions"][Command] then
+    if Settings["Thrix"]["Functions"][Command] or not Settings["Thrix"]["Settings"]["AutoCorrect"] then
         return Settings["Thrix"]["Functions"][Command]
     end
 
@@ -1791,6 +1792,18 @@ local function main()
                 print("Enabled silent chat.")
             else
                 print("Disabled silent chat.")
+            end
+        end)
+
+        Record.Switch("Auto Correct", Settings["Thrix"]["Settings"]["AutoCorrect"], function(Value)
+            Settings["Thrix"]["Settings"]["AutoCorrect"] = Value
+
+            SaveSettings()
+
+            if Value then
+                print("Enabled auto correct.")
+            else
+                print("Disabled auto correct.")
             end
         end)
 
