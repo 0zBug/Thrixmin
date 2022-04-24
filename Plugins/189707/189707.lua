@@ -5,7 +5,7 @@ local Plugin = {
         ["balloon"] = {
             ["Description"] = "Clones a balloon from someones character.",
             ["Aliases"] = {"getballoon"},
-            ["Function"] = function(Args)
+            ["Function"] = function()
                 if game:FindFirstChild("GreenBalloon", true) then 
                     Balloon = game:FindFirstChild("GreenBalloon", true):Clone()
                     Balloon.Parent = game:GetService("Players").LocalPlayer.Backpack
@@ -15,7 +15,7 @@ local Plugin = {
         ["nofalldamage"] = {
             ["Description"] = "Removes fall damage.",
             ["Aliases"] = {"nodamage"},
-            ["Function"] = function(Args)
+            ["Function"] = function()
                 game.Players.LocalPlayer.Character.FallDamageScript:Destroy()
             end
         }

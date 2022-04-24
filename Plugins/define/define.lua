@@ -6,8 +6,8 @@ local Plugin = {
     ["Commands"] = {
         ["define"] = {
             ["Description"] = "Defines a function or property in the roblox api",
-            ["Function"] = function(Args)
-                local Define = string.lower(Args[1])
+            ["Function"] = function(Class)
+                local Define = string.lower(Class)
               
                 if Documentation[Define] then
                     game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(Documentation[Define], "All")

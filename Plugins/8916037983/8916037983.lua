@@ -6,8 +6,8 @@ local Plugin = {
     ["Commands"] = {
         ["draw"] = {
             ["Description"] = "Draws the url of a png to the canvas.",
-            ["Function"] = function(Args)
-                local Picture = PNG.new(game:HttpGet(Args[1]))
+            ["Function"] = function(Url)
+                local Picture = PNG.new(game:HttpGet(Url))
                 local Cells = {}
                 local Width, Height = Picture.Width / 32, Picture.Height / 32
         
