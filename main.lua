@@ -59,6 +59,8 @@ repeat wait() until game:IsLoaded()
         • animspeed - Changes the speed of your players animation. 
         • noanim - Stops your players animation. 
         • reanim - Starts your players animation. 
+        • stare - Stares at the selected player. (Aliases: "lookat")
+        • unstare - Stops staring at the player. (Aliases: "unlookat")
         • noclip - Noclips your character. 
         • clip - Clips your character. 
         • serverhop - Teleports you to a different server. (Aliases: "sh")
@@ -800,6 +802,36 @@ local function main()
 
         AddFunction("reanim", "Starts your players animation.", function()
             LocalPlayer.Character.Animate.Disabled = false
+        end)
+
+        local LookAt
+        AddFunction({"stare", "lookat"}, "Stares at the selected player.", function(Player)
+            local Player = GetPlayer(Player)
+
+            if LookAt then
+                LookAt:Disconnect()
+            end
+
+            LookAt = RunService.RenderStepped:Connect(function()
+                local Character = LocalPlayer.Character
+
+                if Player.Character and Character then
+                    local PrimaryPart = Character.PrimaryPart
+                    local HumanoidRootPart = Player.Character:FindFirstChild("HumanoidRootPart")
+
+                    if PrimaryPart and HumanoidRootPart then
+                        Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(PrimaryPart.Position, Vector3.new(HumanoidRootPart.Position.X, PrimaryPart.Position.Y, HumanoidRootPart.Position.Z)))
+                    elseif not Player then
+                        LookAt:Disconnect()
+                    end
+                end
+            end)
+        end)
+
+        AddFunction({"unstare", "unlookat"}, "Stops staring at the player.", function()
+            if LookAt then
+                LookAt:Disconnect()
+            end
         end)
 
         local Noclip
