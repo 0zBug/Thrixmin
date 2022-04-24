@@ -26,11 +26,14 @@ repeat wait() until game:IsLoaded()
     ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
                                                                                                                
     ⮚ Functions 
-        • ExecuteCommand - Executes a command.
-        • AddFunction - Adds a function to the admin.
-        • CustomPlayerCase - Creates a custom player case.
         • GetPlayer - Returns a player of a shortend string of the player's name.
+        • AddSetting - Adds a setting to the admin.
+        • GetSetting - Returns the value of a setting.
+        • EditSetting - Edits a setting's value.
+        • AddFunction - Adds a command to the admin.
         • SaveSettings - Saves Thrixmin's settings to the workspace.
+        • ExecuteCommand - Executes a command.
+        • CustomPlayerCase - Creates a custom player case.
 
     ⮚ Commands
         • goto - Teleports your player to the selected player. (Aliases: "tp")
@@ -114,7 +117,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.4.7",
+        ["Version"] = "v1.4.8",
         ["Developer"] = "Bug#4193",
     },
     ["Debug"] = true,
