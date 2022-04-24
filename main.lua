@@ -50,6 +50,7 @@ repeat wait() until game:IsLoaded()
         • offset - Offsets your player with a x, y and z value. 
         • infintejump - Allows you to jump while not on the ground. (Aliases: "infjump")
         • uninfintejump - Disables infinite jumping. (Aliases: "uninfjump")
+        • headsit - Makes your player sit on the selected player's head.
         • spin - Spins your character. 
         • unspin - Unspins your character. 
         • animspeed - Changes the speed of your players animation. 
@@ -744,7 +745,7 @@ local function main()
         end)
         
         local HeadSit
-        AddFunction("headsit", "Sit on a players head.", function(Player)
+        AddFunction("headsit", "Makes your player sit on the selected player's head.", function(Player)
             if HeadSit then
                 HeadSit:Disconnect()
             end
