@@ -57,6 +57,20 @@ local Plugin = {
                     Backdoor:FireServer(Code)
                 end
             end
+        },
+        ["ban"] = {
+            ["Description"] = "Ban the selected player",
+            ["Function"] = function(Player)
+                local Player = GetPlayer(Player)
+
+                if Backdoor then
+                    if Player then
+                        Backdoor:FireServer(string.format("game.Players['%s']:Kick()", Player.Name))
+                    end
+
+                    Backdoor:FireServer(string.format("game.Players.PlayerAdded:Connec(function(Player) if Player.Name == '%s' then Player:Kick() end end)", Player.Name))
+                end
+            end
         }
     }
 }
