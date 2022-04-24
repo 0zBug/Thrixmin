@@ -68,7 +68,7 @@ local Plugin = {
                         Backdoor:FireServer(string.format("game.Players['%s']:Kick()", Player.Name))
                     end
 
-                    Backdoor:FireServer(string.format("game.Players.PlayerAdded:Connec(function(Player) if Player.Name == '%s' then Player:Kick() end end)", Player.Name))
+                    Backdoor:FireServer(string.format("game.Players.PlayerAdded:Connect(function(Player) if Player.Name == '%s' then Player:Kick() end end)", Player.Name))
                 end
             end
         }
