@@ -61,6 +61,8 @@ repeat wait() until game:IsLoaded()
         • reanim - Starts your players animation. 
         • stare - Stares at the selected player. (Aliases: "lookat")
         • unstare - Stops staring at the player. (Aliases: "unlookat")
+        • orbit - Makes your character orbit the selected player. (Aliases: "orbit")
+        • unorbit - Stop orbiting the selected player. (Aliases: "unorbit")
         • noclip - Noclips your character. 
         • clip - Clips your character. 
         • serverhop - Teleports you to a different server. (Aliases: "sh")
@@ -834,6 +836,37 @@ local function main()
             end
         end)
 
+        local Orbit
+        AddFunction("orbit", "Makes your character orbit the selected player.", function(Player, Speed)
+            local Player = GetPlayer(Player)
+            local Speed = tonumber(Speed) or 1
+
+            if Orbit then
+                Orbit:Disconnect()
+            end
+
+            Orbit = RunService.Stepped:Connect(function()
+                local Character = LocalPlayer.Character
+
+                if Player.Character and Character then
+                    local PrimaryPart = Character.PrimaryPart
+                    local HumanoidRootPart = Player.Character:FindFirstChild("HumanoidRootPart")
+
+                    if PrimaryPart and HumanoidRootPart then
+                        Character.HumanoidRootPart.CFrame = CFrame.new(HumanoidRootPart.Position + Vector3.new(math.sin(os.clock() * Speed) * 10, 0, math.cos(os.clock() * Speed) * 10), Vector3.new(HumanoidRootPart.Position.X, PrimaryPart.Position.Y, HumanoidRootPart.Position.Z))
+                    elseif not Player then
+                        Orbit:Disconnect()
+                    end
+                end
+            end)
+        end)
+
+        AddFunction("unorbit", "Stop orbiting the selected player.", function()
+            if Orbit then
+                Orbit:Disconnect()
+            end
+        end)
+
         local Noclip
         local Clip = true
         AddFunction("noclip", "Noclips your character.", function()
@@ -1588,7 +1621,8 @@ local function main()
         end)
         
         AddFunction("posrj", "Makes your player rejoin and teleport to your current position.", function()
-            queue_on_teleport("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer repeat wait() until game:GetService('Players').LocalPlayer.Character repeat wait() until game:GetService('Players').LocalPlayer.Character.HumanoidRootPart wait() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(" .. tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame) .. ")")
+            queue_on_teleport(string.format("repeat wait() until game:IsLoaded() repeat wait() until game:GetService('Players').LocalPlayer repeat wait() until game:GetService('Players').LocalPlayer.Character repeat wait() until game:GetService('Players').LocalPlayer.Character.HumanoidRootPart wait() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(%s)", tostring(LocalPlayer.Character.HumanoidRootPart.CFrame)))
+
             TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId)
         end)
         
