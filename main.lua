@@ -764,7 +764,7 @@ local function main()
                 
                 HeadSit = RunService.Heartbeat:Connect(function()
                     if Player and Humanoid.Sit and Player.Character then
-                        HumanoidRootPart.CFrame = Head.CFrame * CFrame.new(0, 0.5, 0.4)
+                        HumanoidRootPart.CFrame = Head.CFrame * CFrame.new(0, Head.Size.Y / 2, Head.Size.Z / 2)
                     else
                         HeadSit:Disconnect()
                     end
