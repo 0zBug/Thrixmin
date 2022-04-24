@@ -40,7 +40,7 @@ end
 
 local Backdoor
 local Plugin = {
-    ["Name"] = "print",
+    ["Name"] = "backdoor",
     ["Commands"] = {
         ["scan"] = {
             ["Description"] = "Scan for a backdoor in the game.",
