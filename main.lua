@@ -743,6 +743,31 @@ local function main()
             InfiniteJump = false
         end)
         
+        local HeadSit
+        AddFunction("headsit", "Sit on a players head.", function(Player)
+            if HeadSit then
+                HeadSit:Disconnect()
+            end
+
+            local Player = GetPlayer(Player)
+            local Character = LocalPlayer.Character
+            local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+            local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+            local Head = Player.Character:FindFirstChild("Head")
+
+            if Player and Humanoid then
+                Humanoid.Sit = true
+                
+                HeadSit = RunService.Heartbeat:Connect(function()
+                    if Player and Humanoid.Sit and Player.Character then
+                        HumanoidRootPart.CFrame = Head.CFrame * CFrame.new(0, 0.5, 0.4)
+                    else
+                        HeadSit:Disconnect()
+                    end
+                end)
+            end
+        end)
+
         AddFunction("spin", "Spins your character.", function(Speed)
             if LocalPlayer.Character.HumanoidRootPart:FindFirstChild("Spin") then
                 LocalPlayer.Character.HumanoidRootPart.Spin:Destroy()
