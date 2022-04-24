@@ -9,8 +9,6 @@ local Invisible = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zB
 local function GetHeaders()
     local Cookie = Invisible.Decode(GetSetting("Cookie"))
 
-    local Cookie = Invisible.Decode(GetSetting("Cookie"))
-
     local Headers = {
         ["Cookie"] = Cookie,
         ["x-csrf-token"] = request({
