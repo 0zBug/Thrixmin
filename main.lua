@@ -126,6 +126,7 @@ local Settings = {
             ["Prefix"] = "-",
             ["Silent"] = true,
             ["AutoCorrect"] = true,
+            ["AntiChatLog"] = true,
             ["Markers"] = true
         },
         ["OutputTypes"] = {
@@ -1770,6 +1771,20 @@ local function main()
             end
         end)
 
+        local PlayerScripts = LocalPlayer:WaitForChild("PlayerScripts")
+        local ChatMain = require(PlayerScripts:WaitForChild("ChatScript"):WaitForChild("ChatMain"))
+        local MessagePosted = ChatMain.MessagePosted
+
+        hookfunction(MessagePosted.fire, function(self, Message)
+            thread(function()
+                if Settings["Thrix"]["Settings"]["AntiChatLog"] then
+                    return
+                else
+                    Players:Chat(Message)
+                end
+            end)
+        end)
+
         AddFunction("prefix", "Sets your command prefix.", function(Prefix)
             Settings["Thrix"]["Settings"]["Prefix"] = Prefix
             
@@ -1870,6 +1885,18 @@ local function main()
             end
         end)
 
+        Record.Switch("Anti ChatLog", Settings["Thrix"]["Settings"]["AntiChatLog"], function(Value)
+            Settings["Thrix"]["Settings"]["AntiChatLog"] = Value
+
+            SaveSettings()
+
+            if Value then
+                print("Enabled anti-chatlog.")
+            else
+                print("Disabled anti-chatlog.")
+            end
+        end)
+        
         Record.Switch("Waypoints", Settings["Thrix"]["Settings"]["Markers"], function(Value)
             for _, Waypoint in pairs(Waypoints) do
                 Waypoint.Enabled = Value
