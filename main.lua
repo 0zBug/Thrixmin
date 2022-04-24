@@ -1885,15 +1885,15 @@ local function main()
             end
         end)
 
-        Record.Switch("Anti ChatLog", Settings["Thrix"]["Settings"]["AntiChatLog"], function(Value)
+        Record.Switch("Anti Chat Log", Settings["Thrix"]["Settings"]["AntiChatLog"], function(Value)
             Settings["Thrix"]["Settings"]["AntiChatLog"] = Value
 
             SaveSettings()
 
             if Value then
-                print("Enabled anti-chatlog.")
+                print("Enabled anti chatlog.")
             else
-                print("Disabled anti-chatlog.")
+                print("Disabled anti chatlog.")
             end
         end)
         
