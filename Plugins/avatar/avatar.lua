@@ -51,7 +51,9 @@ local Plugin = {
                     Url = "https://avatar.roblox.com/v1/avatar/set-wearing-assets", 
                     Method = "POST", 
                     Headers = Headers,
-                    Body = HttpService:JSONEncode(Assets)
+                    Body = HttpService:JSONEncode({
+                        ["AssetIds"] = Assets
+                    })
                 })
 
                 local Avatar = HttpService:JSONDecode(request({
