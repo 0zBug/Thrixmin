@@ -600,11 +600,9 @@ local function AddFunction(Aliases, Description, Execute, Plugin)
 
             Settings["Thrix"]["Functions"][Command]["Execute"] = function(self, args)
                 thread(function()
-                    self.Arguments = {
-                        args
-                    }
+                    self.Arguments = {args}
 
-                    local Success, Error = pcall(Execute, args)
+                    local Success, Error = pcall(Execute, unpack(args))
 
                     if not Success then 
                         warn(Error)
@@ -729,7 +727,7 @@ local function main()
         end)
 
         AddFunction("offset", "Offsets your player with a x, y and z value.", function(x, y, z)
-            LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(x or 0, y or 0, z or 0)
+            LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(tonumber(x) or 0, tonumber(y) or 0, tonumber(z) or 0)
         end)
 
         local InfiniteJump = false
@@ -1696,7 +1694,7 @@ local function main()
 
                     if Command then
                         table.remove(Args, 1)
-                        Command:Execute(unpack(Args))
+                        Command:Execute(Args)
 
                         if Settings["Thrix"]["Settings"]["Silent"] then
                             return self, ""
@@ -1727,7 +1725,7 @@ local function main()
 
                 if Command then
                     table.remove(Args, 1)
-                    Command:Execute(unpack(Args))
+                    Command:Execute(Args)
                 end
             end
 
