@@ -90,7 +90,7 @@ local Plugin = {
             end
         },
         ["ban"] = {
-            ["Description"] = "Ban the selected player",
+            ["Description"] = "Ban the selected player.",
             ["Function"] = function(Player)
                 local Player = GetPlayer(Player)
 
