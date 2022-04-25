@@ -4,6 +4,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Event = ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest
 
+local FurryDescriptors = {"furry", "fur", "tail", "wolf", "ears", "floof", "fox", "protogen", "shark", "dragon", "critter"}
+
 local Plugin = {
     ["Name"] = "playerinfo",
     ["Commands"] = {
@@ -55,6 +57,37 @@ local Plugin = {
                     Event:FireServer(string.format("%s is black.", Player.Name), "All")
                 else
                     Event:FireServer(string.format("%s is %s.", Player.Name, BrickColor.new(Description.HeadColor.R * 255, Description.HeadColor.G * 255, Description.HeadColor.B * 255).Name), "All")
+                end
+            end
+        },
+        ["furry"] = {
+            ["Description"] = "Get the player's furryness.",
+            ["Aliases"] = {"furrymeter"},
+            ["Function"] = function(Player)
+                local Player = GetPlayer(Player)
+
+                if Player.Character then
+                    local Total = 0
+                    local Furry = 0
+
+                    for _, Accessory in pairs(Player.Character:GetChildren()) do
+                        if Accessory:IsA("Accessory") then
+                            Total = Total + 0.5
+
+                            local match = false
+                            for _, v in pairs(FurryDescriptors) do
+                                if string.find(string.lower(Accessory.Name), v) then
+                                    match = true
+                                end
+                            end
+
+                            if match then
+                                Furry = Furry + 1
+                            end
+                        end
+                    end
+
+                    Event:FireServer(string.format("%s is %s%% furry.", Player.Name, math.max(math.floor(Furry / Total * 100)), 100), "All")
                 end
             end
         }
