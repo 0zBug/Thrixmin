@@ -1889,7 +1889,7 @@ local function main()
             })
         end)
 		
-        for _,File in next, listfiles("Thrixmin/Plugins") do
+        for _, File in next, listfiles("Thrixmin/Plugins") do
             if isfile(File) then
                 local Plugin = loadstring(readfile(File))()
 
