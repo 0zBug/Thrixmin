@@ -131,6 +131,7 @@ local Settings = {
             ["Silent"] = true,
             ["AutoCorrect"] = true,
             ["AntiChatLog"] = true,
+            ["CustomAliases"] = {}
             ["Markers"] = true
         },
         ["OutputTypes"] = {
