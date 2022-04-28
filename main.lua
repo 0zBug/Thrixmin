@@ -429,7 +429,7 @@ end
 
 local PlayerCases = {
     ["random"] = function()
-        return Players:GetPlayers()[math.random(1, #Players:GetPlayers())]
+        return {Players:GetPlayers()[math.random(1, #Players:GetPlayers())]}
     end,
     ["closest"] = function()
         local Closest
@@ -445,7 +445,7 @@ local PlayerCases = {
         	end
         end
         
-        return Closest
+        return {Closest}
     end,
     ["farthest"] = function()
         local Farthest
@@ -461,10 +461,24 @@ local PlayerCases = {
         	end
         end
         
-        return Farthest
+        return {Farthest}
     end,
     ["me"] = function()
         return LocalPlayer
+    end,
+    ["all"] = function()
+        return Players:GetPlayers()
+    end,
+    ["others"] = function()
+        local Others = {}
+
+        for _, Player in pairs(Players:GetPlayers()) do
+        	if Player ~= LocalPlayer then
+        		table.insert(Others, Player)
+        	end
+        end
+        
+        return Others
     end
 }
 
@@ -478,7 +492,7 @@ local function GetPlayer(Name)
     else
         for i,v in next, Players:GetChildren() do
             if v:IsA("Player") and string.lower(string.sub((v.Name), 1, #Name)) == string.sub((string.lower(Name)), 1, #Name) or string.lower(string.sub((v.DisplayName), 1, #Name)) == string.sub((string.lower(Name)), 1, #Name) then
-                return v
+                return {v}
             end
         end
     end
@@ -681,7 +695,13 @@ local function main()
         SaveSettings()
         
         AddFunction({"goto", "tp"}, "Teleports your player to the selected player.", function(Player)
-            LocalPlayer.Character.HumanoidRootPart.CFrame = GetPlayer(Player).Character.HumanoidRootPart.CFrame
+            local Player = GetPlayer(Player)
+
+            for _, Player in pairs(Player) do
+                if Player.Character then
+                    LocalPlayer.Character.HumanoidRootPart.CFrame = Player.Character.HumanoidRootPart.CFrame
+                end
+            end
         end)
         
         AddFunction({"gameteleport", "gametp"}, "Teleports you to the selected game.", function(Place)
@@ -753,26 +773,32 @@ local function main()
         
         local HeadSit
         AddFunction("headsit", "Makes your player sit on the selected player's head.", function(Player)
-            if HeadSit then
-                HeadSit:Disconnect()
-            end
 
             local Player = GetPlayer(Player)
             local Character = LocalPlayer.Character
             local Humanoid = Character:FindFirstChildOfClass("Humanoid")
             local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
-            local Head = Player.Character:FindFirstChild("Head")
 
-            if Player and Humanoid then
-                Humanoid.Sit = true
-                
-                HeadSit = RunService.Heartbeat:Connect(function()
-                    if Player and Humanoid.Sit and Player.Character then
-                        HumanoidRootPart.CFrame = Head.CFrame * CFrame.new(0, Head.Size.Y / 2, Head.Size.Z / 2)
-                    else
+            for _, Player in pairs(Player) do
+                if Player.Character then
+                    if HeadSit then
                         HeadSit:Disconnect()
                     end
-                end)
+                    
+                    local Head = Player.Character:FindFirstChild("Head")
+
+                    if Player and Humanoid then
+                        Humanoid.Sit = true
+                        
+                        HeadSit = RunService.Heartbeat:Connect(function()
+                            if Player and Humanoid.Sit and Player.Character then
+                                HumanoidRootPart.CFrame = Head.CFrame * CFrame.new(0, Head.Size.Y / 2, Head.Size.Z / 2)
+                            else
+                                HeadSit:Disconnect()
+                            end
+                        end)
+                    end
+                end
             end
         end)
 
@@ -811,24 +837,28 @@ local function main()
         AddFunction({"stare", "lookat"}, "Stares at the selected player.", function(Player)
             local Player = GetPlayer(Player)
 
-            if LookAt then
-                LookAt:Disconnect()
-            end
-
-            LookAt = RunService.RenderStepped:Connect(function()
-                local Character = LocalPlayer.Character
-
-                if Player.Character and Character then
-                    local PrimaryPart = Character.PrimaryPart
-                    local HumanoidRootPart = Player.Character:FindFirstChild("HumanoidRootPart")
-
-                    if PrimaryPart and HumanoidRootPart then
-                        Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(PrimaryPart.Position, Vector3.new(HumanoidRootPart.Position.X, PrimaryPart.Position.Y, HumanoidRootPart.Position.Z)))
-                    elseif not Player then
+            for _, Player in pairs(Player) do
+                if Player.Character then
+                    if LookAt then
                         LookAt:Disconnect()
                     end
+
+                    LookAt = RunService.RenderStepped:Connect(function()
+                        local Character = LocalPlayer.Character
+
+                        if Player.Character and Character then
+                            local PrimaryPart = Character.PrimaryPart
+                            local HumanoidRootPart = Player.Character:FindFirstChild("HumanoidRootPart")
+
+                            if PrimaryPart and HumanoidRootPart then
+                                Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(PrimaryPart.Position, Vector3.new(HumanoidRootPart.Position.X, PrimaryPart.Position.Y, HumanoidRootPart.Position.Z)))
+                            elseif not Player then
+                                LookAt:Disconnect()
+                            end
+                        end
+                    end)
                 end
-            end)
+            end
         end)
 
         AddFunction({"unstare", "unlookat"}, "Stops staring at the player.", function()
@@ -842,24 +872,28 @@ local function main()
             local Player = GetPlayer(Player)
             local Speed = tonumber(Speed) or 1
 
-            if Orbit then
-                Orbit:Disconnect()
-            end
-
-            Orbit = RunService.Stepped:Connect(function()
-                local Character = LocalPlayer.Character
-
-                if Player.Character and Character then
-                    local PrimaryPart = Character.PrimaryPart
-                    local HumanoidRootPart = Player.Character:FindFirstChild("HumanoidRootPart")
-
-                    if PrimaryPart and HumanoidRootPart then
-                        Character.HumanoidRootPart.CFrame = CFrame.new(HumanoidRootPart.Position + Vector3.new(math.sin(os.clock() * Speed) * 10, 0, math.cos(os.clock() * Speed) * 10), Vector3.new(HumanoidRootPart.Position.X, PrimaryPart.Position.Y, HumanoidRootPart.Position.Z))
-                    elseif not Player then
+            for _, Player in pairs(Player) do
+                if Player.Character then
+                    if Orbit then
                         Orbit:Disconnect()
                     end
+
+                    Orbit = RunService.Stepped:Connect(function()
+                        local Character = LocalPlayer.Character
+
+                        if Player.Character and Character then
+                            local PrimaryPart = Character.PrimaryPart
+                            local HumanoidRootPart = Player.Character:FindFirstChild("HumanoidRootPart")
+
+                            if PrimaryPart and HumanoidRootPart then
+                                Character.HumanoidRootPart.CFrame = CFrame.new(HumanoidRootPart.Position + Vector3.new(math.sin(os.clock() * Speed) * 10, 0, math.cos(os.clock() * Speed) * 10), Vector3.new(HumanoidRootPart.Position.X, PrimaryPart.Position.Y, HumanoidRootPart.Position.Z))
+                            elseif not Player then
+                                Orbit:Disconnect()
+                            end
+                        end
+                    end)
                 end
-            end)
+            end
         end)
 
         AddFunction("unorbit", "Stop orbiting the selected player.", function()
@@ -911,17 +945,27 @@ local function main()
         end)
 
         AddFunction({"ruinreplication", "breaknet"}, "Breaks the selected players net.", function(Player)
-            for _,v in next, GetPlayer(Player).Character:GetDescendants() do
-                if v:IsA("Part") or v:IsA("BasePart") then
-                    Heartbeat:Connect(function()
-                    	sethiddenproperty(v, "NetworkIsSleeping", true)
-                    end)
+            local Player = GetPlayer(Player)
+
+            for _, Player in pairs(Player) do
+                for _, v in next, Player.Character:GetDescendants() do
+                    if v:IsA("Part") or v:IsA("BasePart") then
+                        Heartbeat:Connect(function()
+                            sethiddenproperty(v, "NetworkIsSleeping", true)
+                        end)
+                    end
                 end
             end
         end)
 
         AddFunction({"view", "spectate"}, "Spectates the chosen player.", function(Player)
-            Workspace.Camera.CameraSubject = GetPlayer(Player).Character.Humanoid
+            local Player = GetPlayer(Player)
+
+            for _, Player in pairs(Player) do
+                if Player.Character then
+                    Workspace.Camera.CameraSubject = Player.Character.Humanoid
+                end
+            end
         end)
         
         AddFunction({"unview", "unspectate"}, "Makes your camera go back to your player.", function()
@@ -1121,70 +1165,72 @@ local function main()
 
         AddFunction("fling", "Flings the selected player.", function(Player)
             local Player = GetPlayer(Player)
+
+            for _, Player in pairs(Player) do
+                if Player == LocalPlayer then return end
             
-            if Player == LocalPlayer then return end
-        
-            if Player then
-                local Character = LocalPlayer.Character
-                
-                if Character then
-                    local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
-                    local Humanoid = Character:FindFirstChild("Humanoid")
-        
-                    local Torso = Player.Character:FindFirstChild("Torso") or Player.Character:FindFirstChild("UpperTorso")
-        
-                    if HumanoidRootPart and Humanoid and Torso then
-                        for _, v in next, LocalPlayer.Character:GetDescendants() do
-                            if v:IsA("BasePart") then
-                                v.Velocity, v.RotVelocity = Vector3.new(), Vector3.new()
-                            end
-                        end
-        
-                        local Origin = HumanoidRootPart.CFrame
-                        local Offset = CFrame.new((Torso.Velocity.X / 6), -(Torso.Size.Y * 0.75) + (Torso.Velocity.Y / 6), (Torso.Velocity.Z / 6)) * CFrame.Angles(math.pi, math.pi, 0) * CFrame.new(-(Torso.Size.X / 3), 0, -(Torso.Size.Z / 3))
-        
-                        local Heartbeat = RunService.Heartbeat:Connect(function()
-                            Humanoid:ChangeState(16)
-                            
-                            for _, v in next, LocalPlayer.Character:GetDescendants() do
-                                if v:IsA("BasePart") then
-                                    v.CanCollide = false
-                                    v.RotVelocity = Vector3.new(11e11, 11e11, 11e11)
-                                    v.Velocity = Vector3.new(11e11, 11e11, 11e11)
-                                end
-                            end
-        
-                            HumanoidRootPart.CFrame = Torso.CFrame * Offset
-                        end)
-        
-                        local t = os.clock()
-        
-                        while HumanoidRootPart and Torso and Torso.Parent and Torso.Velocity.Magnitude < 500 and (os.clock() - t) < (Torso.Velocity.Magnitude * 0.02) + 0.4 do
-                            RunService.Heartbeat:Wait()
-                        end
-        
-                        HumanoidRootPart.Anchored = true
-        
-                        Heartbeat:Disconnect()
-        
-                        for i = 1, 5 do
-                            RunService.Heartbeat:Wait()
-                            
+                if Player then
+                    local Character = LocalPlayer.Character
+                    
+                    if Character then
+                        local HumanoidRootPart = Character:FindFirstChild("HumanoidRootPart")
+                        local Humanoid = Character:FindFirstChild("Humanoid")
+            
+                        local Torso = Player.Character:FindFirstChild("Torso") or Player.Character:FindFirstChild("UpperTorso")
+            
+                        if HumanoidRootPart and Humanoid and Torso then
                             for _, v in next, LocalPlayer.Character:GetDescendants() do
                                 if v:IsA("BasePart") then
                                     v.Velocity, v.RotVelocity = Vector3.new(), Vector3.new()
                                 end
                             end
-                            
-                            HumanoidRootPart.CFrame = Origin
-                            Humanoid:ChangeState(8)
-                        end
-        
-                        HumanoidRootPart.Anchored = false
-        
-                        for _, v in next, LocalPlayer.Character:GetDescendants() do
-                            if v:IsA("BasePart") then
-                                v.Velocity, v.RotVelocity = Vector3.new(), Vector3.new()
+            
+                            local Origin = HumanoidRootPart.CFrame
+                            local Offset = CFrame.new((Torso.Velocity.X / 6), -(Torso.Size.Y * 0.75) + (Torso.Velocity.Y / 6), (Torso.Velocity.Z / 6)) * CFrame.Angles(math.pi, math.pi, 0) * CFrame.new(-(Torso.Size.X / 3), 0, -(Torso.Size.Z / 3))
+            
+                            local Heartbeat = RunService.Heartbeat:Connect(function()
+                                Humanoid:ChangeState(16)
+                                
+                                for _, v in next, LocalPlayer.Character:GetDescendants() do
+                                    if v:IsA("BasePart") then
+                                        v.CanCollide = false
+                                        v.RotVelocity = Vector3.new(11e11, 11e11, 11e11)
+                                        v.Velocity = Vector3.new(11e11, 11e11, 11e11)
+                                    end
+                                end
+            
+                                HumanoidRootPart.CFrame = Torso.CFrame * Offset
+                            end)
+            
+                            local t = os.clock()
+            
+                            while HumanoidRootPart and Torso and Torso.Parent and Torso.Velocity.Magnitude < 500 and (os.clock() - t) < (Torso.Velocity.Magnitude * 0.02) + 0.4 do
+                                RunService.Heartbeat:Wait()
+                            end
+            
+                            HumanoidRootPart.Anchored = true
+            
+                            Heartbeat:Disconnect()
+            
+                            for i = 1, 5 do
+                                RunService.Heartbeat:Wait()
+                                
+                                for _, v in next, LocalPlayer.Character:GetDescendants() do
+                                    if v:IsA("BasePart") then
+                                        v.Velocity, v.RotVelocity = Vector3.new(), Vector3.new()
+                                    end
+                                end
+                                
+                                HumanoidRootPart.CFrame = Origin
+                                Humanoid:ChangeState(8)
+                            end
+            
+                            HumanoidRootPart.Anchored = false
+            
+                            for _, v in next, LocalPlayer.Character:GetDescendants() do
+                                if v:IsA("BasePart") then
+                                    v.Velocity, v.RotVelocity = Vector3.new(), Vector3.new()
+                                end
                             end
                         end
                     end
@@ -1194,35 +1240,40 @@ local function main()
         
         AddFunction({"pathfind", "walkto"}, "Walks to the selected player using pathfinding.", function(Player)
             local Player = GetPlayer(Player)
-            local To = Player.Character.HumanoidRootPart.Position
-            local From =  LocalPlayer.Character.HumanoidRootPart.Position
-            
-            local Path = PathfindingService:FindPathAsync(From, To)
-            local Points = Path:GetWaypoints()
-            local Parts = {}
-            
-            for i,v in next, Points do
-                local Part = Instance.new("Part", game.Workspace)
-                Part.Size = Vector3.new(1, 1, 1)
-                Part.Color = Color3.new(0, 1, 0)
-                Part.Transparency = 0.5
-                Part.Shape = "Ball"
-                Part.Anchored = true
-                Part.Position = v.Position + Vector3.new(0, 3, 0)
-                Part.CanCollide = false
-                Part.TopSurface = "Smooth"
-                Part.BottomSurface = "Smooth"
-                
-                table.insert(Parts, Part)
-            end
-            
-            for i,v in next, Points do
-                Parts[i]:Destroy()
-                if v.Action == Enum.PathWaypointAction.Jump then
-                    LocalPlayer.Character.Humanoid.Jump = true
+
+            for _, Player in pairs(Player) do
+                if Player.Character then
+                    local To = Player.Character.HumanoidRootPart.Position
+                    local From =  LocalPlayer.Character.HumanoidRootPart.Position
+                    
+                    local Path = PathfindingService:FindPathAsync(From, To)
+                    local Points = Path:GetWaypoints()
+                    local Parts = {}
+                    
+                    for i,v in next, Points do
+                        local Part = Instance.new("Part", game.Workspace)
+                        Part.Size = Vector3.new(1, 1, 1)
+                        Part.Color = Color3.new(0, 1, 0)
+                        Part.Transparency = 0.5
+                        Part.Shape = "Ball"
+                        Part.Anchored = true
+                        Part.Position = v.Position + Vector3.new(0, 3, 0)
+                        Part.CanCollide = false
+                        Part.TopSurface = "Smooth"
+                        Part.BottomSurface = "Smooth"
+                        
+                        table.insert(Parts, Part)
+                    end
+                    
+                    for i,v in next, Points do
+                        Parts[i]:Destroy()
+                        if v.Action == Enum.PathWaypointAction.Jump then
+                            LocalPlayer.Character.Humanoid.Jump = true
+                        end
+                        LocalPlayer.Character.Humanoid:MoveTo(v.Position)
+                        LocalPlayer.Character.Humanoid.MoveToFinished:Wait()
+                    end
                 end
-                LocalPlayer.Character.Humanoid:MoveTo(v.Position)
-                LocalPlayer.Character.Humanoid.MoveToFinished:Wait()
             end
         end)
 		
@@ -1630,17 +1681,19 @@ local function main()
         AddFunction("report", "Reports the chosen player the chosen amount of times.", function(Player, Amount)
             local Player = GetPlayer(Player)
             local Amount = Amount
-            
+                
             local Sources = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Assets/Dependencies/ReportReasons.lua"))()
             
-            for i = 1, Amount do
-                local Catagory = Sources[math.random(1, #Sources)]
-                local Reason = Catagory[2][math.random(1, #Catagory[2])]
+            for _, Player in pairs(Player) do
+                for i = 1, Amount do
+                    local Catagory = Sources[math.random(1, #Sources)]
+                    local Reason = Catagory[2][math.random(1, #Catagory[2])]
 
-                Players:ReportAbuse(Player, Catagory[1], Reason)
-                print(string.format("Reported %s for %s with message: %s", Player.Name, Catagory[1], Reason))
+                    Players:ReportAbuse(Player, Catagory[1], Reason)
+                    print(string.format("Reported %s for %s with message: %s", Player.Name, Catagory[1], Reason))
 
-                wait(0.5)
+                    wait(0.5)
+                end
             end
         end)
 			
