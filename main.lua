@@ -1167,7 +1167,7 @@ local function main()
             local Player = GetPlayer(Player)
 
             for _, Player in pairs(Player) do
-                if Player == LocalPlayer then return end
+                if Player == LocalPlayer then continue end
             
                 if Player then
                     local Character = LocalPlayer.Character
