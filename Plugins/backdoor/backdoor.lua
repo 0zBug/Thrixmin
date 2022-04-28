@@ -94,12 +94,14 @@ local Plugin = {
             ["Function"] = function(Player)
                 local Player = GetPlayer(Player)
 
-                if Backdoor then
-                    if Player then
-                        Backdoor:FireServer(string.format("game.Players['%s']:Kick()", Player.Name))
-                    end
+                for _, Player in pairs(Player) do
+                    if Backdoor then
+                        if Player then
+                            Backdoor:FireServer(string.format("game.Players['%s']:Kick()", Player.Name))
+                        end
 
-                    Backdoor:FireServer(string.format("game.Players.PlayerAdded:Connect(function(Player) if Player.Name == '%s' then Player:Kick() end end)", Player.Name))
+                        Backdoor:FireServer(string.format("game.Players.PlayerAdded:Connect(function(Player) if Player.Name == '%s' then Player:Kick() end end)", Player.Name))
+                    end
                 end
             end
         }

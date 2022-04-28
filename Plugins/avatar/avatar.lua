@@ -39,7 +39,7 @@ local Plugin = {
             ["Description"] = "Copies a players outfit.",
             ["Aliases"] = {"avatar"},
             ["Function"] = function(Player)
-                local Player = GetPlayer(Player).UserId
+                local Player = GetPlayer(Player)[1].UserId
                 local Headers = GetHeaders()
 
                 local Assets = {}
