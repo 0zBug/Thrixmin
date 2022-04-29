@@ -1897,9 +1897,7 @@ local function main()
 
         hookfunction(MessagePosted.fire, function(self, Message)
             thread(function()
-                if Settings["Thrix"]["Settings"]["AntiChatLog"] then
-                    return
-                else
+                if string.sub(Message, 1, 2) == "/e" or not Settings["Thrix"]["Settings"]["AntiChatLog"] then
                     Players:Chat(Message)
                 end
             end)
