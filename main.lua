@@ -971,6 +971,68 @@ local function main()
         AddFunction({"unview", "unspectate"}, "Makes your camera go back to your player.", function()
             Workspace.Camera.CameraSubject = LocalPlayer.Character.Humanoid
         end)
+
+        
+        local Invisible
+        AddFunction({"invisible", "invis"}, "Makes your character invisible.", function()
+            local CurrentCamera = Workspace.CurrentCamera
+            
+            local Character = LocalPlayer.Character
+            Character.Archivable = true
+
+            Invisible = Character:Clone()
+            Invisible.Humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+
+            local ObjectValue = Instance.new("ObjectValue", Invisible)
+            ObjectValue.Name = "Character"
+            ObjectValue.Value = Character
+
+            for _, Part in pairs(Invisible:GetDescendants()) do
+                if Part:IsA("BasePart") then
+                    Part.Material = Enum.Material.ForceField
+                end
+            end
+
+            local Camera = CurrentCamera.CFrame
+            local Origin = Character.HumanoidRootPart.CFrame
+
+            Character:MoveTo(Vector3.new(0, 9e9, 0))
+            
+            CurrentCamera.CameraType = Enum.CameraType.Scriptable
+
+            wait(0.1)
+
+            CurrentCamera.CameraType = Enum.CameraType.Custom
+
+            Character.Parent = nil
+            Invisible.Parent = Workspace
+
+            Invisible.HumanoidRootPart.CFrame = Origin
+
+            LocalPlayer.Character = Invisible
+
+            CurrentCamera.CameraSubject = LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid")
+            CurrentCamera.CFrame = Camera
+
+            LocalPlayer.Character.Animate.Disabled = true
+            LocalPlayer.Character.Animate.Disabled = false
+        end)
+
+        AddFunction({"visible", "vis"}, "Makes your character visible.", function()
+            local CurrentCamera = Workspace.CurrentCamera
+            local Camera = CurrentCamera.CFrame
+            local Character = Invisible.Character.Value
+
+            Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
+            LocalPlayer.Character = Invisible.Character.Value
+
+            Invisible:Destroy()
+
+            Character.Parent = Workspace
+
+            CurrentCamera.CameraSubject = LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid")
+            CurrentCamera.CFrame = Camera
+        end)
         
         local Flying = false
         AddFunction("fly", "Makes your player fly.", function(Speed)
