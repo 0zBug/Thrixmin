@@ -619,6 +619,8 @@ local function AddFunction(Aliases, Description, Execute, Plugin)
             Settings["Thrix"]["Functions"][Command] = {}
 
             Settings["Thrix"]["Functions"][Command]["Execute"] = function(self, args)
+                local args = args or {}
+                
                 thread(function()
                     self.Arguments = {args}
 
