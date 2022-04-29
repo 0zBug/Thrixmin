@@ -69,6 +69,8 @@ repeat wait() until game:IsLoaded()
         • sync - Synchronizes your current animation with another players. (Aliases: "syncanim")
         • view - Spectates the chosen player. (Aliases: "spectate")
         • unview - Makes your camera go back to your player. (Aliases: "unspectate")
+        • invisible - Makes your character invisible. (Aliases: "invis")
+        • visible - Makes your character visible. (Aliases: "vis")
         • fly - Makes your player fly. 
         • vfly - Makes your player fly in vehicles. (Aliases: "vehiclefly")
         • unfly - Makes your player stop flying. (Aliases: "unvfly", "unvehiclefly")
@@ -620,7 +622,7 @@ local function AddFunction(Aliases, Description, Execute, Plugin)
 
             Settings["Thrix"]["Functions"][Command]["Execute"] = function(self, args)
                 local args = args or {}
-                
+
                 thread(function()
                     self.Arguments = {args}
 
