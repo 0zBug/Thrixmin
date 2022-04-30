@@ -765,7 +765,7 @@ local function main()
             if InfiniteJump and Key == " " then
                 LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(3)
             end
-        end)
+        end) 
 
         AddFunction({"infintejump", "infjump"}, "Allows you to jump while not on the ground.", function()
             InfiniteJump = true
