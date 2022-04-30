@@ -777,7 +777,6 @@ local function main()
         
         local HeadSit
         AddFunction("headsit", "Makes your player sit on the selected player's head.", function(Player)
-
             local Player = GetPlayer(Player)
             local Character = LocalPlayer.Character
             local Humanoid = Character:FindFirstChildOfClass("Humanoid")
