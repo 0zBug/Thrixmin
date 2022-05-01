@@ -511,7 +511,7 @@ local States = {
 }
 
 local SetStatesEnabled = function(Enabled)
-    for _,v in pairs(States) do
+    for _, v in pairs(States) do
         LocalPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType[v], Enabled)
     end
 end
