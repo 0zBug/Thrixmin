@@ -256,7 +256,7 @@ else
 end
 
 if not isfile("Thrixmin/UISettings.json") then
-	writefile("Thrixmin/UISettings.json", game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/UISettings.json"))
+    writefile("Thrixmin/UISettings.json", game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/UISettings.json"))
 end
 
 Settings["Thrix"]["UI"] = HttpService:JSONDecode(readfile("Thrixmin/UISettings.json"))
