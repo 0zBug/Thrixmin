@@ -338,10 +338,12 @@ ImageLabel.BackgroundTransparency = 1
 ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 ImageLabel.Position = UDim2.new(0.05, 0, 0.5, 0)
 ImageLabel.Size = UDim2.new(0.09, 0, 1, 0)
+
 if Settings["Thrix"]["UI"]["CustomIcon"]["Enabled"] then
 	local FileName = string.format("Thrixmin/Assets/%s.png", HttpService:GenerateGUID(false))
 	writefile(FileName, game:HttpGet(Settings["Thrix"]["UI"]["CustomIcon"]["Url"]))
 	ImageLabel.Image = getcustomasset(FileName)
+
 	spawn(function()
 		wait(5)
 		delfile(FileName)
@@ -409,24 +411,6 @@ local function warn(...)
     else
         owarn(...)
     end
-end
-
-local y = {}
-Stepped:Connect(function()
-	local c = os.clock()
-	for i, d in next, y do
-		local s = c - d[1]
-		if s >= d[2] then
-			y[i] = nil
-			coroutine.resume(d[3], s, c)
-		end
-	end
-end)
-        
-local function swait(t)
-    local t = (type(t) ~= "number" or t < 0) and 0 or t
-    table.insert(y, {os.clock(), t, coroutine.running()})
-    return coroutine.yield()
 end
 
 local PlayerCases = {
