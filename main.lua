@@ -8,7 +8,7 @@
        ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝
 ]]--
 
-if Thrixmin then
+if Thrixmin then 
     warn("Thrixmin has already been ran!")
     return
 else
