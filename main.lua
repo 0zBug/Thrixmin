@@ -1490,11 +1490,12 @@ local function main()
             
             Highlight.CreateGui()
             
-            for Index,Player in next, game.Players:GetChildren() do
+            for _, Player in next, game.Players:GetChildren() do
                 if Player ~= game.Players.LocalPlayer then
                     if Player.Character then
                         Highlight.HighlightBody(Player.Character, Color)
                     end
+
                     local Connection = Player.CharacterAdded:Connect(function(Character)
                         local Humanoid = Character:WaitForChild("Humanoid")
                         Highlight.HighlightBody(Character, Color)
