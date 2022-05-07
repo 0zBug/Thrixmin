@@ -14,7 +14,7 @@ if Thrixmin then
 else
     getgenv().Thrixmin = true
 end
-
+ 
 repeat wait() until game:IsLoaded()
 
 --[[
