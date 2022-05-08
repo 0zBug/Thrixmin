@@ -539,7 +539,7 @@ function TeleportToCode(Code)
 end
 
 local function thread(f)
-    return spawn(function()
+    return spawn(function() 
         if syn then
             syn.set_thread_identity(7)
         elseif KRNL_LOADED then
@@ -1528,11 +1528,12 @@ local function main()
             
             Highlight.CreateGui()
             
-            for Index,Player in next, game.Players:GetChildren() do
+            for _, Player in next, game.Players:GetChildren() do
                 if Player ~= game.Players.LocalPlayer then
                     if Player.Character then
                         Highlight.HighlightBody(Player.Character, Player.TeamColor)
                     end
+
                     local Connection = Player.CharacterAdded:Connect(function(Character)
                         local Humanoid = Character:WaitForChild("Humanoid")
                         Highlight.HighlightBody(Character, Player.TeamColor)
@@ -1772,7 +1773,8 @@ local function main()
         end)
 
         AddFunction("gencode", "Generates a join code.", function()
-            local Code = UpdateCodes()
+            local Code
+            Code = UpdateCodes()
 
             setclipboard(Code)
             StarterGui:SetCore("SendNotification", {
@@ -1786,7 +1788,7 @@ local function main()
         end)
 	
         AddFunction({"remotespy", "rspy"}, "Opens remote spy", function()
-            loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))() -- Credits to exxtremestuffs
+            loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))()
         end)
 
         AddFunction({"dex", "explorer"}, "Opens dex.", function()
@@ -1803,11 +1805,11 @@ local function main()
                     Plugin = game.PlaceId 
                 end 
                 
-                game:HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Plugin) 
+                game:HttpGet("https://github.com/0zBug/Thrixmin/tree/main/Plugins/" .. Plugin)
             end)
 
             if not Success then
-                warn("Plugin not found.")
+                warn("Plugin not found.", Error)
                 return
             else
                 local Files = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Thrixmin/main/Plugins/" .. Plugin .. "/install.lua"))()
@@ -1853,20 +1855,18 @@ local function main()
             end
         end)
         
-        local gt = getrawmetatable(game)
-        setreadonly(gt, false)
-        local old = gt.__namecall
-        
-        gt.__namecall = newcclosure(function(self, ...)
+        local namecall
+        namecall = hookmetamethod(game, "__namecall", newcclosure(function(self, Message, ...)
             if getnamecallmethod() == "FireServer" and tostring(self) == "SayMessageRequest" then
-                local Args = (({...})[1]):split(" ")
-                if string.sub(Args[1], 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
+                local Args = string.split(Message, " ")
+
+                if string.sub(Message, 1, #Settings["Thrix"]["Settings"]["Prefix"]) == Settings["Thrix"]["Settings"]["Prefix"] then
                     local Command = FindClosestCommand(string.sub(string.lower(Args[1]), #Settings["Thrix"]["Settings"]["Prefix"] + 1))
 
                     if Command then
                         table.remove(Args, 1)
                         Command:Execute(Args)
-
+                        
                         if Settings["Thrix"]["Settings"]["Silent"] then
                             return self, ""
                         end
@@ -1874,8 +1874,8 @@ local function main()
                 end
             end
             
-            return old(self, ...)
-        end)
+            return namecall(self, Message, ...)
+        end))
         
         local CommandAction
         CommandAction = UserInputService.InputBegan:Connect(function(Key, Typing)
@@ -1962,7 +1962,7 @@ local function main()
         end)
         
         AddFunction({"end", "quit"}, "Stops the admin from running.", function()
-            gt.__namecall = old
+            hookmetamethod(game, "__namecall", namecall)
             CommandAction:Disconnect()
             
             getgenv().Thrixmin = false
