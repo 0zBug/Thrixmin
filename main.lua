@@ -10,7 +10,7 @@
 
 if Thrixmin then
     warn("Thrixmin has already been ran!")
-    return 
+    return
 else
     getgenv().Thrixmin = true
 end
