@@ -6,14 +6,14 @@ local Plugin = {
     ["Commands"] = {
         ["dump"] = {
             ["Description"] = "Finds and outputs tables in the collection.",
-            ["Aliases"] = {"search", "query"},
+            ["Aliases"] = {"search"},
             ["Function"] = function(Query)
                 Garbage.dump(Query)
             end
         },
         ["setupvalue"] = {
             ["Description"] = "Edits the value of an value in the collection.",
-            ["Aliases"] = {"search", "query"},
+            ["Aliases"] = {"set"},
             ["Function"] = function(Query, Index, Value, Changed)
                 Garbage.setupvalue(Query, Index, tonumber(Value) and tonumber(Value) or Value, Changed == "true" and true or false)
             end
