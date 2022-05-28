@@ -1,5 +1,5 @@
 
-local Garbage = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Garbage/main/main.lua"))()
+local Garbage = loadstring(game:HttpGet("https://raw.githubusercontent.com/0zBug/Garbage/main/timy.lua"))()
 
 local Plugin = {
     ["Name"] = "garbage",
