@@ -1873,7 +1873,7 @@ local function main()
                         Event:Fire(Command, Args)
                         
                         if Settings["Thrix"]["Settings"]["Silent"] then
-                            return self, ""
+                            return
                         end
                     end
                 end
@@ -1967,7 +1967,10 @@ local function main()
         end)
         
         AddFunction({"end", "quit"}, "Stops the admin from running.", function()
-            hookmetamethod(game, "__namecall", namecall)
+            local _game = getrawmetatable(game)
+            setreadonly(_game, false)
+            _game.__namecall = namecall
+
             CommandAction:Disconnect()
             
             getgenv().Thrixmin = false
