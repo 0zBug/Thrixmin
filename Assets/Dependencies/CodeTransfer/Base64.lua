@@ -3,7 +3,7 @@ local Alphabet = {}
 local Indexes = {}
 
 for i = 1, 64 do
-    local c = i < 27 and (i + 64) or i < 53 and (i + 70)  or i < 63 and (i - 5) or math.floor(((i - 62) * 3.5) + 40)
+    local c = i < 27 and (i + 64) or i < 53 and (i + 70) or i < 63 and (i - 5) or math.floor(((i - 62) * 3.5) + 40)
     Alphabet[i] = c
     Indexes[c] = i
 end
