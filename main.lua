@@ -123,7 +123,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.4.8",
+        ["Version"] = "v1.4.9",
         ["Developer"] = "Bug#4193",
     },
     ["Debug"] = true,
@@ -1855,6 +1855,11 @@ local function main()
             end
         end)
         
+        local Event = Instance.new("BindableEvent")
+        Event.Event:Connect(function(Command, Args)
+            Command:Execute(Args)
+        end)
+
         local namecall
         namecall = hookmetamethod(game, "__namecall", newcclosure(function(self, Message, ...)
             if getnamecallmethod() == "FireServer" and tostring(self) == "SayMessageRequest" then
@@ -1865,7 +1870,7 @@ local function main()
 
                     if Command then
                         table.remove(Args, 1)
-                        Command:Execute(Args)
+                        Event:Fire(Command, Args)
                         
                         if Settings["Thrix"]["Settings"]["Silent"] then
                             return self, ""
