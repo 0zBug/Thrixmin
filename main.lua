@@ -1950,11 +1950,14 @@ local function main()
         local ChatMain = require(PlayerScripts:WaitForChild("ChatScript"):WaitForChild("ChatMain"))
         local MessagePosted = ChatMain.MessagePosted
 
-        hookfunction(MessagePosted.fire, function(self, Message)
-            thread(function()
-                if string.sub(Message, 1, 2) == "/e" or not Settings["Thrix"]["Settings"]["AntiChatLog"] then
-                    Players:Chat(Message)
-                end
+        thread(function()
+            repeat wait() until PlayerGui:FindFirstChild("Chat").Visible
+            hookfunction(MessagePosted.fire, function(self, Message)
+                thread(function()
+                    if string.sub(Message, 1, 2) == "/e" or not Settings["Thrix"]["Settings"]["AntiChatLog"] then
+                        Players:Chat(Message)
+                    end
+                end)
             end)
         end)
 
