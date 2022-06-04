@@ -10,7 +10,7 @@
 
 if Thrixmin then
     warn("Thrixmin has already been ran!")
-    return 
+    return
 else
     getgenv().Thrixmin = true
 end
@@ -123,7 +123,7 @@ repeat wait() until game:IsLoaded()
 local Settings = {
     ["Info"] = {
         ["Name"] = "Thrixmin",
-        ["Version"] = "v1.4.9",
+        ["Version"] = "v1.5.0",
         ["Developer"] = "Bug#4193",
     },
     ["Debug"] = true,
@@ -133,7 +133,8 @@ local Settings = {
             ["Silent"] = true,
             ["AutoCorrect"] = false,
             ["AntiChatLog"] = true,
-            ["CustomAliases"] = {},
+            ["Aliases"] = {},
+            ["Keybinds"] = {},
             ["Markers"] = true
         },
         ["OutputTypes"] = {
@@ -295,6 +296,7 @@ end
 ]]--
 
 local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local oprint = print
 local owarn = warn
@@ -601,6 +603,14 @@ local function AddFunction(Aliases, Description, Execute, Plugin)
     end
     
     if #Output.SyntaxErrors == 0 then
+        for _, Alias in next, Aliases do
+            if Settings["Thrix"]["Settings"]["Aliases"][Alias] then
+                for _, Alias in next, Settings["Thrix"]["Settings"]["Aliases"][Alias] do
+                    table.insert(Aliases, Alias)
+                end
+            end
+        end
+                
         for _, Command in next, Aliases do
             Settings["Thrix"]["Functions"][Command] = {}
 
@@ -1854,6 +1864,66 @@ local function main()
                 end
             end
         end)
+
+        AddFunction("addkeybind", "Adds a keybind to the chosen command.", function(Key, Command, ...)
+            local Args = {...}
+            local Key = string.lower(Key)
+
+            if not Settings["Thrix"]["Settings"]["Keybinds"][Key] then
+                Settings["Thrix"]["Settings"]["Keybinds"][Key] = {}
+            end
+
+            Settings["Thrix"]["Settings"]["Keybinds"][Key][Command] = Args
+
+            SaveSettings()
+        end)
+
+        AddFunction("removekeybind", "Removes a keybind from the chosen command.", function(Key, Command)
+            local Key = string.lower(Key)
+
+            if Settings["Thrix"]["Settings"]["Keybinds"][Key] then
+                if Settings["Thrix"]["Settings"]["Keybinds"][Key][Command] then
+                    Settings["Thrix"]["Settings"]["Keybinds"][Key][Command] = nil
+
+                    if #Settings["Thrix"]["Settings"]["Keybinds"][Key] == 0 then
+                        Settings["Thrix"]["Settings"]["Keybinds"][Key] = nil
+                    end
+                    
+                    SaveSettings()
+                end
+            end
+        end)
+
+        AddFunction("addalias", "Adds an alias to the chosen command.", function(Command, Alias)
+            if Settings["Thrix"]["Functions"][Command] then
+                Settings["Thrix"]["Functions"][Alias] = Settings["Thrix"]["Functions"][Command]
+
+                if not Settings["Thrix"]["Settings"]["Aliases"][Command] then
+                    Settings["Thrix"]["Settings"]["Aliases"][Command] = {}
+                end
+
+                table.insert(Settings["Thrix"]["Settings"]["Aliases"][Command], Alias)
+                SaveSettings()
+
+                print(string.format("Added alias %s to command %s.", Alias, Command))
+            end
+        end)
+
+        AddFunction("removealias", "Removes the chosen alias.", function(Alias)
+            for Command, Aliases in next, Settings["Thrix"]["Settings"]["Aliases"] do
+                for i, v in next, Aliases do
+                    if v == Alias then
+                        table.remove(Aliases, i)
+                    end
+                end
+
+                if #Aliases == 0 then
+                    Settings["Thrix"]["Settings"]["Aliases"][Command] = nil
+                end
+            end
+
+            SaveSettings()
+        end)
         
         local Event = Instance.new("BindableEvent")
         Event.Event:Connect(function(Command, Args)
@@ -1884,14 +1954,21 @@ local function main()
         
         local CommandAction
         CommandAction = UserInputService.InputBegan:Connect(function(Key, Typing)
-            if UserInputService:GetStringForKeyCode(Key.KeyCode) == Settings["Thrix"]["Settings"]["Prefix"] and not Typing then
-                Frame:TweenPosition(UDim2.new(0.5, 0, 0.9, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.7)
-            	TextBox:CaptureFocus()
+            if not Typing then
+                local Key = string.lower(UserInputService:GetStringForKeyCode(Key.KeyCode))
+
+                if Key == string.lower(Settings["Thrix"]["Settings"]["Prefix"]) then
+                    Frame:TweenPosition(UDim2.new(0.5, 0, 0.9, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.7)
+                    TextBox:CaptureFocus()
+                elseif Settings["Thrix"]["Settings"]["Keybinds"][Key] then
+                    for Command, Args in next, Settings["Thrix"]["Settings"]["Keybinds"][Key] do
+                        ExecuteCommand(Command, Args)
+                    end
+                end
             end
         end)
         
         TextBox.FocusLost:Connect(function()
-        	wait()
         	Frame:TweenPosition(UDim2.new(0.5, 0, 1.1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5)
 
         	local Args = TextBox.Text:split(" ")
@@ -1905,7 +1982,6 @@ local function main()
                 end
             end
 
-        	wait()
             TextBox.Text = ""
         end)
 
@@ -1951,7 +2027,8 @@ local function main()
         local MessagePosted = ChatMain.MessagePosted
 
         thread(function()
-            repeat wait() until PlayerGui:FindFirstChild("Chat").Visible
+            repeat wait() until PlayerGui:FindFirstChild("Chat").Frame.Visible
+
             hookfunction(MessagePosted.fire, function(self, Message)
                 thread(function()
                     if string.sub(Message, 1, 2) == "/e" or not Settings["Thrix"]["Settings"]["AntiChatLog"] then
