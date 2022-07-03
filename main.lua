@@ -34,86 +34,6 @@ repeat wait() until game:IsLoaded()
         • SaveSettings - Saves Thrixmin's settings to the workspace.
         • ExecuteCommand - Executes a command.
         • CustomPlayerCase - Creates a custom player case.
-
-    ⮚ Commands
-        • goto from main - Teleports your player to the selected player. (Aliases: "tp", "to")
-        • gameteleport from main - Teleports you to the selected game. (Aliases: "gametp")
-        • walkspeed from main - Sets your character's walkspeed to the chosen amount. (Aliases: "ws")
-        • jumppower from main - Sets your character's jumppower to the chosen amount. (Aliases: "jp")
-        • hipheight from main - Sets your hip height to the chosen amount. (Aliases: "height")
-        • gravity from main - Sets the workspace's gravity to the chosen amount. (Aliases: "grav")
-        • timeofday from main - Sets the time to the selected time. (Aliases: "time")
-        • sit from main - Makes your player sit down. 
-        • unsit from main - Makes your player stand up. 
-        • platformstand from main - Stuns your player. (Aliases: "stun")
-        • unplatformstand from main - Unstuns your player. (Aliases: "unstun")
-        • freeze from main - Freezes your player in place. (Aliases: "fr")
-        • unfreeze from main - Unfreezes your player in place. (Aliases: "unfr")
-        • offset from main - Offsets your player with a x, y and z value. 
-        • infintejump from main - Allows you to jump while not on the ground. (Aliases: "infjump")
-        • uninfintejump from main - Disables infinite jumping. (Aliases: "uninfjump")
-        • headsit from main - Makes your player sit on the selected player's head. 
-        • spin from main - Spins your character. 
-        • unspin from main - Unspins your character. 
-        • animspeed from main - Changes the speed of your players animation. 
-        • noanim from main - Stops your players animation. 
-        • reanim from main - Starts your players animation. 
-        • stare from main - Stares at the selected player. (Aliases: "lookat")
-        • unstare from main - Stops staring at the player. (Aliases: "unlookat")
-        • orbit from main - Makes your character orbit the selected player. 
-        • unorbit from main - Stop orbiting the selected player. 
-        • noclip from main - Noclips your character. 
-        • clip from main - Clips your character. 
-        • serverhop from main - Teleports you to a different server. (Aliases: "sh")
-        • sync from main - Synchronizes your current animation with another players. (Aliases: "syncanim")
-        • ruinreplication from main - Breaks the selected players net. (Aliases: "breaknet")
-        • view from main - Spectates the chosen player. (Aliases: "spectate")
-        • unview from main - Makes your camera go back to your player. (Aliases: "unspectate")
-        • invisible from main - Makes your character invisible. (Aliases: "invis")
-        • visible from main - Makes your character visible. (Aliases: "vis")
-        • fly from main - Makes your player fly. (Aliases: "retard")
-        • vfly from main - Makes your player fly in vehicles. (Aliases: "vehiclefly")
-        • unfly from main - Makes your player stop flying. (Aliases: "unvfly", "unvehiclefly")
-        • fling from main - Flings the selected player. 
-        • pathfind from main - Walks to the selected player using pathfinding. (Aliases: "walkto")
-        • setwaypoint from main - Creates a waypoint at your current location. (Aliases: "setwp")
-        • deletewaypoint from main - Deletes the selected waypoint. (Aliases: "delwp")
-        • waypoint from main - Teleports you to the selected waypoint. (Aliases: "wp")
-        • pathfindwaypoint from main - Makes you walt to the selected waypoint. (Aliases: "pfwp")
-        • chams from main - Highlights Players through walls. (Aliases: "esp")
-        • teamchams from main - Highlights Players through walls by team. (Aliases: "teamesp")
-        • nochams from main - Disables chams. (Aliases: "noesp")
-        • firecd from main - Fires all clickdetectors in the workspace. (Aliases: "fireclickdetectors")
-        • firetouch from main - Fires all touchinterests in the workspace. (Aliases: "firetouchinterests")
-        • fireprox from main - Fires all proximityprompts in the workspace. (Aliases: "fireproximityprompts")
-        • team from main - If possible, switch to the selected team. 
-        • spider from main - Lets you climb on walls. (Aliases: "wallclimb")
-        • unspider from main - Stops climbing on walls. (Aliases: "unwallclimb")
-        • swim from main - Lets you swim in the air. 
-        • unswim from main - Stops swimming in the air. 
-        • noname from main - Disables nametags in some games. (Aliases: "nobillboardgui")
-        • reset from main - Resets your player. (Aliases: "re")
-        • spawn from main - Respawns your player. (Aliases: "gr")
-        • rejoin from main - Makes your player rejoin. (Aliases: "rj")
-        • posrj from main - Makes your player rejoin and teleport to your current position. 
-        • report from main - Reports the chosen player the chosen amount of times. 
-        • load from main - Runs the chosen file. (Aliases: "exec")
-        • delete from main - Deletes the chosen file. (Aliases: "del", "delfile")
-        • join from main - Teleports you to the game of the join code. 
-        • gencode from main - Generates a join code. 
-        • chatlogs from main - Opens chat logs. (Aliases: "clogs")
-        • remotespy from main - Opens remote spy (Aliases: "rspy")
-        • dex from main - Opens dex. (Aliases: "explorer")
-        • exit from main - Closes your game. (Aliases: "close")
-        • install from main - Installs the chosen plugin. (Aliases: "installplugin")
-        • uninstall from main - Uninstalls the chosen plugin. (Aliases: "uninstallplugin")
-        • addkeybind from main - Adds a keybind to the chosen command. 
-        • removekeybind from main - Removes a keybind from the chosen command. 
-        • addalias from main - Adds an alias to the chosen command. 
-        • removealias from main - Removes the chosen alias. 
-        • prefix from main - Sets your command prefix. 
-        • end from main - Stops the admin from running. (Aliases: "quit")
-        • discord from main - Invites you to the Thrixmin discord. 
 ]]--
 
 --[[
@@ -1930,13 +1850,11 @@ local function main()
             SaveSettings()
         end)
         
-        local Event = Instance.new("BindableEvent")
-        Event.Event:Connect(function(Command, Args)
-            Command:Execute(Args)
-        end)
+        local gamemetatable = getrawmetatable(game)
+        setreadonly(gamemetatable, false)
+        local namecall = gamemetatable.__namecall
 
-        local namecall
-        namecall = hookmetamethod(game, "__namecall", newcclosure(function(self, Message, ...)
+        gamemetatable.__namecall = function(self, Message, ...)
             if getnamecallmethod() == "FireServer" and tostring(self) == "SayMessageRequest" then
                 local Args = string.split(Message, " ")
 
@@ -1945,18 +1863,18 @@ local function main()
 
                     if Command then
                         table.remove(Args, 1)
-                        Event:Fire(Command, Args)
-                        
+                        Command:Execute(Args)
+
                         if Settings["Thrix"]["Settings"]["Silent"] then
                             return
                         end
                     end
                 end
             end
-            
+
             return namecall(self, Message, ...)
-        end))
-        
+        end
+
         local CommandAction
         CommandAction = UserInputService.InputBegan:Connect(function(Key, Typing)
             if not Typing then
@@ -2031,13 +1949,18 @@ local function main()
         local ChatMain = require(PlayerScripts:WaitForChild("ChatScript"):WaitForChild("ChatMain"))
         local MessagePosted = ChatMain.MessagePosted
 
+        local Chat = Instance.new("BindableEvent")
+        Chat.Event:Connect(function(Message)
+            Players:Chat(Message)
+        end)
+
         thread(function()
             repeat wait() until PlayerGui:FindFirstChild("Chat").Frame.Visible
 
             hookfunction(MessagePosted.fire, function(self, Message)
                 thread(function()
                     if string.sub(Message, 1, 2) == "/e" or not Settings["Thrix"]["Settings"]["AntiChatLog"] then
-                        Players:Chat(Message)
+                        Chat:Fire(Message)
                     end
                 end)
             end)
@@ -2052,9 +1975,7 @@ local function main()
         end)
         
         AddFunction({"end", "quit"}, "Stops the admin from running.", function()
-            local _game = getrawmetatable(game)
-            setreadonly(_game, false)
-            _game.__namecall = namecall
+            gamemetatable.__namecall = namecall
 
             CommandAction:Disconnect()
             
