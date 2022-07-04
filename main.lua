@@ -1930,11 +1930,13 @@ local function main()
             SaveSettings()
         end)
         
-        local gamemetatable = getrawmetatable(game)
-        setreadonly(gamemetatable, false)
-        local namecall = gamemetatable.__namecall
+        local Event = Instance.new("BindableEvent")
+        Event.Event:Connect(function(Command, Args)
+            Command:Execute(Args)
+        end)
 
-        gamemetatable.__namecall = function(self, Message, ...)
+        local namecall
+        namecall = hookmetamethod(game, "__namecall", newcclosure(function(self, Message, ...)
             if getnamecallmethod() == "FireServer" and tostring(self) == "SayMessageRequest" then
                 local Args = string.split(Message, " ")
 
@@ -1943,17 +1945,20 @@ local function main()
 
                     if Command then
                         table.remove(Args, 1)
-                        Command:Execute(Args)
 
+                        task.spawn(function()
+                            Event:Fire(Command, Args)
+                        end)
+                        
                         if Settings["Thrix"]["Settings"]["Silent"] then
                             return
                         end
                     end
                 end
             end
-
+            
             return namecall(self, Message, ...)
-        end
+        end))
 
         local CommandAction
         CommandAction = UserInputService.InputBegan:Connect(function(Key, Typing)
@@ -2055,7 +2060,9 @@ local function main()
         end)
         
         AddFunction({"end", "quit"}, "Stops the admin from running.", function()
-            gamemetatable.__namecall = namecall
+            local _game = getrawmetatable(game)
+            setreadonly(_game, false)
+            _game.__namecall = namecall
 
             CommandAction:Disconnect()
             
