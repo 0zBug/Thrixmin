@@ -457,7 +457,7 @@ local PlayerCases = {
         return {Farthest}
     end,
     ["me"] = function()
-        return LocalPlayer
+        return {LocalPlayer}
     end,
     ["all"] = function()
         return Players:GetPlayers()
