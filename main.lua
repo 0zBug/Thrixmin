@@ -1569,6 +1569,30 @@ local function main()
             table.insert(ChamsConnections, Connection)
         end)
 
+        AddFunction("partesp", "Highlights parts of your choice.", function(Part, r, g, b)
+            Highlight.RemoveHighlightGuis()
+
+            Highlight.CreateGui()
+
+            local Color = Color3.fromRGB(r or 255, g or 255, b or 255)
+
+            for _, Instance in next, Workspace:GetDescendants() do
+                if Instance:IsA("BasePart") then
+                    if Instance.Name == Part then
+                        Highlight.HighlightPart(Instance, Color)
+                    end
+                end
+            end
+
+            Workspace.DescendantAdded:Connect(function()
+                if Instance:IsA("BasePart") then
+                    if Instance.Name == Part then
+                        Highlight.HighlightPart(Instance, Color)
+                    end
+                end
+            end)
+        end)
+
         AddFunction({"nochams", "noesp"}, "Disables chams.", function()
             Highlight.RemoveHighlightGuis()
 
