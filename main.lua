@@ -233,7 +233,6 @@ local TouchInputService = game:GetService("TouchInputService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local PathfindingService = game:GetService("PathfindingService")
 local PermissionsService = game:GetService("PermissionsService")
-local AvatarEditorService = game:GetService("AvatarEditorService")
 local LocalizationService = game:GetService("LocalizationService")
 local MeshContentProvider = game:GetService("MeshContentProvider")
 local NotificationService = game:GetService("NotificationService")
@@ -550,26 +549,28 @@ local function TeleportToCode(Code)
 end
 
 local function SaveAvatar(Description, Type)
-    local Players = game:GetService("Players")
-    local CoreGui = game:GetService("CoreGui")
-    local GuiService = game:GetService("GuiService")
-    
+    pcall(function()
+        local Players = game:GetService("Players")
+        local CoreGui = game:GetService("CoreGui")
+        local GuiService = game:GetService("GuiService")
+        local AvatarEditorService = game:GetService("AvatarEditorService")
 
-    local LocalPlayer = Players.LocalPlayer
-    local Mouse = LocalPlayer:GetMouse()
+        local LocalPlayer = Players.LocalPlayer
+        local Mouse = LocalPlayer:GetMouse()
 
-    AvatarEditorService:PromptSaveAvatar(Description, Type)
+        AvatarEditorService:PromptSaveAvatar(Description, Type)
 
-    local Prompts = CoreGui:WaitForChild("AvatarEditorPrompts")
-    local PromptFrame = Prompts:WaitForChild("PromptFrame")
-    local Prompt = PromptFrame:WaitForChild("Prompt")
+        local Prompts = CoreGui:WaitForChild("AvatarEditorPrompts")
+        local PromptFrame = Prompts:WaitForChild("PromptFrame")
+        local Prompt = PromptFrame:WaitForChild("Prompt")
 
-    local Button = Prompt.AlertContents.Footer.Buttons["2"]
-    local Origin = Button.AbsolutePosition + Button.AbsoluteSize / 2 + GuiService:GetGuiInset()
+        local Button = Prompt.AlertContents.Footer.Buttons["2"]
+        local Origin = Button.AbsolutePosition + Button.AbsoluteSize / 2 + GuiService:GetGuiInset()
 
-    for i = 0, 1 do
-        VirtualInputManager:SendMouseButtonEvent(Origin.X, Origin.Y, 0, i == 0, Button, 1)
-    end
+        for i = 0, 1 do
+            VirtualInputManager:SendMouseButtonEvent(Origin.X, Origin.Y, 0, i == 0, Button, 1)
+        end
+    end)
 end
 
 local function thread(f)
