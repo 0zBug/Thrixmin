@@ -52,8 +52,8 @@ repeat wait() until game:IsLoaded()
         • freeze - Freezes your player in place. (Aliases: "fr")
         • unfreeze - Unfreezes your player in place. (Aliases: "unfr")
         • offset - Offsets your player with a x, y and z value.
-        • infintejump - Allows you to jump while not on the ground. (Aliases: "infjump")
-        • uninfintejump - Disables infinite jumping. (Aliases: "uninfjump")
+        • infinitejump - Allows you to jump while not on the ground. (Aliases: "infjump")
+        • uninfinitejump - Disables infinite jumping. (Aliases: "uninfjump")
         • headsit - Makes your player sit on the selected player's head.
         • spin - Spins your character.
         • unspin - Unspins your character.
@@ -793,11 +793,11 @@ local function main()
             end
         end)
 
-        AddFunction({"infintejump", "infjump"}, "Allows you to jump while not on the ground.", function()
+        AddFunction({"infinitejump", "infjump"}, "Allows you to jump while not on the ground.", function()
             InfiniteJump = true
         end)
 
-        AddFunction({"uninfintejump", "uninfjump"}, "Disables infinite jumping.", function()
+        AddFunction({"uninfinitejump", "uninfjump"}, "Disables infinite jumping.", function()
             InfiniteJump = false
         end)
 
