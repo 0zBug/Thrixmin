@@ -1,4 +1,6 @@
 
+setfflag("AvatarEditorServiceEnabled2_PlaceFilter", string.format("True;%s", game.PlaceId))
+
 --[[
     ████████╗██╗  ██╗██████╗ ██╗██╗  ██╗███╗   ███╗██╗███╗   ██╗
     ╚══██╔══╝██║  ██║██╔══██╗██║╚██╗██╔╝████╗ ████║██║████╗  ██║
@@ -231,10 +233,12 @@ local TouchInputService = game:GetService("TouchInputService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local PathfindingService = game:GetService("PathfindingService")
 local PermissionsService = game:GetService("PermissionsService")
+local AvatarEditorService = game:GetService("AvatarEditorService")
 local LocalizationService = game:GetService("LocalizationService")
 local MeshContentProvider = game:GetService("MeshContentProvider")
 local NotificationService = game:GetService("NotificationService")
 local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local ContextActionService = game:GetService("ContextActionService")
 local CSGDictionaryService = game:GetService("CSGDictionaryService")
@@ -529,7 +533,7 @@ local function GenerateCode()
     }
 end
 
-function UpdateCodes()
+local function UpdateCodes()
     local Codes = FlushCodes(GetCodes())
     local Code, CodeData = GenerateCode()
     Codes[Code] = CodeData
@@ -539,10 +543,33 @@ function UpdateCodes()
     return Code
 end
 
-function TeleportToCode(Code)
+local function TeleportToCode(Code)
     local Codes = FlushCodes(GetCodes())
 
     TeleportService:TeleportToPlaceInstance(Codes[Code].PlaceID, Codes[Code].JobId)
+end
+
+local function SaveAvatar(Description, Type)
+    local Players = game:GetService("Players")
+    local CoreGui = game:GetService("CoreGui")
+    local GuiService = game:GetService("GuiService")
+    
+
+    local LocalPlayer = Players.LocalPlayer
+    local Mouse = LocalPlayer:GetMouse()
+
+    AvatarEditorService:PromptSaveAvatar(Description, Type)
+
+    local Prompts = CoreGui:WaitForChild("AvatarEditorPrompts")
+    local PromptFrame = Prompts:WaitForChild("PromptFrame")
+    local Prompt = PromptFrame:WaitForChild("Prompt")
+
+    local Button = Prompt.AlertContents.Footer.Buttons["2"]
+    local Origin = Button.AbsolutePosition + Button.AbsoluteSize / 2 + GuiService:GetGuiInset()
+
+    for i = 0, 1 do
+        VirtualInputManager:SendMouseButtonEvent(Origin.X, Origin.Y, 0, i == 0, Button, 1)
+    end
 end
 
 local function thread(f)
@@ -955,6 +982,46 @@ local function main()
                         Heartbeat:Connect(function()
                             sethiddenproperty(v, "NetworkIsSleeping", true)
                         end)
+                    end
+                end
+            end
+        end)
+
+        AddFunction("r6", "Sets your avatar type to R6.", function()
+            local Character = LocalPlayer.Character
+
+            if Character then
+                local Humanoid = Character:FindFirstChild("Humanoid")
+
+                if Humanoid then
+                    SaveAvatar(Humanoid:GetAppliedDescription(), 0)
+                end
+            end
+        end)
+
+        AddFunction("r15", "Sets your avatar type to R15.", function()
+            local Character = LocalPlayer.Character
+
+            if Character then
+                local Humanoid = Character:FindFirstChild("Humanoid")
+
+                if Humanoid then
+                    SaveAvatar(Humanoid:GetAppliedDescription(), Enum.HumanoidRigType.R15)
+                end
+            end
+        end)
+
+        AddFunction({"outfit", "avatar"}, "Copies a players outfit.", function(Player)
+            local Player = GetPlayer(Player)
+
+            for _, Player in pairs(Player) do
+                local Character = Player.Character
+
+                if Character then
+                    local Humanoid = Character:FindFirstChild("Humanoid")
+
+                    if Humanoid then
+                        SaveAvatar(Humanoid:GetAppliedDescription(), Humanoid.RigType)
                     end
                 end
             end
