@@ -2125,18 +2125,29 @@ local function main()
         local ChatMain = require(PlayerScripts:WaitForChild("ChatScript"):WaitForChild("ChatMain"))
         local MessagePosted = ChatMain.MessagePosted
 
-        local Chat = Instance.new("BindableEvent")
-        Chat.Event:Connect(function(Message)
-            Players:Chat(Message)
-        end)
-
         thread(function()
             repeat wait() until PlayerGui:FindFirstChild("Chat").Frame.Visible
 
             hookfunction(MessagePosted.fire, function(self, Message)
                 thread(function()
-                    if string.sub(Message, 1, 2) == "/e" or not Settings["Thrix"]["Settings"]["AntiChatLog"] then
-                        Chat:Fire(Message)
+                    local Args = string.split(Message, " ")
+
+                    if Args[1] == "/e" then
+                        local Character = LocalPlayer.Character
+
+                        if Character then
+                            local Animate = Character:FindFirstChild("Animate")
+
+                            if Animate then
+                                local PlayEmote = Animate:FindFirstChild("PlayEmote")
+                                
+                                if PlayEmote then
+                                    table.remove(Args, 1)
+
+                                    PlayEmote:Invoke(table.concat(Args, " "))
+                                end
+                            end
+                        end
                     end
                 end)
             end)
