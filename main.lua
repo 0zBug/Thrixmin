@@ -2146,7 +2146,7 @@ local function main()
 
                                 if Animate then
                                     local PlayEmote = Animate:FindFirstChild("PlayEmote")
-                                    
+
                                     if PlayEmote then
                                         table.remove(Args, 1)
 
