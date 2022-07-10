@@ -2125,38 +2125,29 @@ local function main()
         local ChatMain = require(PlayerScripts:WaitForChild("ChatScript"):WaitForChild("ChatMain"))
         local MessagePosted = ChatMain.MessagePosted
 
-        local Chat = Instance.new("BindableEvent")
-        Chat.Event:Connect(function(Message)
-            Players:Chat(Message)
-        end)
-
         thread(function()
             repeat wait() until PlayerGui:FindFirstChild("Chat").Frame.Visible
 
             hookfunction(MessagePosted.fire, function(self, Message)
                 thread(function()
-                    if Settings["Thrix"]["Settings"]["AntiChatLog"] then
-                        local Args = string.split(Message, " ")
+                    local Args = string.split(Message, " ")
 
-                        if Args[1] == "/e" then
-                            local Character = LocalPlayer.Character
+                    if Args[1] == "/e" then
+                        local Character = LocalPlayer.Character
 
-                            if Character then
-                                local Animate = Character:FindFirstChild("Animate")
+                        if Character then
+                            local Animate = Character:FindFirstChild("Animate")
 
-                                if Animate then
-                                    local PlayEmote = Animate:FindFirstChild("PlayEmote")
+                            if Animate then
+                                local PlayEmote = Animate.PlayEmote
+                                
+                                if PlayEmote then
+                                    table.remove(Args, 1)
 
-                                    if PlayEmote then
-                                        table.remove(Args, 1)
-
-                                        PlayEmote:Invoke(table.concat(Args, " "))
-                                    end
+                                    PlayEmote:Invoke(table.concat(Args, " "))
                                 end
                             end
                         end
-                    else
-                        Chat:Fire(Message)
                     end
                 end)
             end)
