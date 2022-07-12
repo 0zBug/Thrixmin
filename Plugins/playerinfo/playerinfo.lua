@@ -64,7 +64,7 @@ local Plugin = {
                     elseif SkinColor == 209 or SkinColor == 206 or SkinColor == 286 or SkinColor == 232 then
                         Event:FireServer(string.format("%s is black.", Player.Name), "All")
                     else
-                        Event:FireServer(string.format("%s is %s.", Player.Name, BrickColor.new(Description.HeadColor.R * 255, Description.HeadColor.G * 255, Description.HeadColor.B * 255).Name), "All")
+                        Event:FireServer(string.format("%s is %s.", Player.Name, BrickColor.new(Description.HeadColor.R, Description.HeadColor.G, Description.HeadColor.B).Name), "All")
                     end
                 end
             end
