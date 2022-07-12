@@ -20,9 +20,9 @@ local Plugin = {
                     if Description.HeightScale >= 1.01 then
                         Event:FireServer(string.format("%s is tall.", Player.Name), "All")
                     elseif Description.HeightScale >= 0.9 then
-                        Event:FireServer(string.format("%s is short.", Player.Name), "All")
-                    else
                         Event:FireServer(string.format("%s's height is average.", Player.Name), "All")
+                    else
+                        Event:FireServer(string.format("%s is short.", Player.Name), "All")
                     end
                 end
             end
