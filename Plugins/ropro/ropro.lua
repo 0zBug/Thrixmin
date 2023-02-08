@@ -1,4 +1,5 @@
 
+local request = request or syn.request
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 
@@ -14,7 +15,7 @@ local Plugin = {
                 local Players = GetPlayer(Player)
             
                 for _, Player in next, Players do
-                    local Discord = HttpService:JSONDecode(syn.request({
+                    local Discord = HttpService:JSONDecode(request({
                         Url =  "https://api.ropro.io/getUserInfoTest.php?myid=0&userid=" .. Player.UserId
                     }).Body).discord
             
@@ -32,7 +33,7 @@ local Plugin = {
                 local Players = GetPlayer(Player)
 
                 for _, Player in next, Players do
-                    local Reputation = HttpService:JSONDecode(syn.request({
+                    local Reputation = HttpService:JSONDecode(request({
                         Url =  "https://api.ropro.io/getUserInfoTest.php?myid=0&userid=" .. Player.UserId
                     }).Body).reputation
 
