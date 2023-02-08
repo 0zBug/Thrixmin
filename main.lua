@@ -559,7 +559,7 @@ local function SaveAvatar(Description, Type)
 
         AvatarEditorService:PromptSaveAvatar(Description, Type)
 
-        local Prompts = CoreGui:WaitForChild("AvatarEditorPrompts")
+        local Prompts = CoreGui:WaitForChild("ThemeProvider")
         local PromptFrame = Prompts:WaitForChild("PromptFrame")
         local Prompt = PromptFrame:WaitForChild("Prompt")
 
