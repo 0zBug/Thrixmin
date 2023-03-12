@@ -559,8 +559,7 @@ local function SaveAvatar(Description, Type)
 
         AvatarEditorService:PromptSaveAvatar(Description, Type)
 
-        local Prompts = CoreGui:WaitForChild("ThemeProvider")
-        local PromptFrame = Prompts:WaitForChild("PromptFrame")
+        local PromptFrame = CoreGui:FindFirstChild("PromptFrame", true)
         local Prompt = PromptFrame:WaitForChild("Prompt")
 
         local Button = Prompt.AlertContents.Footer.Buttons["2"]
