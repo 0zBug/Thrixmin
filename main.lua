@@ -2121,25 +2121,29 @@ local function main()
         end)
 
         local PlayerScripts = LocalPlayer:WaitForChild("PlayerScripts")
-        local ChatMain = require(PlayerScripts:WaitForChild("ChatScript"):WaitForChild("ChatMain"))
-        local MessagePosted = ChatMain.MessagePosted
+        local ChatScript = PlayerScripts:FindFirstChild("ChatScript")
 
-        local Chat = Instance.new("BindableEvent")
-        Chat.Event:Connect(function(Message)
-            Players:Chat(Message)
-        end)
+        if ChatScript then
+            local ChatMain = require(ChatScript:WaitForChild("ChatMain"))
+            local MessagePosted = ChatMain.MessagePosted
 
-        thread(function()
-            repeat wait() until PlayerGui:FindFirstChild("Chat").Frame.Visible
+            local Chat = Instance.new("BindableEvent")
+            Chat.Event:Connect(function(Message)
+                Players:Chat(Message)
+            end)
 
-            hookfunction(MessagePosted.fire, function(self, Message)
-                thread(function()
-                    if string.sub(Message, 1, 2) == "/e" or not Settings["Thrix"]["Settings"]["AntiChatLog"] then
-                        Chat:Fire(Message)
-                    end
+            thread(function()
+                repeat wait() until PlayerGui:FindFirstChild("Chat").Frame.Visible
+
+                hookfunction(MessagePosted.fire, function(self, Message)
+                    thread(function()
+                        if string.sub(Message, 1, 2) == "/e" or not Settings["Thrix"]["Settings"]["AntiChatLog"] then
+                            Chat:Fire(Message)
+                        end
+                    end)
                 end)
             end)
-        end)
+        end
 
         AddFunction("prefix", "Sets your command prefix.", function(Prefix)
             Settings["Thrix"]["Settings"]["Prefix"] = Prefix
